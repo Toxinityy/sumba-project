@@ -1,0 +1,149 @@
+<title>Tentang Kami — Hope for Sumba (prototype)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  /* Runs before the rest of the page parses, so an explicitly chosen theme
+     never flashes the other one on navigation. "system" deliberately sets
+     nothing and lets prefers-color-scheme decide. */
+  try {
+    var saved = localStorage.getItem("hfs-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+    document.documentElement.setAttribute("lang", localStorage.getItem("hfs-proto-lang") || "id");
+  } catch (e) {}
+</script>
+
+  <div class="protobar">
+    <strong data-id="PROTOTIPE — bukan situs resmi." data-en="PROTOTYPE — not a live site.">PROTOTIPE — bukan situs resmi.</strong>
+    <span data-id=" Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain." data-en=" All school names, figures, photographs and quotations on this page are invented examples for design review."> Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain.</span>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="wordmark" href="index.html">Hope for Sumba</a>
+      <nav class="nav__links" aria-label="Utama">
+          <a href="index.html" data-id="Beranda" data-en="Home">Beranda</a>
+          <a href="tentang.html" aria-current="page" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+      </nav>
+      <div class="langswitch" role="group" aria-label="Bahasa / Language">
+        <button type="button" data-lang-btn="id" aria-pressed="true">ID</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+<main>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="prose">
+        <p class="label muted" data-id="Tentang kami" data-en="About us">Tentang kami</p>
+        <h1 data-id="Dimulai dari satu ruang kelas beratap seng." data-en="It started with one classroom under a tin roof.">Dimulai dari satu ruang kelas beratap seng.</h1>
+        <p class="lead" data-id="Pada 2007, tujuh anak berkumpul di bawah atap seng di Karuni karena sekolah terdekat berjarak tiga jam berjalan kaki. Hari ini empat belas sekolah dan rumah anak berjalan di seluruh pulau." data-en="In 2007, seven children gathered under a tin roof in Karuni because the nearest school was a three-hour walk away. Today fourteen schools and children's homes run across the island.">Pada 2007, tujuh anak berkumpul di bawah atap seng di Karuni karena sekolah terdekat berjarak tiga jam berjalan kaki. Hari ini empat belas sekolah dan rumah anak berjalan di seluruh pulau.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        
+      <div class="photo photo--hero photo--3">
+        <p class="photo__note" data-id="Foto: potret lingkungan Reynold di halaman sekolah pertama" data-en="Photograph: environmental portrait of Reynold in the yard of the first school">Foto: potret lingkungan Reynold di halaman sekolah pertama</p>
+      </div>
+        <div class="prose">
+          <p class="label muted" data-id="Pendiri" data-en="Founder">Pendiri</p>
+          <h2 data-id="Reynold" data-en="Reynold">Reynold</h2>
+          <p data-id="Reynold lahir dan besar di Sumba. Ia kembali setelah menyelesaikan studinya, membawa satu keyakinan sederhana: anak-anak di kampungnya sama cerdasnya dengan anak-anak di mana pun, dan yang mereka butuhkan hanyalah pintu yang terbuka." data-en="Reynold was born and raised in Sumba. He came back after finishing his studies with one simple conviction: the children in his village are as capable as children anywhere, and what they need is an open door.">Reynold lahir dan besar di Sumba. Ia kembali setelah menyelesaikan studinya, membawa satu keyakinan sederhana: anak-anak di kampungnya sama cerdasnya dengan anak-anak di mana pun, dan yang mereka butuhkan hanyalah pintu yang terbuka.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="prose">
+          <p class="label muted" data-id="Misi" data-en="Mission">Misi</p>
+          <h2 data-id="Pendidikan gratis yang bermutu, dekat dengan rumah." data-en="Free, good education, close to home.">Pendidikan gratis yang bermutu, dekat dengan rumah.</h2>
+          <p data-id="Kami membuka dan menjalankan sekolah di desa-desa yang belum terlayani, dengan guru yang tinggal di desa itu sendiri, dan tanpa biaya apa pun bagi keluarga." data-en="We open and run schools in underserved villages, staffed by teachers who live in those villages, at no cost to families.">Kami membuka dan menjalankan sekolah di desa-desa yang belum terlayani, dengan guru yang tinggal di desa itu sendiri, dan tanpa biaya apa pun bagi keluarga.</p>
+        </div>
+        <div class="prose">
+          <p class="label muted" data-id="Visi" data-en="Vision">Visi</p>
+          <h2 data-id="Sumba yang menyekolahkan anaknya sendiri." data-en="A Sumba that educates its own children.">Sumba yang menyekolahkan anaknya sendiri.</h2>
+          <p data-id="Setiap sekolah dirancang untuk suatu hari dijalankan sepenuhnya oleh guru dan pemimpin dari Sumba. Beberapa lulusan pertama kami kini mengajar di kelas tempat mereka dulu belajar." data-en="Every school is designed to one day be run entirely by teachers and leaders from Sumba. Several of our first graduates now teach in the classrooms where they studied.">Setiap sekolah dirancang untuk suatu hari dijalankan sepenuhnya oleh guru dan pemimpin dari Sumba. Beberapa lulusan pertama kami kini mengajar di kelas tempat mereka dulu belajar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="wrap">
+      <div class="prose" style="margin-inline:auto;text-align:center">
+        <p class="quote" data-id="“Saya ingin murid-murid saya tahu bahwa dari desa kecil ini, mereka bisa menjadi apa saja.”" data-en="“I want my pupils to know that from this small village, they can become anything.”">“Saya ingin murid-murid saya tahu bahwa dari desa kecil ini, mereka bisa menjadi apa saja.”</p>
+        <p class="attribution">Maria Bulu — <span data-id="Kepala Sekolah, SMP Harapan Anakalang" data-en="Head Teacher, SMP Harapan Anakalang">Kepala Sekolah, SMP Harapan Anakalang</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--inverse">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        <div class="stack stack--sm">
+          <h2 data-id="Mari mulai kemitraan." data-en="Let's start a partnership.">Mari mulai kemitraan.</h2>
+          <p data-id="Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala." data-en="For foundations, churches and companies looking to build a long-term programme in Sumba. We provide a proposal, an itemised budget and regular reporting.">Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="kontak.html" data-id="Bermitra dengan Kami" data-en="Partner with us">Bermitra dengan Kami</a>
+          <a class="btn btn--secondary" href="dukung.html" data-id="Dukung Sebuah Sekolah" data-en="Support a school">Dukung Sebuah Sekolah</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <p class="wordmark" style="color:var(--inverse-ink)">Hope for Sumba</p>
+          <p data-id="Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur." data-en="Free schools and children's homes on Sumba Island, East Nusa Tenggara.">Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.</p>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Jelajahi" data-en="Explore">Jelajahi</p>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Hubungi" data-en="Contact">Hubungi</p>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+          <a href="perlindungan-anak.html" data-id="Perlindungan Anak" data-en="Child Safeguarding">Perlindungan Anak</a>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p data-id="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112" data-en="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112">Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112</p>
+        <p data-id="Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan." data-en="Deed of establishment and foundation registration number: PLACEHOLDER — not yet supplied. Annual reports available on request.">Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="themeswitch" role="group" aria-label="Tema / Theme">
+    <p class="label" data-id="Tampilan" data-en="Appearance">Tampilan</p>
+    <div class="themeswitch__row">
+      <button type="button" data-theme-btn="light" aria-pressed="false" data-id="Terang" data-en="Light">Terang</button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false" data-id="Gelap" data-en="Dark">Gelap</button>
+      <button type="button" data-theme-btn="system" aria-pressed="true" data-id="Sistem" data-en="System">Sistem</button>
+    </div>
+  </div>
+<script src="assets/site.js"></script>

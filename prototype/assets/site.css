@@ -1,0 +1,853 @@
+/* ==========================================================================
+   Hope for Sumba — prototype stylesheet
+
+   Hand-written CSS, not Tailwind. The production site uses Tailwind; for a
+   throwaway prototype a build step buys nothing, and every value here maps
+   cleanly onto a Tailwind token when it moves across.
+
+   One visual system in two luminances: "Open Field" light, "Dusk Savanna"
+   dark. Structure, type scale, spacing, geometry and image treatment are
+   identical in both — only colour changes.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Spacing — 8px base */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-5: 40px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-10: 80px;
+  --s-12: 96px;
+
+  /* Layout */
+  --max-width: 1200px;
+  --prose-width: 68ch;
+  --gutter: 16px;
+  --section-y: 96px;
+
+  /* Type scale — desktop values; mobile overrides in §7 */
+  --t-display: 56px;
+  --t-h1: 44px;
+  --t-h2: 32px;
+  --t-h3: 24px;
+  --t-body: 18px;
+  --t-small: 16px;
+  --t-caption: 14px;
+
+  --lh-tight: 1.1;
+  --lh-heading: 1.2;
+  --lh-body: 1.7;
+
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+
+  --transition: 160ms ease;
+}
+
+/* --- Theme -----------------------------------------------------------------
+
+   One system, two luminances. "Open Field" is the light mode (warm paper,
+   forest ink, ochre drawn from dry grass); "Dusk Savanna" is the dark mode
+   (Sumba at last light, ember gold). They share a hue family, so the accent
+   stays recognisably the same colour in both.
+
+   Geometry and photography are theme-INDEPENDENT and live in the block above
+   / below: corners that change on a theme toggle read as two different sites,
+   and a real photograph doesn't change either.
+
+   Three states, per the usual trap: an explicit choice stamps data-theme on
+   <html>, and the default "system" setting stamps nothing — so the bare :root
+   must carry a complete palette, and the media query is guarded so an explicit
+   light choice still beats a dark OS.
+   -------------------------------------------------------------------------- */
+
+:root {
+  --surface: #f7f8f3;
+  --surface-raised: #ffffff;
+  --surface-sunk: #eceee3;
+  --ink: #1e2a22;
+  --ink-muted: #4b5a4e;
+  --accent: #96660e;
+  --accent-strong: #7c5309;
+  --accent-ink: #ffffff;
+  --border: #dedfce;
+  --badge-bg: #efe3c8;
+  --badge-ink: #5a3e0e;
+
+  /* A band that inverts against the page. In light mode it goes dark; in dark
+     mode it can only go lighter, so the token flips meaning, not direction. */
+  --inverse-surface: #1e2a22;
+  --inverse-ink: #f7f8f3;
+  --inverse-ink-muted: #b9c2b4;
+
+  --shadow-strong: rgba(30, 42, 34, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #211a15;
+    --surface-raised: #2b231c;
+    --surface-sunk: #1a1410;
+    --ink: #f5efe6;
+    --ink-muted: #c9beb0;
+    --accent: #e8a23a;
+    --accent-strong: #f0b45c;
+    --accent-ink: #241a0e;
+    --border: #3b322a;
+    --badge-bg: #3b2e1c;
+    --badge-ink: #f0c97d;
+
+    /* Distinct from --surface-raised on purpose: in dark mode the two would
+       otherwise resolve identically and the section alternation would vanish. */
+    --inverse-surface: #3a2e22;
+    --inverse-ink: #f5efe6;
+    --inverse-ink-muted: #cfc4b4;
+
+    --shadow-strong: rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface: #211a15;
+  --surface-raised: #2b231c;
+  --surface-sunk: #1a1410;
+  --ink: #f5efe6;
+  --ink-muted: #c9beb0;
+  --accent: #e8a23a;
+  --accent-strong: #f0b45c;
+  --accent-ink: #241a0e;
+  --border: #3b322a;
+  --badge-bg: #3b2e1c;
+  --badge-ink: #f0c97d;
+
+  --inverse-surface: #3a2e22;
+  --inverse-ink: #f5efe6;
+  --inverse-ink-muted: #cfc4b4;
+
+  --shadow-strong: rgba(0, 0, 0, 0.5);
+}
+
+/* --- Geometry and imagery — identical in both themes ---------------------- */
+
+:root {
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 8px;
+
+  /* Stand-ins for warm, saturated, natural-light documentary photography.
+     Deliberately the same in both themes: the real photographs will be. */
+  --photo-1: linear-gradient(155deg, #d9a94a 0%, #b9862f 38%, #7c5d2a 72%, #4b3d22 100%);
+  --photo-2: linear-gradient(160deg, #cdbb79 0%, #9e8a4c 55%, #5f5230 100%);
+  --photo-3: linear-gradient(160deg, #e0b457 0%, #b98a3c 55%, #6e5024 100%);
+  --photo-4: linear-gradient(160deg, #c79a56 0%, #9c7333 55%, #573f1f 100%);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset and base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Typography
+   -------------------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.display,
+h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+}
+
+.display {
+  font-size: var(--t-display);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--t-h3);
+  line-height: 1.3;
+}
+
+p {
+  margin: 0;
+}
+
+.prose {
+  max-width: var(--prose-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.lead {
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+.muted {
+  color: var(--ink-muted);
+}
+
+.caption,
+.label {
+  font-size: var(--t-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 30px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.attribution {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout primitives
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tight {
+  padding-block: var(--s-8);
+}
+
+.section--sunk {
+  background: var(--surface-sunk);
+}
+
+.section--raised {
+  background: var(--surface-raised);
+}
+
+.section--inverse {
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
+}
+
+.section--inverse .muted,
+.section--inverse .attribution {
+  color: var(--inverse-ink-muted);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.stack--sm {
+  gap: var(--s-2);
+}
+
+.stack--lg {
+  gap: var(--s-6);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-6);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4);
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: var(--prose-width);
+  margin-bottom: var(--s-6);
+}
+
+/* --------------------------------------------------------------------------
+   5. Components
+   -------------------------------------------------------------------------- */
+
+/* Photo placeholder — stands in for real photography.
+   Labelled so nobody mistakes a gradient for a design decision. */
+.photo {
+  background: var(--photo-1);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--s-2);
+  position: relative;
+  overflow: hidden;
+}
+
+.photo--2 { background: var(--photo-2); }
+.photo--3 { background: var(--photo-3); }
+.photo--4 { background: var(--photo-4); }
+
+.photo--wide { aspect-ratio: 21 / 9; }
+.photo--hero { aspect-ratio: 3 / 2; }
+.photo--tall { aspect-ratio: 4 / 5; }
+.photo--story { aspect-ratio: 3 / 2; }
+.photo--square { aspect-ratio: 1 / 1; }
+
+.photo__note {
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: #2a1b10;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  max-width: 34ch;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  padding: 15px 26px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition),
+    border-color var(--transition);
+  /* Indonesian runs 15–20% longer than English — never sized to fit EN. */
+  white-space: normal;
+  text-align: center;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn--primary:hover {
+  background: var(--accent-strong);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn--secondary:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.section--inverse .btn--secondary {
+  color: var(--inverse-ink);
+  border-color: var(--inverse-ink);
+}
+
+.section--inverse .btn--secondary:hover {
+  background: var(--inverse-ink);
+  color: var(--inverse-surface);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* Badge — school level (TK / SMP / SMA) */
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-ink);
+}
+
+/* Cards */
+.card {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition);
+}
+
+a.card:hover {
+  border-color: var(--accent);
+}
+
+.card__media {
+  position: relative;
+}
+
+.card__media .badge {
+  position: absolute;
+  top: var(--s-2);
+  left: var(--s-2);
+  z-index: 1;
+}
+
+.card__body {
+  padding: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  flex: 1;
+}
+
+.card__location {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.card__need {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+/* Qualitative status only — no numbers, no progress bars anywhere. */
+.card__status {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: auto;
+  padding-top: var(--s-1);
+}
+
+/* Stats — display numerals, no chart junk */
+.stat__value {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--s-1);
+}
+
+.stat__label {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.stat__asof {
+  font-size: 12px;
+  color: var(--inverse-ink-muted);
+  margin-top: 6px;
+}
+
+/* Before / after pair */
+.beforeafter {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-2);
+}
+
+.beforeafter__caption {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-top: var(--s-1);
+}
+
+/* Definition list used for facts a due-diligence reader looks for */
+.facts {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.facts__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+}
+
+.facts__key {
+  color: var(--ink-muted);
+}
+
+.facts__value {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   6. Site chrome — nav, footer, prototype bar
+   -------------------------------------------------------------------------- */
+
+.protobar {
+  background: #3d2f00;
+  color: #ffe9a8;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 10px var(--gutter);
+  text-align: center;
+  font-weight: 600;
+}
+
+.protobar strong {
+  color: #fff;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__inner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--s-2) var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ink);
+  margin-right: auto;
+  line-height: 1.1;
+}
+
+.nav__links {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.nav__links a {
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink-muted);
+  transition: color var(--transition);
+}
+
+.nav__links a:hover,
+.nav__links a[aria-current="page"] {
+  color: var(--accent);
+}
+
+.langswitch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.langswitch button {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.langswitch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.footer {
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
+  padding-block: var(--s-10) var(--s-6);
+  font-size: 15px;
+}
+
+.footer a {
+  color: var(--inverse-ink);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: var(--s-6);
+  margin-bottom: var(--s-8);
+}
+
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.footer__col .label {
+  color: var(--inverse-ink-muted);
+  margin-bottom: var(--s-1);
+}
+
+.footer__legal {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: var(--s-3);
+  color: var(--inverse-ink-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+/* Theme switcher. Unlike the old direction picker this one ships — it's the
+   standard light / dark / follow-the-system control. */
+.themeswitch {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 6px 24px var(--shadow-strong);
+  max-width: calc(100vw - 32px);
+}
+
+.themeswitch .label {
+  color: var(--ink-muted);
+  font-size: 11px;
+}
+
+.themeswitch__row {
+  display: flex;
+  gap: 6px;
+}
+
+.themeswitch button {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 11px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.themeswitch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   7. Responsive — mobile-first values override at the small end
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --t-display: 36px;
+    --t-h1: 32px;
+    --t-h2: 26px;
+    --t-h3: 20px;
+    --t-body: 17px;
+    --section-y: 56px;
+  }
+
+  body {
+    font-size: var(--t-body);
+  }
+
+  .lead {
+    font-size: 19px;
+  }
+
+  .quote {
+    font-size: 24px;
+  }
+
+  .stat__value {
+    font-size: 48px;
+  }
+
+  .grid-2,
+  .grid-3,
+  .beforeafter,
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav__inner {
+    gap: var(--s-2);
+  }
+
+  .nav__links {
+    order: 3;
+    width: 100%;
+    gap: var(--s-2);
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav__links a {
+    white-space: nowrap;
+  }
+
+  .themeswitch {
+    left: 16px;
+    right: 16px;
+    bottom: 12px;
+  }
+
+  .themeswitch__row {
+    justify-content: space-between;
+  }
+
+  .themeswitch button {
+    flex: 1;
+    padding: 9px 6px;
+  }
+}

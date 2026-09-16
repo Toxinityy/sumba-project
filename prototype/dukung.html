@@ -1,0 +1,234 @@
+<title>Dukung Kami — Hope for Sumba (prototype)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  /* Runs before the rest of the page parses, so an explicitly chosen theme
+     never flashes the other one on navigation. "system" deliberately sets
+     nothing and lets prefers-color-scheme decide. */
+  try {
+    var saved = localStorage.getItem("hfs-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+    document.documentElement.setAttribute("lang", localStorage.getItem("hfs-proto-lang") || "id");
+  } catch (e) {}
+</script>
+
+  <div class="protobar">
+    <strong data-id="PROTOTIPE — bukan situs resmi." data-en="PROTOTYPE — not a live site.">PROTOTIPE — bukan situs resmi.</strong>
+    <span data-id=" Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain." data-en=" All school names, figures, photographs and quotations on this page are invented examples for design review."> Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain.</span>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="wordmark" href="index.html">Hope for Sumba</a>
+      <nav class="nav__links" aria-label="Utama">
+          <a href="index.html" data-id="Beranda" data-en="Home">Beranda</a>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+          <a href="dukung.html" aria-current="page" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+      </nav>
+      <div class="langswitch" role="group" aria-label="Bahasa / Language">
+        <button type="button" data-lang-btn="id" aria-pressed="true">ID</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+<main>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="prose">
+        <p class="label muted" data-id="Dukung kami" data-en="Get involved">Dukung kami</p>
+        <h1 data-id="Pilih sesuatu yang nyata." data-en="Fund something specific.">Pilih sesuatu yang nyata.</h1>
+        <p class="lead" data-id="Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program." data-en="Every option below is tied to one school and one need whose progress you can follow. We send photographic and financial reporting on each.">Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="wrap">
+      <div class="grid-3">
+
+        <div class="card">
+          <div class="photo photo--story photo--2">
+        <p class="photo__note" data-id="Foto: ruang kelas di salah satu sekolah" data-en="Photograph: a classroom at one of the schools">Foto: ruang kelas di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Ruang kelas" data-en="A classroom">Ruang kelas</p>
+            <p class="card__status" data-id="Rp 180.000.000" data-en="Rp 180,000,000 (approx. USD 11,000)">Rp 180.000.000</p>
+            <p class="card__need" data-id="Satu ruang kelas lengkap dengan meja, kursi dan papan tulis." data-en="One complete classroom with desks, chairs and a board.">Satu ruang kelas lengkap dengan meja, kursi dan papan tulis.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo photo--story photo--3">
+        <p class="photo__note" data-id="Foto: laboratorium di salah satu sekolah" data-en="Photograph: a laboratory at one of the schools">Foto: laboratorium di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Laboratorium" data-en="A laboratory">Laboratorium</p>
+            <p class="card__status" data-id="Rp 240.000.000" data-en="Rp 240,000,000 (approx. USD 14,500)">Rp 240.000.000</p>
+            <p class="card__need" data-id="Laboratorium IPA atau komputer untuk satu sekolah menengah." data-en="A science or computer laboratory for one secondary school.">Laboratorium IPA atau komputer untuk satu sekolah menengah.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo photo--story photo--4">
+        <p class="photo__note" data-id="Foto: gaji guru satu tahun di salah satu sekolah" data-en="Photograph: a teacher for a year at one of the schools">Foto: gaji guru satu tahun di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Gaji guru satu tahun" data-en="A teacher for a year">Gaji guru satu tahun</p>
+            <p class="card__status" data-id="Rp 54.000.000" data-en="Rp 54,000,000 (approx. USD 3,300)">Rp 54.000.000</p>
+            <p class="card__need" data-id="Satu guru tetap, tinggal di desa tempat ia mengajar." data-en="One permanent teacher, living in the village where they teach.">Satu guru tetap, tinggal di desa tempat ia mengajar.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo photo--story photo--2">
+        <p class="photo__note" data-id="Foto: perpustakaan di salah satu sekolah" data-en="Photograph: a library at one of the schools">Foto: perpustakaan di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Perpustakaan" data-en="A library">Perpustakaan</p>
+            <p class="card__status" data-id="Rp 95.000.000" data-en="Rp 95,000,000 (approx. USD 5,800)">Rp 95.000.000</p>
+            <p class="card__need" data-id="Rak, koleksi buku dan penerangan tenaga surya." data-en="Shelving, a book collection and solar lighting.">Rak, koleksi buku dan penerangan tenaga surya.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo photo--story photo--3">
+        <p class="photo__note" data-id="Foto: dua puluh laptop di salah satu sekolah" data-en="Photograph: twenty laptops at one of the schools">Foto: dua puluh laptop di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Dua puluh laptop" data-en="Twenty laptops">Dua puluh laptop</p>
+            <p class="card__status" data-id="Rp 120.000.000" data-en="Rp 120,000,000 (approx. USD 7,300)">Rp 120.000.000</p>
+            <p class="card__need" data-id="Perangkat untuk satu kelas komputer, termasuk perawatan." data-en="Devices for one computer class, maintenance included.">Perangkat untuk satu kelas komputer, termasuk perawatan.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo photo--story photo--4">
+        <p class="photo__note" data-id="Foto: beasiswa satu murid di salah satu sekolah" data-en="Photograph: one pupil's scholarship at one of the schools">Foto: beasiswa satu murid di salah satu sekolah</p>
+      </div>
+          <div class="card__body">
+            <p class="card__title" data-id="Beasiswa satu murid" data-en="One pupil's scholarship">Beasiswa satu murid</p>
+            <p class="card__status" data-id="Rp 7.200.000" data-en="Rp 7,200,000 (approx. USD 440)">Rp 7.200.000</p>
+            <p class="card__need" data-id="Satu tahun penuh: seragam, buku, makan siang dan transportasi." data-en="A full year: uniform, books, lunch and transport.">Satu tahun penuh: seragam, buku, makan siang dan transportasi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="prose">
+          <p class="label muted" data-id="Cara memberi" data-en="How giving works">Cara memberi</p>
+          <h2 data-id="Transfer langsung ke rekening yayasan." data-en="A direct transfer to the foundation.">Transfer langsung ke rekening yayasan.</h2>
+          <p data-id="Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba." data-en="We do not yet use an online payment gateway. Giving is by bank transfer, QRIS, Wise or PayPal, straight into an account held in the name of Yayasan Harapan Sumba.">Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.</p>
+          <p data-id="Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda." data-en="After transferring, send us the receipt and you will have a formal acknowledgement within three working days, along with the name of the school your gift went to.">Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda.</p>
+        </div>
+        <dl class="facts">
+          <div class="facts__row">
+            <dt class="facts__key" data-id="Nama rekening" data-en="Account name">Nama rekening</dt>
+            <dd class="facts__value">Yayasan Harapan Sumba</dd>
+          </div>
+          <div class="facts__row">
+            <dt class="facts__key" data-id="Bank" data-en="Bank">Bank</dt>
+            <dd class="facts__value" data-id="CONTOH — belum diisi" data-en="PLACEHOLDER — not yet supplied">CONTOH — belum diisi</dd>
+          </div>
+          <div class="facts__row">
+            <dt class="facts__key" data-id="Nomor rekening" data-en="Account number">Nomor rekening</dt>
+            <dd class="facts__value" data-id="CONTOH — belum diisi" data-en="PLACEHOLDER — not yet supplied">CONTOH — belum diisi</dd>
+          </div>
+          <div class="facts__row">
+            <dt class="facts__key" data-id="Internasional" data-en="International">Internasional</dt>
+            <dd class="facts__value">Wise / PayPal</dd>
+          </div>
+          <div class="facts__row">
+            <dt class="facts__key" data-id="Tanda terima" data-en="Acknowledgement">Tanda terima</dt>
+            <dd class="facts__value" data-id="3 hari kerja" data-en="3 working days">3 hari kerja</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="wrap">
+      <div class="grid-3">
+        <div class="prose">
+          <h3 data-id="Perusahaan" data-en="Companies">Perusahaan</h3>
+          <p data-id="Program CSR jangka panjang dengan anggaran terperinci, kunjungan lapangan dan laporan tahunan yang dapat diaudit." data-en="Long-term CSR programmes with itemised budgets, site visits and auditable annual reporting.">Program CSR jangka panjang dengan anggaran terperinci, kunjungan lapangan dan laporan tahunan yang dapat diaudit.</p>
+        </div>
+        <div class="prose">
+          <h3 data-id="Gereja" data-en="Churches">Gereja</h3>
+          <p data-id="Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar berkala dan kunjungan bersama." data-en="Congregational partnership with one named school, including regular updates and joint visits.">Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar berkala dan kunjungan bersama.</p>
+        </div>
+        <div class="prose">
+          <h3 data-id="Relawan" data-en="Volunteers">Relawan</h3>
+          <p data-id="Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua relawan menjalani proses penyaringan perlindungan anak." data-en="We host volunteers for teacher training and construction. All volunteers complete a child safeguarding screening process.">Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua relawan menjalani proses penyaringan perlindungan anak.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--inverse">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        <div class="stack stack--sm">
+          <h2 data-id="Mari mulai kemitraan." data-en="Let's start a partnership.">Mari mulai kemitraan.</h2>
+          <p data-id="Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala." data-en="For foundations, churches and companies looking to build a long-term programme in Sumba. We provide a proposal, an itemised budget and regular reporting.">Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="kontak.html" data-id="Bermitra dengan Kami" data-en="Partner with us">Bermitra dengan Kami</a>
+          <a class="btn btn--secondary" href="dukung.html" data-id="Dukung Sebuah Sekolah" data-en="Support a school">Dukung Sebuah Sekolah</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <p class="wordmark" style="color:var(--inverse-ink)">Hope for Sumba</p>
+          <p data-id="Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur." data-en="Free schools and children's homes on Sumba Island, East Nusa Tenggara.">Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.</p>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Jelajahi" data-en="Explore">Jelajahi</p>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Hubungi" data-en="Contact">Hubungi</p>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+          <a href="perlindungan-anak.html" data-id="Perlindungan Anak" data-en="Child Safeguarding">Perlindungan Anak</a>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p data-id="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112" data-en="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112">Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112</p>
+        <p data-id="Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan." data-en="Deed of establishment and foundation registration number: PLACEHOLDER — not yet supplied. Annual reports available on request.">Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="themeswitch" role="group" aria-label="Tema / Theme">
+    <p class="label" data-id="Tampilan" data-en="Appearance">Tampilan</p>
+    <div class="themeswitch__row">
+      <button type="button" data-theme-btn="light" aria-pressed="false" data-id="Terang" data-en="Light">Terang</button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false" data-id="Gelap" data-en="Dark">Gelap</button>
+      <button type="button" data-theme-btn="system" aria-pressed="true" data-id="Sistem" data-en="System">Sistem</button>
+    </div>
+  </div>
+<script src="assets/site.js"></script>

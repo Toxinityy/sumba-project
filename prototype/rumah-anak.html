@@ -1,0 +1,136 @@
+<title>Rumah Anak — Hope for Sumba (prototype)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  /* Runs before the rest of the page parses, so an explicitly chosen theme
+     never flashes the other one on navigation. "system" deliberately sets
+     nothing and lets prefers-color-scheme decide. */
+  try {
+    var saved = localStorage.getItem("hfs-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+    document.documentElement.setAttribute("lang", localStorage.getItem("hfs-proto-lang") || "id");
+  } catch (e) {}
+</script>
+
+  <div class="protobar">
+    <strong data-id="PROTOTIPE — bukan situs resmi." data-en="PROTOTYPE — not a live site.">PROTOTIPE — bukan situs resmi.</strong>
+    <span data-id=" Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain." data-en=" All school names, figures, photographs and quotations on this page are invented examples for design review."> Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain.</span>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="wordmark" href="index.html">Hope for Sumba</a>
+      <nav class="nav__links" aria-label="Utama">
+          <a href="index.html" data-id="Beranda" data-en="Home">Beranda</a>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" aria-current="page" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+      </nav>
+      <div class="langswitch" role="group" aria-label="Bahasa / Language">
+        <button type="button" data-lang-btn="id" aria-pressed="true">ID</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+<main>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="prose">
+        <p class="label muted" data-id="Rumah anak" data-en="Children's homes">Rumah anak</p>
+        <h1 data-id="Rumah, bukan asrama." data-en="A home, not an institution.">Rumah, bukan asrama.</h1>
+        <p class="lead" data-id="Dua rumah anak kami menampung anak-anak yang tidak bisa tinggal bersama keluarganya. Setiap rumah diasuh oleh satu keluarga pengasuh yang tinggal bersama anak-anak sepanjang tahun." data-en="Our two children's homes care for children who cannot live with their families. Each home is run by a resident house family who live alongside the children year-round.">Dua rumah anak kami menampung anak-anak yang tidak bisa tinggal bersama keluarganya. Setiap rumah diasuh oleh satu keluarga pengasuh yang tinggal bersama anak-anak sepanjang tahun.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        
+      <div class="photo photo--hero photo--2">
+        <p class="photo__note" data-id="Foto: dapur rumah anak saat makan malam bersama — tanpa wajah anak yang dapat dikenali" data-en="Photograph: the house kitchen at the shared evening meal — no identifiable children's faces">Foto: dapur rumah anak saat makan malam bersama — tanpa wajah anak yang dapat dikenali</p>
+      </div>
+        <div class="prose">
+          <p class="label muted" data-id="Cara kami mengasuh" data-en="Our care model">Cara kami mengasuh</p>
+          <h2 data-id="Satu keluarga, bukan giliran jaga." data-en="One family, not a staff rota.">Satu keluarga, bukan giliran jaga.</h2>
+          <p data-id="Anak-anak tinggal dalam kelompok kecil bersama satu keluarga pengasuh tetap, bersekolah di sekolah umum bersama anak-anak desa lainnya, dan tetap berhubungan dengan kerabatnya jika memungkinkan. Tujuan kami selalu pengasuhan yang stabil dan jangka panjang." data-en="Children live in small groups with one permanent house family, attend the local school alongside other village children, and stay in contact with relatives wherever that is possible. The goal is always stable, long-term care.">Anak-anak tinggal dalam kelompok kecil bersama satu keluarga pengasuh tetap, bersekolah di sekolah umum bersama anak-anak desa lainnya, dan tetap berhubungan dengan kerabatnya jika memungkinkan. Tujuan kami selalu pengasuhan yang stabil dan jangka panjang.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label muted" data-id="Privasi anak" data-en="Children's privacy">Privasi anak</p>
+        <h2 data-id="Anak-anak di rumah anak tidak kami tampilkan dengan nama." data-en="Children in our homes are never named on this site.">Anak-anak di rumah anak tidak kami tampilkan dengan nama.</h2>
+      </div>
+      <div class="prose">
+        <p data-id="Keadaan keluarga seorang anak adalah informasi pribadi miliknya, bukan milik kami, dan bukan bahan penggalangan dana. Kami menceritakan pekerjaan rumah anak ini melalui pengasuh, melalui kegiatan sehari-hari, dan melalui anak-anak yang sudah dewasa dan memilih sendiri untuk bercerita." data-en="A child's family circumstances are their own private information — not ours, and not fundraising material. We tell the story of this work through the house parents, through daily life, and through young adults who have grown up and chosen to speak for themselves.">Keadaan keluarga seorang anak adalah informasi pribadi miliknya, bukan milik kami, dan bukan bahan penggalangan dana. Kami menceritakan pekerjaan rumah anak ini melalui pengasuh, melalui kegiatan sehari-hari, dan melalui anak-anak yang sudah dewasa dan memilih sendiri untuk bercerita.</p>
+        <p><a href="perlindungan-anak.html" data-id="Baca kebijakan perlindungan anak kami →" data-en="Read our child safeguarding policy →">Baca kebijakan perlindungan anak kami →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--inverse">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        <div class="stack stack--sm">
+          <h2 data-id="Mari mulai kemitraan." data-en="Let's start a partnership.">Mari mulai kemitraan.</h2>
+          <p data-id="Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala." data-en="For foundations, churches and companies looking to build a long-term programme in Sumba. We provide a proposal, an itemised budget and regular reporting.">Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="kontak.html" data-id="Bermitra dengan Kami" data-en="Partner with us">Bermitra dengan Kami</a>
+          <a class="btn btn--secondary" href="dukung.html" data-id="Dukung Sebuah Sekolah" data-en="Support a school">Dukung Sebuah Sekolah</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <p class="wordmark" style="color:var(--inverse-ink)">Hope for Sumba</p>
+          <p data-id="Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur." data-en="Free schools and children's homes on Sumba Island, East Nusa Tenggara.">Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.</p>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Jelajahi" data-en="Explore">Jelajahi</p>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Hubungi" data-en="Contact">Hubungi</p>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+          <a href="perlindungan-anak.html" data-id="Perlindungan Anak" data-en="Child Safeguarding">Perlindungan Anak</a>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p data-id="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112" data-en="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112">Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112</p>
+        <p data-id="Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan." data-en="Deed of establishment and foundation registration number: PLACEHOLDER — not yet supplied. Annual reports available on request.">Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="themeswitch" role="group" aria-label="Tema / Theme">
+    <p class="label" data-id="Tampilan" data-en="Appearance">Tampilan</p>
+    <div class="themeswitch__row">
+      <button type="button" data-theme-btn="light" aria-pressed="false" data-id="Terang" data-en="Light">Terang</button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false" data-id="Gelap" data-en="Dark">Gelap</button>
+      <button type="button" data-theme-btn="system" aria-pressed="true" data-id="Sistem" data-en="System">Sistem</button>
+    </div>
+  </div>
+<script src="assets/site.js"></script>

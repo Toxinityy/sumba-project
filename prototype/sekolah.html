@@ -1,0 +1,204 @@
+<title>Sekolah — Hope for Sumba (prototype)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  /* Runs before the rest of the page parses, so an explicitly chosen theme
+     never flashes the other one on navigation. "system" deliberately sets
+     nothing and lets prefers-color-scheme decide. */
+  try {
+    var saved = localStorage.getItem("hfs-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+    document.documentElement.setAttribute("lang", localStorage.getItem("hfs-proto-lang") || "id");
+  } catch (e) {}
+</script>
+
+  <div class="protobar">
+    <strong data-id="PROTOTIPE — bukan situs resmi." data-en="PROTOTYPE — not a live site.">PROTOTIPE — bukan situs resmi.</strong>
+    <span data-id=" Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain." data-en=" All school names, figures, photographs and quotations on this page are invented examples for design review."> Semua nama sekolah, angka, foto dan kutipan di halaman ini adalah contoh rekaan untuk keperluan tinjauan desain.</span>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="wordmark" href="index.html">Hope for Sumba</a>
+      <nav class="nav__links" aria-label="Utama">
+          <a href="index.html" data-id="Beranda" data-en="Home">Beranda</a>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" aria-current="page" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+      </nav>
+      <div class="langswitch" role="group" aria-label="Bahasa / Language">
+        <button type="button" data-lang-btn="id" aria-pressed="true">ID</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+<main>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="prose">
+        <p class="label muted" data-id="Sekolah" data-en="Schools">Sekolah</p>
+        <h1 data-id="Empat belas sekolah, satu pulau." data-en="Fourteen schools, one island.">Empat belas sekolah, satu pulau.</h1>
+        <p class="lead" data-id="Setiap sekolah dibuka atas permintaan desanya sendiri, dan setiap sekolah punya kebutuhan yang berbeda. Berikut enam di antaranya." data-en="Each school was opened at the request of its own village, and each has different needs. Six of them are shown here.">Setiap sekolah dibuka atas permintaan desanya sendiri, dan setiap sekolah punya kebutuhan yang berbeda. Berikut enam di antaranya.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="wrap">
+      <div class="grid-3">
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">TK</span>
+            <div class="photo photo--tall photo--2">
+        <p class="photo__note" data-id="Foto: murid TK Harapan Karuni sedang belajar" data-en="Photograph: pupils at TK Harapan Karuni in class">Foto: murid TK Harapan Karuni sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Karuni, Sumba Barat Daya</p>
+            <p class="card__title">TK Harapan Karuni</p>
+            <p class="card__need" data-id="Ruang baca baru untuk 60 anak." data-en="A new reading room for 60 children.">Ruang baca baru untuk 60 anak.</p>
+            <p class="card__status" data-id="Butuh 4 mitra lagi" data-en="Needs 4 more partners">Butuh 4 mitra lagi</p>
+          </div>
+        </a>
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">SMP</span>
+            <div class="photo photo--tall photo--3">
+        <p class="photo__note" data-id="Foto: murid SMP Harapan Anakalang sedang belajar" data-en="Photograph: pupils at SMP Harapan Anakalang in class">Foto: murid SMP Harapan Anakalang sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Anakalang, Sumba Tengah</p>
+            <p class="card__title">SMP Harapan Anakalang</p>
+            <p class="card__need" data-id="Guru IPA untuk tahun ajaran baru." data-en="A science teacher for the new school year.">Guru IPA untuk tahun ajaran baru.</p>
+            <p class="card__status" data-id="Sedang mencari mitra pendidik" data-en="Seeking a teaching partner">Sedang mencari mitra pendidik</p>
+          </div>
+        </a>
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">SMA</span>
+            <div class="photo photo--tall photo--4">
+        <p class="photo__note" data-id="Foto: murid SMA Harapan Kambera sedang belajar" data-en="Photograph: pupils at SMA Harapan Kambera in class">Foto: murid SMA Harapan Kambera sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Kambera, Sumba Timur</p>
+            <p class="card__title">SMA Harapan Kambera</p>
+            <p class="card__need" data-id="Pembaruan laboratorium komputer." data-en="Computer laboratory refurbishment.">Pembaruan laboratorium komputer.</p>
+            <p class="card__status" data-id="Perlu 2 mitra korporasi" data-en="Needs 2 corporate partners">Perlu 2 mitra korporasi</p>
+          </div>
+        </a>
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">TK</span>
+            <div class="photo photo--tall photo--3">
+        <p class="photo__note" data-id="Foto: murid TK Harapan Melolo sedang belajar" data-en="Photograph: pupils at TK Harapan Melolo in class">Foto: murid TK Harapan Melolo sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Melolo, Sumba Timur</p>
+            <p class="card__title">TK Harapan Melolo</p>
+            <p class="card__need" data-id="Perlengkapan bermain dan belajar." data-en="Play and learning equipment.">Perlengkapan bermain dan belajar.</p>
+            <p class="card__status" data-id="Didanai penuh tahun ini" data-en="Fully funded this year">Didanai penuh tahun ini</p>
+          </div>
+        </a>
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">SMP</span>
+            <div class="photo photo--tall photo--2">
+        <p class="photo__note" data-id="Foto: murid SMP Harapan Lewa sedang belajar" data-en="Photograph: pupils at SMP Harapan Lewa in class">Foto: murid SMP Harapan Lewa sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Lewa, Sumba Timur</p>
+            <p class="card__title">SMP Harapan Lewa</p>
+            <p class="card__need" data-id="Asrama putri untuk murid dari desa jauh." data-en="A girls' dormitory for pupils from distant villages.">Asrama putri untuk murid dari desa jauh.</p>
+            <p class="card__status" data-id="Pembangunan sedang berjalan" data-en="Construction underway">Pembangunan sedang berjalan</p>
+          </div>
+        </a>
+
+        <a class="card" href="sekolah-karuni.html">
+          <div class="card__media">
+            <span class="badge">SMA</span>
+            <div class="photo photo--tall photo--4">
+        <p class="photo__note" data-id="Foto: murid SMA Harapan Waikabubak sedang belajar" data-en="Photograph: pupils at SMA Harapan Waikabubak in class">Foto: murid SMA Harapan Waikabubak sedang belajar</p>
+      </div>
+          </div>
+          <div class="card__body">
+            <p class="card__location">Waikabubak, Sumba Barat</p>
+            <p class="card__title">SMA Harapan Waikabubak</p>
+            <p class="card__need" data-id="Beasiswa kelas akhir untuk 12 murid." data-en="Final-year scholarships for 12 pupils.">Beasiswa kelas akhir untuk 12 murid.</p>
+            <p class="card__status" data-id="Butuh 5 mitra lagi" data-en="Needs 5 more partners">Butuh 5 mitra lagi</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--inverse">
+    <div class="wrap">
+      <div class="grid-2" style="align-items:center">
+        <div class="stack stack--sm">
+          <h2 data-id="Mari mulai kemitraan." data-en="Let's start a partnership.">Mari mulai kemitraan.</h2>
+          <p data-id="Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala." data-en="For foundations, churches and companies looking to build a long-term programme in Sumba. We provide a proposal, an itemised budget and regular reporting.">Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="kontak.html" data-id="Bermitra dengan Kami" data-en="Partner with us">Bermitra dengan Kami</a>
+          <a class="btn btn--secondary" href="dukung.html" data-id="Dukung Sebuah Sekolah" data-en="Support a school">Dukung Sebuah Sekolah</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <p class="wordmark" style="color:var(--inverse-ink)">Hope for Sumba</p>
+          <p data-id="Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur." data-en="Free schools and children's homes on Sumba Island, East Nusa Tenggara.">Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.</p>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Jelajahi" data-en="Explore">Jelajahi</p>
+          <a href="tentang.html" data-id="Tentang Kami" data-en="About">Tentang Kami</a>
+          <a href="sekolah.html" data-id="Sekolah" data-en="Schools">Sekolah</a>
+          <a href="rumah-anak.html" data-id="Rumah Anak" data-en="Children's Homes">Rumah Anak</a>
+          <a href="cerita.html" data-id="Cerita" data-en="Stories">Cerita</a>
+        </div>
+        <div class="footer__col">
+          <p class="label" data-id="Hubungi" data-en="Contact">Hubungi</p>
+          <a href="dukung.html" data-id="Dukung Kami" data-en="Get Involved">Dukung Kami</a>
+          <a href="kontak.html" data-id="Kontak" data-en="Contact">Kontak</a>
+          <a href="perlindungan-anak.html" data-id="Perlindungan Anak" data-en="Child Safeguarding">Perlindungan Anak</a>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p data-id="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112" data-en="Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112">Yayasan Harapan Sumba — Jl. Contoh No. 00, Waingapu, Sumba Timur, NTT 87112</p>
+        <p data-id="Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan." data-en="Deed of establishment and foundation registration number: PLACEHOLDER — not yet supplied. Annual reports available on request.">Akta pendirian dan nomor registrasi yayasan: CONTOH — belum diisi. Laporan tahunan tersedia atas permintaan.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="themeswitch" role="group" aria-label="Tema / Theme">
+    <p class="label" data-id="Tampilan" data-en="Appearance">Tampilan</p>
+    <div class="themeswitch__row">
+      <button type="button" data-theme-btn="light" aria-pressed="false" data-id="Terang" data-en="Light">Terang</button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false" data-id="Gelap" data-en="Dark">Gelap</button>
+      <button type="button" data-theme-btn="system" aria-pressed="true" data-id="Sistem" data-en="System">Sistem</button>
+    </div>
+  </div>
+<script src="assets/site.js"></script>
