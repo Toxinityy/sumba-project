@@ -1,0 +1,10 @@
+# Installed agent skills — restore with `npx skills experimental_install`
+.agents/
+.claude/
+
+# Brainstorm session scratch
+.superpowers/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
