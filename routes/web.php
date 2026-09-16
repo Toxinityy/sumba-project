@@ -39,3 +39,9 @@ foreach (config('locales.supported') as $locale) {
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
         });
 }
+
+// A component gallery, not a public page. Registered outside production so
+// the design system can be reviewed on staging without appearing on the site.
+if (! app()->environment('production')) {
+    Route::view('/gallery', 'gallery')->name('gallery');
+}
