@@ -1,0 +1,68 @@
+/* resources/css/tokens.css */
+
+/* Three states, not two. The bare :root carries the COMPLETE light palette,
+   because the default "system" setting stamps no attribute at all and most
+   visitors arrive in that state. A colour whose only definition sits inside a
+   media query or a [data-theme] block renders one theme's text on the other
+   theme's ground. */
+
+:root {
+  --surface: #f7f8f3;
+  --surface-raised: #ffffff;
+  --surface-sunk: #eceee3;
+  --ink: #1e2a22;
+  --ink-muted: #4b5a4e;
+  --accent: #96660e;
+  --accent-strong: #7c5309;
+  --accent-ink: #ffffff;
+  --border: #dedfce;
+  --badge-bg: #efe3c8;
+  --badge-ink: #5a3e0e;
+  --inverse-surface: #1e2a22;
+  --inverse-ink: #f7f8f3;
+  --inverse-ink-muted: #b9c2b4;
+
+  /* Geometry is theme-independent: corners that move on a theme toggle read
+     as two different sites. */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Guarded so an explicit light choice still beats a dark OS. */
+  :root:not([data-theme="light"]) {
+    --surface: #211a15;
+    --surface-raised: #2b231c;
+    --surface-sunk: #1a1410;
+    --ink: #f5efe6;
+    --ink-muted: #c9beb0;
+    --accent: #e8a23a;
+    --accent-strong: #f0b45c;
+    --accent-ink: #241a0e;
+    --border: #3b322a;
+    --badge-bg: #3b2e1c;
+    --badge-ink: #f0c97d;
+    --inverse-surface: #3a2e22;
+    --inverse-ink: #f5efe6;
+    --inverse-ink-muted: #cfc4b4;
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface: #211a15;
+  --surface-raised: #2b231c;
+  --surface-sunk: #1a1410;
+  --ink: #f5efe6;
+  --ink-muted: #c9beb0;
+  --accent: #e8a23a;
+  --accent-strong: #f0b45c;
+  --accent-ink: #241a0e;
+  --border: #3b322a;
+  --badge-bg: #3b2e1c;
+  --badge-ink: #f0c97d;
+  --inverse-surface: #3a2e22;
+  --inverse-ink: #f5efe6;
+  --inverse-ink-muted: #cfc4b4;
+}

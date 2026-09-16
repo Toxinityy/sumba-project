@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './tokens.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,4 +7,93 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Tailwind colour names -> theme tokens (resolved from resources/css/tokens.css) */
+    --color-surface: var(--surface);
+    --color-raised: var(--surface-raised);
+    --color-sunk: var(--surface-sunk);
+    --color-ink: var(--ink);
+    --color-ink-muted: var(--ink-muted);
+    --color-accent: var(--accent);
+    --color-accent-strong: var(--accent-strong);
+    --color-accent-ink: var(--accent-ink);
+    --color-line: var(--border);
+    --color-badge: var(--badge-bg);
+    --color-badge-ink: var(--badge-ink);
+    --color-inverse: var(--inverse-surface);
+    --color-inverse-ink: var(--inverse-ink);
+    --color-inverse-ink-muted: var(--inverse-ink-muted);
+
+    /* Radius scale. Values are literal, not var(--radius-*), because Tailwind's
+       radius theme keys share the exact same custom-property names as the raw
+       tokens in tokens.css (--radius-sm, --radius, --radius-lg, --radius-pill) —
+       a var() reference here would be self-referential and resolve to nothing.
+       Radius is theme-independent (see tokens.css), so duplicating the literal
+       values here is safe; keep the two files in sync if they ever change. */
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 8px;
+
+    /* Font families */
+    --font-display: 'Fraunces', ui-serif, Georgia, serif;
+    --font-body: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+    /* Font sizes (with matching line-height / letter-spacing) */
+    --text-display: 56px;
+    --text-display--line-height: 1.1;
+    --text-display--letter-spacing: -0.015em;
+
+    --text-h1: 44px;
+    --text-h1--line-height: 1.1;
+    --text-h1--letter-spacing: -0.015em;
+
+    --text-h2: 32px;
+    --text-h2--line-height: 1.2;
+    --text-h2--letter-spacing: -0.01em;
+
+    --text-h3: 24px;
+    --text-h3--line-height: 1.3;
+
+    --text-body: 18px;
+    --text-body--line-height: 1.7;
+
+    --text-caption: 14px;
+    --text-caption--line-height: 1.4;
+    --text-caption--letter-spacing: 0.08em;
+
+    /* Max widths */
+    --max-width-content: 1200px;
+    --max-width-prose: 68ch;
+}
+
+@layer base {
+    body {
+        /* Explicit background: a transparent body borrows the host's ground. */
+        background-color: var(--surface);
+        color: var(--ink);
+        font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+        body {
+            font-size: 17px;
+        }
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 }
