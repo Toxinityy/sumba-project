@@ -39,12 +39,3 @@ foreach (config('locales.supported') as $locale) {
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
         });
 }
-
-// Catches any prefix not matched by a supported-locale group above (e.g.
-// /fr/sekolah) and routes it through the setlocale middleware so an
-// unsupported locale genuinely gets rejected by the middleware's
-// abort_unless — not by Laravel's default "no route matched" 404, which
-// would look the same but prove nothing about the locale check itself.
-Route::any('/{locale}/{any?}', fn () => abort(404))
-    ->where('any', '.*')
-    ->middleware('setlocale');

@@ -29,7 +29,11 @@ it('does not serve the English segment under the Indonesian prefix', function ()
     $this->get('/id/schools')->assertNotFound();
 });
 
-it('rejects an unsupported locale prefix', function () {
+it('does not serve content under an unsupported locale prefix', function () {
+    // This only proves no route responds under /fr/ — with no {locale}
+    // catch-all route registered, this 404 comes from Laravel's ordinary
+    // "no route matched" path, not from SetLocale's own rejection logic.
+    // See SetLocaleMiddlewareTest for a test of the middleware's contract.
     $this->get('/fr/sekolah')->assertNotFound();
 });
 
