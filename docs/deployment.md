@@ -34,6 +34,18 @@ account username) and `example.org` (the site's domain) below are
 placeholders, not real values — replace every occurrence with the actual
 account username and domain once hosting is provisioned.
 
+**Verified 2026-09-17** — both local-side commands below run clean on this
+machine: `composer install --no-dev --optimize-autoloader` (removes
+pestphp/pest, fakerphp/faker, mockery, and other dev-only packages;
+generates the optimized autoloader with no errors) and `npm run build`
+(builds `public/build/` — CSS, the font-face CSS, and font files — in under
+a second, no errors). `--no-dev` does **not** break anything the deploy
+procedure depends on: `tests/` is already excluded from the upload (step 5
+below), so the app never needs Pest on the host. After verifying,
+dev dependencies were restored with a plain `composer install` — running
+`--no-dev` locally leaves the working copy without Pest until that's done,
+so restore before running `php artisan test` again.
+
 1. In cPanel's **MultiPHP Manager**, set the domain to a PHP version this
    app supports (8.3+) *before* uploading anything — picking this after the
    fact, once other steps depend on it, fails in confusing ways (wrong
@@ -105,3 +117,84 @@ migrations. Shared hosting has a limited disk quota, so keep only the
 current release plus one or two previous dated directories and delete older
 ones once a release has proven stable — there is no need to retain a long
 history on the host itself (the git history already has it).
+
+## Performance baseline
+
+### LOCAL FLOOR — not a staging baseline (2026-09-17)
+
+No hosting has been chosen yet, so there is no staging URL to measure.
+The numbers below come from `php artisan serve` on the development machine
+and Lighthouse run against `http://127.0.0.1:8000/id`:
+
+```
+npx lighthouse http://127.0.0.1:8000/id --form-factor=mobile \
+  --throttling-method=simulate --output=json \
+  --output-path=./lighthouse-local.json --chrome-flags="--headless"
+```
+
+**LCP, TTFB, and the overall Performance score are deliberately omitted.**
+Localhost has no network latency and no shared-hosting CPU contention, so
+those numbers would be meaninglessly good and would mislead anyone who
+later compared a real staging measurement against them. They are **pending
+staging** (Task 10's deferred checklist below).
+
+Host-independent signals only:
+
+- **Accessibility score:** 0.86 (86/100)
+- **Cumulative Layout Shift:** 0 — no layout shift observed, but the page
+  is a placeholder view with almost no content, so this is not a
+  meaningful signal yet either.
+- **Total transferred bytes:** 1,842 bytes (document 1,686 B + favicon
+  156 B). **Zero image bytes** — the placeholder views served at this
+  stage don't render any images, so there is no next-gen-format signal to
+  report (no `modern-image-formats` / `uses-optimized-images` audits ran
+  at all, because there were no images for them to inspect).
+- **Best Practices audit failures:** none.
+- **Accessibility audit failures:**
+  - `document-title` — the document has no `<title>` element.
+  - `landmark-one-main` — the document has no `<main>` landmark.
+  - `target-size` — touch targets lack sufficient size/spacing.
+
+These are real defects in the current placeholder markup, worth fixing
+independent of hosting. They are not caused by, and will not be fixed by,
+choosing a host.
+
+**Why this is a floor, not a baseline:** these placeholder views (real
+pages arrive in a later plan) are near-empty, so the byte totals and CLS
+here are best-case numbers with almost nothing on the page. Do not treat
+this measurement as representative of the finished site — it establishes
+only that nothing is broken today, not what "good" looks like once real
+content and images are in place.
+
+## Deferred staging checklist
+
+**BLOCKS LAUNCH.** No hosting has been selected yet, so none of this can
+run today. It must all be done, in order, once a host exists — before the
+site is considered launch-ready.
+
+- [ ] Deploy to a staging subdomain on the real host, following the
+      procedure in "Deploying to cPanel" above (same host as production —
+      staging on a different host tells you nothing useful).
+- [ ] Run `php artisan images:capabilities` **on the host** and record the
+      result under `## Host image capabilities` above as **STAGING**,
+      dated. The entry currently there is **LOCAL only** (development
+      machine) and does not describe the production host.
+- [ ] Verify both locales serve on the host:
+  ```bash
+  curl -sI https://staging.example.org/ | head -1           # expect 302
+  curl -sI https://staging.example.org/id/sekolah | head -1 # expect 200
+  curl -sI https://staging.example.org/en/schools | head -1 # expect 200
+  ```
+- [ ] Run throttled-mobile Lighthouse against the staging URL and record
+      the full numbers **including LCP and CLS** (the LOCAL FLOOR above
+      deliberately excluded LCP/TTFB/Performance — this is where they get
+      recorded for real, under `## Performance baseline`, dated):
+  ```bash
+  npx lighthouse https://staging.example.org/id \
+    --form-factor=mobile --throttling-method=simulate \
+    --output=json --output-path=./lighthouse-staging.json
+  ```
+- [ ] Confirm whether the host has Imagick, GD, or both. `VariantGenerator`
+      currently hardcodes the GD driver — a host with Imagick and no GD
+      would need driver selection added before image generation works
+      there at all.
