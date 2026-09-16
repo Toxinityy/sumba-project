@@ -8,7 +8,7 @@
     <a href="{{ $url }}"
        hreflang="{{ $locale }}"
        @class([
-         'px-3 py-2 text-caption font-bold uppercase tracking-[0.08em]',
+         'flex min-h-11 min-w-11 items-center justify-center px-3 text-caption font-bold uppercase tracking-[0.08em]',
          'bg-accent text-accent-ink' => $locale === app()->getLocale(),
          'text-ink-muted' => $locale !== app()->getLocale(),
        ])

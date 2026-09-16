@@ -1,7 +1,3 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-<body>
-<x-language-switcher />
-contact
-</body>
-</html>
+<x-layouts.site>
+  <div class="mx-auto max-w-content px-4 py-24">contact</div>
+</x-layouts.site>
