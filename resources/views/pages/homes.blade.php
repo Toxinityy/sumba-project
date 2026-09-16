@@ -1,4 +1,7 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-<body>homes</body>
+<body>
+<x-language-switcher />
+homes
+</body>
 </html>
