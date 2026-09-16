@@ -10,3 +10,18 @@ Captured after scaffolding the Laravel application (Task 1) and running `npm ins
 - **Pest:** not installed by the default `composer create-project laravel/laravel` scaffold (it ships PHPUnit 12.5.12 and PHPUnit-style example tests instead). Added explicitly via `composer require pestphp/pest pestphp/pest-plugin-laravel --dev` to satisfy this plan's requirement that `php artisan test` runs Pest. Installed version: **pestphp/pest 4.7.8**. `tests/Pest.php` and the Pest-style example tests were added by hand (`vendor/bin/pest --init` hung waiting on an interactive prompt in this non-TTY environment, so the standard manual layout was used instead: `uses(TestCase::class)->in('Feature')` in `tests/Pest.php`, with `tests/Feature/ExampleTest.php` and `tests/Unit/ExampleTest.php` rewritten to Pest's `test()`/`expect()` syntax).
 - **Node:** 24.19.0
 - **npm:** 12.0.2
+
+## Host image capabilities
+
+**LOCAL** — output of `php artisan images:capabilities` on the development machine (PHP 8.3.10, GD enabled, Imagick not installed). This says nothing about the production cPanel host; Task 10 runs the same command on staging and records that separately.
+
+```
++--------+-----------+
+| Format | Encodable |
++--------+-----------+
+| avif | yes |
+| webp | yes |
+| jpeg | yes |
++--------+-----------+
+Chain: avif -> webp -> jpeg
+```
