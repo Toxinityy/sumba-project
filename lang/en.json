@@ -15,5 +15,7 @@
   "theme.label": "Appearance",
   "theme.light": "Light",
   "theme.dark": "Dark",
-  "theme.system": "System"
+  "theme.system": "System",
+  "cta.partner": "Partner with us",
+  "cta.give": "Support a school"
 }
