@@ -2,6 +2,7 @@
 // tests/Feature/LanguageSwitcherTest.php
 
 use App\Support\LocalizedUrl;
+use Illuminate\Support\Facades\Route;
 
 it('resolves the equivalent page in the other locale, not the homepage', function () {
     $this->get('/id/sekolah');
@@ -82,4 +83,34 @@ it('resolves every named route to its counterpart in every other locale', functi
             }
         }
     }
+});
+
+/*
+ | The exact-counterpart lookup 404s in the target locale for a route that
+ | only exists in the current one (e.g. a detail page not yet translated).
+ | It must fall back to the nearest ANCESTOR route in the target locale
+ | ("schools.index"), not the homepage — a reader on an Indonesian school
+ | detail page clicking EN should land in the English schools section, not
+ | on the English homepage. Register a route that exists only under "id" to
+ | force that fallback path, since all eight real pages exist in both
+ | locales and would never otherwise exercise it.
+ */
+it('falls back to the nearest ancestor route when the exact counterpart is missing', function () {
+    Route::get('/id/sekolah/{school}', fn () => 'school detail')
+        ->name('id.schools.show');
+
+    $this->get('/id/sekolah/some-school');
+
+    expect(LocalizedUrl::forLocale('en'))
+        ->toBe(route('en.schools.index'))
+        ->not->toContain('?');
+});
+
+it('falls back to the locale home only when nothing in the ancestor chain resolves', function () {
+    Route::get('/id/orphan/deep/leaf', fn () => 'orphan')
+        ->name('id.orphan.deep.leaf');
+
+    $this->get('/id/orphan/deep/leaf');
+
+    expect(LocalizedUrl::forLocale('en'))->toBe(url('/en'));
 });

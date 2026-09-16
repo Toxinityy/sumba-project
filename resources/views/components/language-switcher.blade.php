@@ -12,7 +12,7 @@
          'bg-accent text-accent-ink' => $locale === app()->getLocale(),
          'text-ink-muted' => $locale !== app()->getLocale(),
        ])
-       @if ($locale === app()->getLocale()) aria-current="true" @endif>
+       @if ($locale === app()->getLocale()) aria-current="page" @endif>
       {{ strtoupper($locale) }}
     </a>
   @endforeach
