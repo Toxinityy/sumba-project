@@ -31,6 +31,9 @@ Thumbs.db
 /public/storage
 /storage/*.key
 /storage/pail
+
+# Generated test fixture — built on demand, see tests/fixtures/build-fixture.php
+/tests/fixtures/sample-hero.jpg
 /vendor
 _ide_helper.php
 Homestead.json
