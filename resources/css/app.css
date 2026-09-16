@@ -24,12 +24,12 @@
     --color-inverse-ink: var(--inverse-ink);
     --color-inverse-ink-muted: var(--inverse-ink-muted);
 
-    /* Radius scale. Values are literal, not var(--radius-*), because Tailwind's
-       radius theme keys share the exact same custom-property names as the raw
-       tokens in tokens.css (--radius-sm, --radius, --radius-lg, --radius-pill) —
-       a var() reference here would be self-referential and resolve to nothing.
-       Radius is theme-independent (see tokens.css), so duplicating the literal
-       values here is safe; keep the two files in sync if they ever change. */
+    /* Radius scale. Declared here, not in tokens.css: @theme entries are real
+       CSS custom properties, so this both generates the rounded-* utilities
+       AND makes var(--radius), var(--radius-sm), etc. available globally as
+       plain CSS variables — one source of truth for the names Tailwind's
+       radius namespace also happens to use. Radius is theme-independent, so
+       it belongs here rather than duplicated per light/dark in tokens.css. */
     --radius-sm: 6px;
     --radius: 10px;
     --radius-lg: 14px;

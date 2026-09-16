@@ -48,7 +48,7 @@ it('keeps the dark inverse band distinct from the raised surface', function () {
 });
 
 it('declares every token used by a theme in the base :root block', function () {
-    $css = file_get_contents(resource_path('css/tokens.css'));
+    $css = file_get_contents(dirname(__DIR__, 2) . '/resources/css/tokens.css');
     $base = substr($css, 0, strpos($css, '@media'));
 
     foreach ([

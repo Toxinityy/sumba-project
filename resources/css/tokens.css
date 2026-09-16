@@ -23,11 +23,12 @@
   --inverse-ink-muted: #b9c2b4;
 
   /* Geometry is theme-independent: corners that move on a theme toggle read
-     as two different sites. */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-pill: 8px;
+     as two different sites. The --radius-* custom properties themselves are
+     declared once, in resources/css/app.css's @theme block, since Tailwind 4
+     @theme declarations ARE real CSS custom properties — declaring them there
+     both generates the rounded-* utilities and exposes var(--radius) etc.
+     globally. Declaring them again here would just be a second source of
+     truth for the same names. */
 }
 
 @media (prefers-color-scheme: dark) {
