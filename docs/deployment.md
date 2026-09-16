@@ -25,3 +25,31 @@ Captured after scaffolding the Laravel application (Task 1) and running `npm ins
 +--------+-----------+
 Chain: avif -> webp -> jpeg
 ```
+
+## Deploying to cPanel
+
+No shell access, so `composer install` runs locally and `vendor/` ships with
+the upload. Hosting has not been chosen yet, so `USERNAME` and `example.org`
+below are placeholders, not real values — replace them with the actual
+account username and domain once hosting is provisioned.
+
+1. Locally: `composer install --no-dev --optimize-autoloader`
+2. Locally: `npm run build`
+3. Upload everything except `node_modules/`, `tests/`, `.git/`
+4. Point the domain's document root at `public/`
+5. Set `.env` on the host (`APP_ENV=production`, `APP_DEBUG=false`, database credentials)
+6. Add the cron entry from `deploy/cron.txt` (replace its `USERNAME` and PHP path placeholders too)
+7. On the host, via cPanel's Terminal or a scheduled one-off cron:
+   - `php artisan migrate --force`
+   - `php artisan config:cache && php artisan route:cache && php artisan view:cache`
+   - `php artisan images:capabilities` — **record the result in this file**
+8. Point Cloudflare (free tier) at the domain
+
+### Rollback
+
+Keep the previous upload as a dated directory (e.g. `/home/USERNAME/releases/2026-09-17/`)
+on the host and repoint the document root. Database rollbacks use the dated
+dump taken before step 7. Shared hosting has a limited disk quota, so keep
+only the current release plus one or two previous dated directories and
+delete older ones once a release has proven stable — there is no need to
+retain a long history on the host itself (the git history already has it).

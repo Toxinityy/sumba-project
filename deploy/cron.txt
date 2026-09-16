@@ -1,0 +1,13 @@
+# Add in cPanel under "Cron Jobs", running every minute.
+#
+# Shared hosting gives no shell access, so there is no supervisor and no
+# long-running `queue:work` daemon. --stop-when-empty makes the worker drain
+# the queue and exit, which is exactly what a per-minute cron wants: no
+# overlapping workers, no process that dies silently and is never restarted.
+# --max-time=50 stops a worker that is still processing before the next
+# minute's cron fires, so two workers never run at once.
+#
+# Replace PHP_PATH and USERNAME with the host's real values (check the
+# PHP version cPanel's "MultiPHP Manager" uses, and the account's home path).
+
+* * * * * /usr/local/bin/php /home/USERNAME/app/artisan queue:work --stop-when-empty --max-time=50 >> /dev/null 2>&1
