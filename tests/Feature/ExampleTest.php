@@ -1,7 +1,8 @@
 <?php
 
 test('the application returns a successful response', function () {
-    $response = $this->get('/');
+    // Root redirects to a locale-prefixed URL now (see LocaleRoutingTest).
+    $response = $this->get('/', ['Accept-Language' => '']);
 
-    $response->assertStatus(200);
+    $response->assertRedirect('/id');
 });
