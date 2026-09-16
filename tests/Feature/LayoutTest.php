@@ -44,3 +44,10 @@ it('emits exactly one main landmark wrapping only the page content', function ()
 
     expect(substr_count($html, '<main'))->toBe(1);
 });
+
+it('emits reciprocal hreflang alternates plus x-default on an English page too', function () {
+    $this->get('/en/schools')
+        ->assertSee('hreflang="id"', escape: false)
+        ->assertSee('hreflang="en"', escape: false)
+        ->assertSee('hreflang="x-default"', escape: false);
+});
