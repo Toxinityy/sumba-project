@@ -115,4 +115,18 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Address
+    |--------------------------------------------------------------------------
+    |
+    | Where the contact page's partnership enquiries are delivered, and the
+    | address printed on that page. It lives here rather than in a view so
+    | the real inbox can be set on the server without a deploy, and so the
+    | page and the delivery can never drift apart.
+    |
+    */
+
+    'contact_to' => env('CONTACT_TO', 'halo@contoh.org'),
+
 ];

@@ -89,20 +89,33 @@ it('resolves every named route to its counterpart in every other locale', functi
  | The exact-counterpart lookup 404s in the target locale for a route that
  | only exists in the current one (e.g. a detail page not yet translated).
  | It must fall back to the nearest ANCESTOR route in the target locale
- | ("schools.index"), not the homepage — a reader on an Indonesian school
- | detail page clicking EN should land in the English schools section, not
- | on the English homepage. Register a route that exists only under "id" to
- | force that fallback path, since all eight real pages exist in both
- | locales and would never otherwise exercise it.
+ | ("<section>.index"), not the homepage — a reader on an Indonesian detail
+ | page clicking EN should land in the English section's index, not on the
+ | English homepage.
+ |
+ | This used to force that path by naming a real section ("schools", then
+ | "homes") that had no ".show" route YET — which broke a second time the
+ | moment Children's Homes detail pages got built, exactly as it broke the
+ | first time schools detail pages did. Both routes below are registered
+ | here, under a segment name ("zzz_test_stub") that isn't in
+ | config('locales.segments') and never will be — the fixture no longer
+ | depends on a real page staying unbuilt.
  */
 it('falls back to the nearest ancestor route when the exact counterpart is missing', function () {
-    Route::get('/id/sekolah/{school}', fn () => 'school detail')
-        ->name('id.schools.show');
+    Route::get('/id/zzz-test-stub', fn () => 'stub index')->name('id.zzz_test_stub.index');
+    Route::get('/en/zzz-test-stub', fn () => 'stub index')->name('en.zzz_test_stub.index');
+    Route::get('/id/zzz-test-stub/{leaf}', fn () => 'stub leaf')->name('id.zzz_test_stub.leaf');
 
-    $this->get('/id/sekolah/some-school');
+    // RouteServiceProvider only refreshes the name lookup once, from an
+    // app->booted() callback that already ran before this test body — a
+    // route named after that point (any ->name() call here) is invisible
+    // to Route::has()/route() until the lookup is rebuilt by hand.
+    app('router')->getRoutes()->refreshNameLookups();
+
+    $this->get('/id/zzz-test-stub/some-leaf');
 
     expect(LocalizedUrl::forLocale('en'))
-        ->toBe(route('en.schools.index'))
+        ->toBe(route('en.zzz_test_stub.index'))
         ->not->toContain('?');
 });
 

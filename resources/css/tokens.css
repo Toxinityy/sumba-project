@@ -16,6 +16,15 @@
   --accent-strong: #7c5309;
   --accent-ink: #ffffff;
   --border: #dedfce;
+  /* I4: --border is decorative by design (spec's token table) and measures
+     only 1.35:1 against --surface — nowhere near WCAG 2.1 SC 1.4.11's 3:1
+     for a UI component's visual boundary. Text inputs use --border as their
+     only visible edge, which makes it an interactive boundary, not
+     decoration. This dedicated token is for exactly that case; --border
+     itself is untouched, so every decorative use (card outlines, dividers)
+     keeps its original, deliberately quiet contrast.
+     Contrast measured against --surface: 4.73:1. */
+  --border-strong: #6e7062;
   --badge-bg: #efe3c8;
   --badge-ink: #5a3e0e;
   --inverse-surface: #1e2a22;
@@ -43,6 +52,8 @@
     --accent-strong: #f0b45c;
     --accent-ink: #241a0e;
     --border: #3b322a;
+    /* I4: contrast measured against dark --surface (#211a15): 4.14:1. */
+    --border-strong: #8a7a68;
     --badge-bg: #3b2e1c;
     --badge-ink: #f0c97d;
     --inverse-surface: #3a2e22;
@@ -61,6 +72,8 @@
   --accent-strong: #f0b45c;
   --accent-ink: #241a0e;
   --border: #3b322a;
+  /* I4: contrast measured against dark --surface (#211a15): 4.14:1. */
+  --border-strong: #8a7a68;
   --badge-bg: #3b2e1c;
   --badge-ink: #f0c97d;
   --inverse-surface: #3a2e22;

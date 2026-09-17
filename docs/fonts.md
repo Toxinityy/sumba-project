@@ -15,23 +15,39 @@ https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..7
 fetched with a Chrome desktop `User-Agent` header so Google returns woff2
 (already correctly subset per-script) rather than ttf.
 
-Only the `normal` style (no italic) and only the `latin` and `latin-ext`
-subsets were kept — Indonesian and English are both Latin-script, so
-cyrillic/greek/vietnamese subsets were discarded as dead weight. Both
-families are variable fonts, so Google served one file per subset covering
-the whole requested weight range (300–700 for Fraunces, 400–700 for Plus
-Jakarta Sans) rather than one file per static weight.
+Only the `latin` and `latin-ext` subsets were kept — Indonesian and English
+are both Latin-script, so cyrillic/greek/vietnamese subsets were discarded
+as dead weight. Both families are variable fonts, so Google served one file
+per subset per style, covering the whole requested weight range (300–700
+for Fraunces roman, 400–600 for Fraunces italic, 400–700 for Plus Jakarta
+Sans) rather than one file per static weight.
+
+The `normal` style was kept for both families. The `italic` style was
+initially discarded for Fraunces as well, on the assumption that the
+synthetic oblique the browser applies to the roman face would be good
+enough — it is not, at 28–32px on the one typographic flourish (pull
+quotes, spec §4) the design spec names explicitly. The italic Fraunces
+latin/latin-ext files were fetched from the same query and added; italic
+Plus Jakarta Sans is still unused (no italic body text in the design) and
+was not fetched.
 
 ## Files kept (final names — used by Task 11's `<link rel="preload">` tags)
 
-| File | Subset | Weight range | Bytes |
-|---|---|---|---|
-| `public/fonts/fraunces-latin.woff2` | latin | 300–700 | 67,304 |
-| `public/fonts/fraunces-latin-ext.woff2` | latin-ext | 300–700 | 59,388 |
-| `public/fonts/plus-jakarta-sans-latin.woff2` | latin | 400–700 | 27,348 |
-| `public/fonts/plus-jakarta-sans-latin-ext.woff2` | latin-ext | 400–700 | 21,728 |
+| File | Subset | Style | Weight range | Bytes |
+|---|---|---|---|---|
+| `public/fonts/fraunces-latin.woff2` | latin | normal | 300–700 | 67,304 |
+| `public/fonts/fraunces-latin-ext.woff2` | latin-ext | normal | 300–700 | 59,388 |
+| `public/fonts/fraunces-italic-latin.woff2` | latin | italic | 400–600 | 81,520 |
+| `public/fonts/fraunces-italic-latin-ext.woff2` | latin-ext | italic | 400–600 | 71,460 |
+| `public/fonts/plus-jakarta-sans-latin.woff2` | latin | normal | 400–700 | 27,348 |
+| `public/fonts/plus-jakarta-sans-latin-ext.woff2` | latin-ext | normal | 400–700 | 21,728 |
 
-Total added to the repo: **175,768 bytes (~172 KiB)**.
+Total added to the repo: **328,748 bytes (~321 KiB)**.
+
+Only the pull-quote component (`resources/views/components/sections/quote.blade.php`)
+renders italic text, and only when its content needs the `-ext` subset does
+the italic latin-ext file get fetched by the browser at all — same
+`unicode-range` gating as the roman faces.
 
 For most pages (plain latin text) only `fraunces-latin.woff2` and
 `plus-jakarta-sans-latin.woff2` will actually be fetched by the browser —
@@ -48,10 +64,13 @@ the stylesheet references `--font-display` / `--font-body`.
 
 ## Verification
 
-After `npm run build`, no reference to `fonts.googleapis.com` or
-`fonts.gstatic.com` remains in `resources/` or `public/build/`:
+After `npm run build`, no reference to any third-party font host or font
+family other than Fraunces/Plus Jakarta Sans remains in `resources/` or
+`public/build/`. Check hosts *and* stray font names — a narrower grep for
+Google hosts only is exactly how a `bunny.net`-fetched font (Instrument
+Sans, pulled in by the Laravel scaffold's Vite plugin) went unnoticed:
 
 ```
-$ grep -r "fonts.googleapis\|fonts.gstatic" resources/ public/build/ || echo "clean"
+$ grep -rli "fonts.googleapis\|fonts.gstatic\|bunny\|instrument" resources/ public/build/ || echo "clean"
 clean
 ```

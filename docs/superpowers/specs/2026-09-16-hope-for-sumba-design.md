@@ -29,7 +29,7 @@ This rules out the standard nonprofit vocabulary — desaturated photography, a 
 | 1 | **Filament**, not Statamic | Statamic's free tier is single-user with no multi-site and no revisions — it cannot do a bilingual, three-editor site. Pro is $349 + $99/yr. Filament is free and mainstream in Laravel, which is also the better handover story. |
 | 2 | Structured entities + fixed narrative templates, **plus one flexible page type** | The §5 narrative spine only holds if it's structural. One escape hatch with a curated block set covers rare one-offs without letting layout drift across the whole site. |
 | 3 | Translation lag expected; **fallback, not 404** | Missing locale renders the source language with a quiet inline note. Filament shows per-locale completeness. |
-| 4 | **No numeric funding anywhere** | No goals, no amounts raised, no progress bars. A bar frozen at 40% for six months actively damages credibility. Status is a short qualitative enum; `current_need` is one sentence. |
+| 4 | **No numeric funding anywhere** | No goals, no amounts raised, no progress bars. A bar frozen at 40% for six months actively damages credibility. Status is a short qualitative sentence an editor writes; `current_need` is one sentence. |
 | 5 | Design for small content volume, schema grows | Content inventory not settled. No filtering or pagination at launch; the model supports adding them without a rewrite. |
 | 6 | **Visual system: Open Field (light) + Dusk Savanna (dark)** | One system at two luminances, sharing a warm neutral family and a gold accent hue — not two directions. |
 | 7 | Safeguarding standard proposed and **enforced in schema** | No policy existed. The site's rules are structural: minors have no surname field, consent gates publishing, EXIF is stripped unconditionally. |
@@ -118,43 +118,56 @@ Pull quotes: serif, italic, 28–32px, generous leading. Both faces self-hosted 
 
 ## 5. Section system
 
-Thirteen sections. Every page is a sequence of them; no page invents new ones.
+Fifteen sections. Every page is a sequence of them; **no page invents new ones, and no spine may name anything absent from this table.**
 
 | Section | Job | Dominant |
 |---|---|---|
 | Hero | Establish place and tone | Image, art-directed per breakpoint |
-| Lede | Mission or profile in one paragraph | Text, 68ch |
+| Lede | Mission or profile in one paragraph | Prose, 68ch |
 | People | Who this is about | Environmental portraits, 4:5 |
-| Context | The challenge | Text + image |
-| Work | What the ministry is doing | Photo/prose alternation |
+| Context | The challenge | Prose + image |
+| Work | What the ministry is doing, or one subject given full-width treatment | Photo/prose alternation |
 | Stat band | Scale at a glance | Display numerals |
 | Evidence | Before/after pairs, dated | Image pair |
 | Quote | A human voice | Serif italic |
 | Stories | Teasers into longer reads | 2–3 cards |
-| Directory | Schools, homes, projects | Card grid |
-| Current need | What this school needs now | Text + facts list |
-| Next step | What the reader does now | Text + actions |
+| Directory | Card grid — schools, homes, projects, or sponsorship tiers | Card grid |
+| Detail panel | Prose beside a scannable facts list — a school's current need, how giving works, a project's status | Prose + facts |
+| Ways | Audience-segmented prose in three columns — corporate, church, volunteer | Three-up prose |
+| Form | Collect a partnership or volunteer enquiry | Labelled fields + submit |
+| Next step | What the reader does now | Prose + actions |
 | Partners | Social proof | Logo strip |
+
+*Detail panel* is implemented as `<x-sections.current-need>` — the component kept its original name when the job broadened, to avoid a rename across built and reviewed code.
 
 **Three rules produce the rhythm:**
 
-1. Sections alternate image-dominant and text-dominant. **Never two text-dominant sections adjacent.** That alternation is the photo-essay cadence.
+1. Sections alternate image-dominant and prose-dominant. **Never two prose-dominant sections adjacent** — that is the photo-essay cadence. Lede, Context and Quote are prose-dominant. Detail panel, Ways and Next step are text-based but are not prose walls: one is a facts table, one is three short columns, one is actions. Those three may sit beside a prose-dominant section without breaking the rhythm.
 2. Photography goes full-bleed or near it; running text stays in the 68ch column. The contrast makes the images read as the page's substance.
 3. Sections alternate across a small set of surface tones rather than uniform white — sectioning without dividers, cards or boxes.
 
 ### Page spines
 
+Every name below is a section from the table above. Where a section serves a specific content role on that page, the role is given in parentheses — it describes the content, not a new section type.
+
 | Page | Sequence |
 |---|---|
-| Home | Hero → Lede → Stat band → Featured school → Stories → Next step |
-| School detail | Hero → Lede → People → Context → Work → Evidence → Current need → Next step |
+| Home | Hero → Lede → Stat band → Work (featured school) → Stories → Next step |
+| School detail | Hero → Lede → People → Context → Work → Evidence → Detail panel (current need) → Next step |
 | Children's home | Same shape, stricter media rules |
-| Project | Hero → Work → Evidence → Status → Next step |
+| Project | Hero → Work → Evidence → Detail panel (status) → Next step |
 | Impact | Hero → Stat band → Stories → Evidence → Next step |
-| About | Hero → Our story → Founder → Mission & vision → People → Next step |
-| Get Involved | Hero → Tiers → Corporate → Church → Volunteer → How giving works |
+| About | Hero → Lede (our story) → Work (founder) → Lede (mission & vision) → People (the team) → Next step |
+| Get Involved | Hero → Directory (sponsorship tiers) → Ways (corporate, church, volunteer) → Detail panel (how giving works) → Next step |
+| Stories | Hero → Stories → Next step |
+| Contact | Hero → Form (partnership enquiry) → Detail panel (where to find us) → Next step |
+| Safeguarding | Hero → Lede → Lede → Lede (policy page — exempt from rule 1, see below) |
 
 The Project and Impact spines are recorded here for completeness; both pages are deferred past launch (§10).
+
+**Policy pages are exempt from rule 1.** Safeguarding — and any later terms or privacy page — is a document, not a photo essay. It is several prose blocks in sequence, which rule 1 would otherwise forbid. The rule exists to prevent walls of prose on narrative pages; applying it here would mean inventing visual rhythm on a child-protection policy, which is worse than the wall it prevents. The exemption is named here so it is a decision rather than an undocumented deviation, and it extends to no other page.
+
+**Why this section was rewritten (2026-09-17).** The original spines named *Featured school*, *Tiers*, *Corporate*, *Church*, *Volunteer*, *How giving works*, *Status*, *Our story*, *Founder* and *Mission & vision* — ten names, none of which existed in the section table. The spec told implementers to build from a fixed set and then handed them a page plan referencing things outside it. This surfaced when the Get Involved page was built: with no section to use, it was assembled from hand-rolled markup, which is precisely the drift the fixed section set exists to prevent. *Ways* is the only genuinely new section; the rest were content roles misnamed as structure.
 
 ### Two hard rules
 
@@ -170,7 +183,7 @@ Giving is information-plus-redirect (PayPal, Wise, bank transfer, QRIS) with no 
 
 | Model | Core fields | Notes |
 |---|---|---|
-| **School** | level (TK/SMP/SMA), location, hero, gallery, pupil/teacher counts, `current_need`, `status` | Status is a short enum, never a number |
+| **School** | level (TK/SMP/SMA), location, hero, gallery, pupil/teacher counts, `current_need`, `status` | Status is a translated qualitative sentence, never a number — see the correction below |
 | **Home** | Same shape plus care model | Stricter media rules |
 | **Project** | status (planned/underway/complete), before + after image with dated captions, optional school/home relation | Powers Projects and Impact |
 | **Post** | `kind` (profile/update/news), title, slug, hook, body, featured image, published_at, optional subject fields, optional relations | The blog and the story feed |
@@ -179,6 +192,10 @@ Giving is information-plus-redirect (PayPal, Wise, bank transfer, QRIS) with no 
 | **Stat** | label, value, `as_of` | `as_of` makes staleness visible to the team |
 | **MediaAsset** | file, caption, consent record, `depicts_minor`, named crops, focal point | Wraps every upload |
 | **Consent** | subject, guardian, date, scope, review date, signed form scan | See §9 |
+
+**Why `status` was corrected (2026-09-17).** This table called School and Home `status` "a short enum". `docs/data-contract.md` called it a qualitative string, and the school card — built, tested and committed — renders sentences no enum can produce ("Butuh 4 mitra lagi", "Didanai penuh tahun ini"). Both documents agreed on the load-bearing rule, that it is never a number, so the table's wording was the error and the component is the fixed point. `status` is a translated JSON string.
+
+Consequence: `status` being taken means publication state is not an enum either. A null `published_at` is the draft state on School, Home, Project and Post, which Post needed regardless.
 
 **Post kinds:** `profile` (student/teacher/community/founder stories, portrait 4:5 card) and `update` / `news` (3:2, date-led). Relations to School, Home or Project let a post surface on that entity's page automatically.
 
@@ -192,7 +209,7 @@ Blocks *inside an article body* are editorial. Blocks that arrange *page section
 
 Filament is an admin panel builder, not a CMS, so these are build items rather than features. Vera publishes without a reviewer, which makes them necessary rather than nice:
 
-- **Draft → preview:** a `status` enum plus a signed preview route rendering the real Blade template with unpublished content. ~1 day.
+- **Draft → preview:** a null `published_at` is the draft state (see the correction above), plus a signed preview route rendering the real Blade template with unpublished content. ~1 day.
 - **Revision history:** activity-log package or a versions table storing the translatable JSON payload, with a rollback action. ~1–2 days.
 - **Media library:** `spatie/laravel-medialibrary` with the Filament plugin — browsable, reusable uploads. Built regardless, since the conversion pipeline hangs off it.
 
@@ -281,7 +298,7 @@ A **Safeguarding page** in both locales: the policy in plain language, how conse
 | Phase | Weeks | Contents | Definition of done |
 |---|---|---|---|
 | **0 — Foundations** | 1 | Laravel + Filament, deploy path, staging URL, locale routing, self-hosted subset fonts, Tailwind tokens, image pipeline with capability detection, Cloudflare | A two-locale page on staging serving a responsive AVIF/WebP hero under 200KB, Lighthouse run against staging |
-| **1 — Design system** | 2 | Thirteen sections as Blade components, card and quote components, both themes | Component gallery renders every section in both locales at 400px and 1440px |
+| **1 — Design system** | 2 | Fifteen sections as Blade components, card and quote components, both themes | Component gallery renders every section in both locales at 400px and 1440px |
 | **2 — Models and panel** | 3–4 | Nine models, translatable fields, media library, consent gate, EXIF stripping, draft preview, revisions | **Vera can create a school and a post end to end and preview them** — and she gets access that day |
 | **3 — Pages** | 4–6 | Launch pages, both locales, forms with spam protection | All launch pages live on staging in both locales |
 | **4 — Launch readiness** | 6–8 | Content and photography in, hreflang, sitemap, OG images, accessibility audit, throttled-mobile performance, safeguarding page live, analytics, backup **with a tested restore** | Launch checklist signed off |
@@ -322,6 +339,10 @@ Not chasing coverage on Blade templates. Feature tests on what fails silently an
 | Confirm Imagick/AVIF availability on the host | Dev | Week 1, gates the image strategy |
 | Dhani briefed on the export spec and tall crops | Dev/Reynold | Before the shoot finishes |
 | Deferred pages scheduled post-launch | Team | Gallery, Partners, Impact, Projects |
+| `spatie/laravel-medialibrary` adopted, or not | Dev | `MediaAsset` is currently a plain table whose columns map onto it; the decision belongs with whoever builds the upload pipeline |
+| EXIF stripping on upload, GPS included (§9) | Dev | No owner. Highest-severity safeguarding gap still open — the schema cannot enforce it, only the upload path can |
+| Revision history and the signed preview route | Dev | No owner. Listed under "Editor experience to build" and not yet built |
+| Consent withdrawal reaching rich-text body images | Dev | `Consent::withdraw()` unpublishes attached assets now; images embedded in body HTML are only reachable once the §8 rewrite pass exists |
 
 ---
 

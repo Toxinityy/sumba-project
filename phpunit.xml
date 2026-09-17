@@ -18,6 +18,9 @@
         </include>
     </source>
     <php>
+        <!-- GD holds whole decoded bitmaps; the variant generator alone needs ~80MB,
+             and PHP's 128M default leaves the suite one image test from exhausting it. -->
+        <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

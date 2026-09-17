@@ -34,6 +34,18 @@ account username) and `example.org` (the site's domain) below are
 placeholders, not real values — replace every occurrence with the actual
 account username and domain once hosting is provisioned.
 
+**Verified 2026-09-17** — both local-side commands below run clean on this
+machine: `composer install --no-dev --optimize-autoloader` (removes
+pestphp/pest, fakerphp/faker, mockery, and other dev-only packages;
+generates the optimized autoloader with no errors) and `npm run build`
+(builds `public/build/` — CSS, the font-face CSS, and font files — in under
+a second, no errors). `--no-dev` does **not** break anything the deploy
+procedure depends on: `tests/` is already excluded from the upload (step 5
+below), so the app never needs Pest on the host. After verifying,
+dev dependencies were restored with a plain `composer install` — running
+`--no-dev` locally leaves the working copy without Pest until that's done,
+so restore before running `php artisan test` again.
+
 1. In cPanel's **MultiPHP Manager**, set the domain to a PHP version this
    app supports (8.3+) *before* uploading anything — picking this after the
    fact, once other steps depend on it, fails in confusing ways (wrong
@@ -52,9 +64,26 @@ account username and domain once hosting is provisioned.
    - `APP_ENV=production`
    - `APP_DEBUG=false`
    - `APP_KEY=` the value copied in step 4
+   - `APP_LOCALE=id` — without it, `config:cache` in step 9 freezes the
+     locale config into the cache file at request time, and a page served
+     before any locale-prefixed route middleware runs would fall back to
+     `config/app.php`'s own default rather than `config/locales.php`'s.
+     Matching `.env.example` keeps the two in agreement.
    - the database credentials for this host
    - leave `QUEUE_CONNECTION`, `SESSION_DRIVER`, `CACHE_STORE` as `database`
      (matching `.env.example`)
+   - `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`,
+     `MAIL_FROM_ADDRESS` — the host's real SMTP credentials.
+   - `CONTACT_TO` — the real inbox the "Partner with us" form delivers to.
+     **If any of these six keys are left out, the contact form does not fail
+     loudly — it silently logs every enquiry to `storage/logs/laravel.log`
+     instead of sending it, and the contact page keeps printing the
+     placeholder address `halo@contoh.org` ("contoh" is Indonesian for
+     "example") as the ministry's own.** A boot-time check in
+     `App\Providers\AppServiceProvider` refuses to serve the site at all in
+     production while either of those two conditions holds, specifically so
+     this is caught at deploy time rather than discovered months later when
+     a donor's enquiry never arrived.
 7. In cPanel File Manager, set permissions so the web server can write to
    `storage/` and `bootstrap/cache/`: select each directory, "Permissions",
    apply recursively, and set `775` (or `755` if the host's PHP runs as the
@@ -95,6 +124,16 @@ account username and domain once hosting is provisioned.
     `USERNAME` and PHP path placeholders too) under cPanel's "Cron Jobs",
     scheduled every minute, so queued jobs actually get processed.
 11. Point Cloudflare (free tier) at `example.org`.
+12. **Restrict the origin to Cloudflare's IP ranges.** The app trusts `*` as
+    a proxy (`bootstrap/app.php`) so `CF-Connecting-IP`/`X-Forwarded-For` are
+    read as the real visitor IP — correct only if every request Laravel sees
+    actually came through Cloudflare. If the origin is directly reachable,
+    anyone can forge that header and spoof any IP, defeating the contact
+    form's rate limit entirely. Most shared-hosting plans have no firewall
+    control for this; where the host offers one (cPanel's IP Blocker/ModSecurity,
+    or an .htaccess allow-list keyed on Cloudflare's published ranges at
+    https://www.cloudflare.com/ips/), apply it. Where it isn't offered, this
+    is a known gap — flag it to whoever chooses hosting.
 
 ### Rollback
 
@@ -105,3 +144,97 @@ migrations. Shared hosting has a limited disk quota, so keep only the
 current release plus one or two previous dated directories and delete older
 ones once a release has proven stable — there is no need to retain a long
 history on the host itself (the git history already has it).
+
+## Performance baseline
+
+### LOCAL FLOOR — not a staging baseline (re-run 2026-09-17)
+
+No hosting has been chosen yet, so there is no staging URL to measure.
+The numbers below come from `php artisan serve` on the development machine
+and Lighthouse run against `http://127.0.0.1:8123/id/sekolah`:
+
+```
+npx lighthouse http://127.0.0.1:8123/id/sekolah --form-factor=mobile \
+  --throttling-method=simulate --output=json \
+  --output-path=./lighthouse-local.json --chrome-flags="--headless"
+```
+
+**LCP, TTFB, and the overall Performance score are still deliberately
+omitted**, for the same reason as before: localhost has no network latency
+and no shared-hosting CPU contention, so those numbers would be
+meaninglessly good and would mislead anyone who later compared a real
+staging measurement against them. They remain **pending staging** (the
+deferred checklist below).
+
+This re-run replaces the figures captured against the pre-layout
+placeholder views (commit `95df185` and earlier — before `x-layouts.site`
+existed). Both accessibility defects that entry listed are fixed and
+verified by `LayoutTest`, so the score they were dragging down is gone:
+
+- **Accessibility score:** 1.0 (100/100) — up from 0.86. `document-title`
+  and `landmark-one-main` are both closed: the layout emits a real
+  `<title>` and exactly one `<main>` landmark (`LayoutTest::'emits exactly
+  one main landmark...'`), and now also a skip link (`LayoutTest::'offers
+  a skip link...'`, Finding 3). No accessibility audit failures at all on
+  this page.
+- **Best Practices score:** 0.77. `is-on-https` fails only because this is
+  plain-HTTP localhost, not a real defect. `errors-in-console` fails on
+  404s for `[::1]:5173` font requests — `php artisan serve` without a
+  running Vite dev server, an artifact of this local setup, not something
+  that exists in the built/production asset pipeline. Worth a second look
+  once there's a real staging URL, not urgent before then.
+- **SEO score:** 0.92. `meta-description` fails — the page has no meta
+  description. Real, host-independent, not caused by hosting.
+- **Cumulative Layout Shift:** 0.
+- **Total transferred bytes:** 568,954 — this page (Schools index) now
+  renders real content and images, unlike the near-empty placeholder the
+  previous entry measured, so this number is not comparable to the old
+  1,842-byte figure.
+
+**Why this is still a floor, not a baseline:** localhost has no network
+latency and no CPU contention, so LCP/TTFB/Performance stay excluded for
+the reason given above. Byte totals and CLS are now measured against a
+real page rather than a placeholder, but are still local-machine numbers —
+treat them as "nothing is broken today," not as what "good" looks like on
+the real host.
+
+## Deferred staging checklist
+
+**BLOCKS LAUNCH.** No hosting has been selected yet, so none of this can
+run today. It must all be done, in order, once a host exists — before the
+site is considered launch-ready.
+
+- [ ] Deploy to a staging subdomain on the real host, following the
+      procedure in "Deploying to cPanel" above (same host as production —
+      staging on a different host tells you nothing useful).
+- [ ] Run `php artisan images:capabilities` **on the host** and record the
+      result under `## Host image capabilities` above as **STAGING**,
+      dated. The entry currently there is **LOCAL only** (development
+      machine) and does not describe the production host.
+- [ ] Verify both locales serve on the host:
+  ```bash
+  curl -sI https://staging.example.org/ | head -1           # expect 302
+  curl -sI https://staging.example.org/id/sekolah | head -1 # expect 200
+  curl -sI https://staging.example.org/en/schools | head -1 # expect 200
+  ```
+- [ ] Run throttled-mobile Lighthouse against the staging URL and record
+      the full numbers **including LCP and CLS** (the LOCAL FLOOR above
+      deliberately excluded LCP/TTFB/Performance — this is where they get
+      recorded for real, under `## Performance baseline`, dated):
+  ```bash
+  npx lighthouse https://staging.example.org/id \
+    --form-factor=mobile --throttling-method=simulate \
+    --output=json --output-path=./lighthouse-staging.json
+  ```
+- [ ] Confirm whether the host has Imagick, GD, or both, and run
+      `php artisan images:capabilities` there to confirm the report matches.
+      `ImageCapabilities::driver()` selects Imagick when it's loaded and GD
+      otherwise, and `VariantGenerator` now builds its `ImageManager` from
+      that selection rather than a hardcoded driver — so a host with only
+      Imagick, only GD, or both installed all work, and the capability
+      report is always computed against the library that will actually do
+      the encoding. The case that matters most on shared hosting is the
+      **mixed** one this spec names (§3: "GD available, Imagick uncertain")
+      — GD without AVIF but Imagick with AVIF, or vice versa — where a
+      report keyed to the wrong library would say "avif: yes" and then hand
+      the encode to a driver that can't produce one.
