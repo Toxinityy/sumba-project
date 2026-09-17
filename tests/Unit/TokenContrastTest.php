@@ -42,6 +42,22 @@ it('meets WCAG AA for body text', function (string $fg, string $bg) {
     expect(contrastRatio($fg, $bg))->toBeGreaterThanOrEqual(4.5);
 })->with('textPairs');
 
+// I4: SC 1.4.11 (Non-text Contrast, Level AA) requires 3:1 for a UI
+// component's visual boundary — --border was designed as decorative (the
+// spec's own token table says so) and measures only 1.35:1 light / 1.23:1
+// dark against --surface, yet it was the sole visible edge of every text
+// input. --border-strong is the dedicated interactive-boundary token; it
+// must clear 3:1 against the surface the inputs actually sit on, in both
+// themes, without touching --accent (the spec forbids darkening it).
+dataset('uiBoundaryPairs', [
+    'light border-strong on surface' => ['#6E7062', '#F7F8F3'],
+    'dark border-strong on surface'  => ['#8A7A68', '#211A15'],
+]);
+
+it('meets WCAG AA (3:1) for interactive UI boundaries', function (string $fg, string $bg) {
+    expect(contrastRatio($fg, $bg))->toBeGreaterThanOrEqual(3.0);
+})->with('uiBoundaryPairs');
+
 it('keeps the dark inverse band distinct from the raised surface', function () {
     // If these collapse to the same value the section alternation dies silently.
     expect('#3A2E22')->not->toBe('#2B231C');
@@ -53,7 +69,7 @@ it('declares every token used by a theme in the base :root block', function () {
 
     foreach ([
         '--surface', '--surface-raised', '--surface-sunk', '--ink', '--ink-muted',
-        '--accent', '--accent-strong', '--accent-ink', '--border',
+        '--accent', '--accent-strong', '--accent-ink', '--border', '--border-strong',
         '--badge-bg', '--badge-ink',
         '--inverse-surface', '--inverse-ink', '--inverse-ink-muted',
     ] as $token) {

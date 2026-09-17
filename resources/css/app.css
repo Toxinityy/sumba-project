@@ -19,6 +19,9 @@
     --color-accent-strong: var(--accent-strong);
     --color-accent-ink: var(--accent-ink);
     --color-line: var(--border);
+    /* I4: dedicated interactive-boundary token — see resources/css/tokens.css.
+       --color-line stays decorative-only contrast; form inputs use this one. */
+    --color-line-strong: var(--border-strong);
     --color-badge: var(--badge-bg);
     --color-badge-ink: var(--badge-ink);
     --color-inverse: var(--inverse-surface);

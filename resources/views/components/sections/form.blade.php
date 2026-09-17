@@ -36,6 +36,8 @@
       @foreach ($fields as $field)
         @php($name = $field['name'])
         @php($type = $field['type'] ?? 'text')
+        @php($autocomplete = $field['autocomplete'] ?? null)
+        @php($required = $field['required'] ?? false)
         {{-- $errors is normally shared by the session middleware on every
              request; guarded here so this component also renders standalone
              (the gallery, a component test) with no session in play. --}}
@@ -52,14 +54,18 @@
           @if ($type === 'textarea')
             <textarea
               id="{{ $name }}" name="{{ $name }}" rows="{{ $field['rows'] ?? 5 }}"
+              @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
+              @if ($required) required aria-required="true" @endif
               @if ($error) aria-invalid="true" aria-describedby="{{ $name }}-error" @endif
-              class="min-h-11 w-full rounded border border-line bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              class="min-h-11 w-full rounded border border-line-strong bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >{{ old($name) }}</textarea>
           @else
             <input
               id="{{ $name }}" name="{{ $name }}" type="{{ $type }}" value="{{ old($name) }}"
+              @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
+              @if ($required) required aria-required="true" @endif
               @if ($error) aria-invalid="true" aria-describedby="{{ $name }}-error" @endif
-              class="min-h-11 w-full rounded border border-line bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
+              class="min-h-11 w-full rounded border border-line-strong bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
           @endif
 
           @if ($error)

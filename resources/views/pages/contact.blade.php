@@ -37,10 +37,10 @@
     :label="__('contact.hero.label')"
     :heading="__('contact.form.heading')"
     :fields="[
-        ['name' => 'name', 'label' => __('contact.form.name'), 'type' => 'text'],
-        ['name' => 'organisation', 'label' => __('contact.form.organisation').' ('.__('contact.form.optional').')', 'type' => 'text'],
-        ['name' => 'email', 'label' => __('contact.form.email'), 'type' => 'email'],
-        ['name' => 'message', 'label' => __('contact.form.message'), 'type' => 'textarea', 'rows' => 6],
+        ['name' => 'name', 'label' => __('contact.form.name'), 'type' => 'text', 'autocomplete' => 'name', 'required' => true],
+        ['name' => 'organisation', 'label' => __('contact.form.organisation').' ('.__('contact.form.optional').')', 'type' => 'text', 'autocomplete' => 'organization'],
+        ['name' => 'email', 'label' => __('contact.form.email'), 'type' => 'email', 'autocomplete' => 'email', 'required' => true],
+        ['name' => 'message', 'label' => __('contact.form.message'), 'type' => 'textarea', 'rows' => 6, 'required' => true],
     ]"
     :submitLabel="__('contact.form.submit')">
 
@@ -57,7 +57,13 @@
          Paired with throttle:5,1 on the route — see routes/web.php.
          ponytail: honeypot + throttle only. Add a captcha if spam
          actually gets through; do not add one pre-emptively. --}}
-    <div class="hidden" aria-hidden="true">
+    {{-- MINOR fix: was class="hidden" only, which depends on the stylesheet
+         loading. On a failed CSS fetch — plausible on an Indonesian mobile
+         connection — a Tailwind utility class does nothing and this field
+         renders visible and labelled, so a real donor who fills it in gets
+         a bare 422 and loses their message. The `hidden` HTML attribute
+         (not the class) needs no stylesheet — it's a UA-default style. --}}
+    <div hidden aria-hidden="true">
       <label for="website">Website</label>
       <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
     </div>
@@ -70,9 +76,9 @@
     <p>{{ __('contact.hero.body') }}</p>
   </x-sections.current-need>
 
-  <x-sections.next-step
-    :heading="__('nextstep.heading')"
-    :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
-    :giveHref="route(app()->getLocale().'.give')" />
+  {{-- MINOR fix: the Next step section's "Partner with us" CTA used to
+       point back at this same Contact page — a circular link with no
+       destination. Since the whole page already IS "partner with us" (the
+       form above), there is no useful second click to offer; the section
+       is dropped rather than pointed at a fake destination. --}}
 </x-layouts.site>

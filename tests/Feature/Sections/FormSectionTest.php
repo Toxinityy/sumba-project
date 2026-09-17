@@ -18,13 +18,27 @@ it('renders a real label bound to each field by id', function () {
         ->and($html)->toContain('rows="6"');
 });
 
+// MINOR fix: this used to assert toContain('min-h-11') and pass even with
+// min-h-11 deleted from both the input and the textarea, because <x-button>
+// hardcodes min-h-11 on the submit button regardless — the string would
+// still be present. Asserting on the <input>/<textarea> tags specifically
+// makes the test fail if either field loses its touch target.
 it('gives every field and the submit button a 44px touch target', function () {
     $html = $this->blade(
         '<x-sections.form :fields="$fields" submitLabel="Send" />',
-        ['fields' => [['name' => 'email', 'label' => 'Email', 'type' => 'email']]]
+        ['fields' => [
+            ['name' => 'email', 'label' => 'Email', 'type' => 'email'],
+            ['name' => 'message', 'label' => 'Message', 'type' => 'textarea'],
+        ]]
     )->__toString();
 
-    expect($html)->toContain('min-h-11')
+    preg_match('/<input\b[^>]*name="email"[^>]*>/', $html, $emailInput);
+    preg_match('/<textarea\b[^>]*name="message"[^>]*>/', $html, $messageTextarea);
+
+    expect($emailInput)->not->toBeEmpty()
+        ->and($emailInput[0])->toContain('min-h-11')
+        ->and($messageTextarea)->not->toBeEmpty()
+        ->and($messageTextarea[0])->toContain('min-h-11')
         ->and($html)->toContain('type="submit"');
 });
 
