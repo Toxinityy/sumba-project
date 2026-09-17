@@ -1,6 +1,13 @@
 <?php
 // tests/Feature/Pages/ContactPageTest.php
 
+// MINOR fix: enquiryMails() used to be declared at the global (file) scope —
+// a second test file anywhere in the suite declaring the same name would be
+// a fatal redeclare. Namespacing it to this file scopes the function so it
+// can't collide; PHP still resolves the unqualified call below inside this
+// same namespace.
+namespace Tests\Feature\Pages\ContactPageTest;
+
 use Illuminate\Support\Facades\Mail;
 
 /*
@@ -9,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
  | anything. phpunit.xml already sets MAIL_MAILER=array, whose transport keeps
  | the real message — recipient, reply-to and body included.
  */
-function enquiryMails(): Illuminate\Support\Collection
+function enquiryMails(): \Illuminate\Support\Collection
 {
     return Mail::mailer()->getSymfonyTransport()->messages();
 }
