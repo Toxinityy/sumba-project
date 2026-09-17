@@ -5,13 +5,13 @@ it('renders every section without error', function () {
     $this->get('/gallery')->assertOk();
 });
 
-it('shows all fourteen sections', function () {
+it('shows all fifteen sections', function () {
     $response = $this->get('/gallery');
 
     foreach ([
         'hero', 'lede', 'people', 'context', 'work', 'stat-band',
         'evidence', 'quote', 'stories', 'directory', 'directory-tier',
-        'ways', 'current-need', 'next-step', 'partners',
+        'ways', 'form', 'current-need', 'next-step', 'partners',
     ] as $section) {
         $response->assertSee("data-section=\"{$section}\"", escape: false);
     }

@@ -154,6 +154,17 @@
       ]" />
   </div>
 
+  <div data-section="form">
+    <x-sections.form label="Kontak" heading="Pertanyaan kemitraan"
+      :fields="[
+        ['name' => 'name', 'label' => 'Nama', 'type' => 'text'],
+        ['name' => 'organisation', 'label' => 'Organisasi (opsional)', 'type' => 'text'],
+        ['name' => 'email', 'label' => 'Surel', 'type' => 'email'],
+        ['name' => 'message', 'label' => 'Pesan', 'type' => 'textarea', 'rows' => 6],
+      ]"
+      submitLabel="Kirim pesan" />
+  </div>
+
   <div data-section="current-need">
     <x-sections.current-need label="Kebutuhan saat ini" heading="Rak, buku, dan penerangan untuk TK Harapan Karuni."
       status="Butuh 4 mitra lagi"
