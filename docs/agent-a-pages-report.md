@@ -296,3 +296,146 @@ assertions, 0 failures** (`php artisan test`).
 3. `100925f` — feat: add the Ways section and a tier mode for Directory
 4. `8550319` — feat: rewrite Get Involved against the corrected spine
 5. `715440a` — test: make the ancestor-fallback test independent of unbuilt pages
+
+---
+
+# Agent A — Pass 3: the Form section and the corrected spines for the last five pages
+
+## Status
+
+Done: `<x-sections.form>` built, and About, Children's Homes, Contact and
+Safeguarding rewritten against the spines corrected in commits `dc06ca3` and
+`34efcbc`. Stories needed no change — its spine (Hero → Stories → Next step)
+was already exactly right. Full suite passes: **182 tests, 454 assertions,
+0 failures** (`php artisan test`).
+
+## Why four "already built" pages needed rework
+
+Pass 2's report ends by saying every corrected §5 spine had a real page
+using it. That was true of Get Involved, which Pass 2 rewrote, but the
+other four launch pages were built in round 2 of Pass 1 — **before** spec §5
+was corrected — against spine names that didn't survive the correction
+(the ten section names §5 flagged as never having existed, per the
+"Why this section was rewritten" note). Re-reading them against the current
+table surfaced three real gaps:
+
+1. **About had a Quote section the corrected spine doesn't name.** Six
+   sections, not seven. Removed — not because the quote was wrong content,
+   but because a fixed spine with an extra section unwatched is exactly the
+   drift §5 exists to prevent. `about.quote.*` lang keys are now unused;
+   left in place rather than pruned, since removing translation strings is
+   a bigger, riskier diff for zero behavioural gain.
+2. **Safeguarding had two Lede sections; the spine now names three.** No
+   third topic existed to add, so the existing four rule paragraphs were
+   split by subject — editorial rules (naming, consent-to-publish) and
+   enforcement (EXIF/location stripping, withdrawal) — into two headed
+   sections instead of one. No paragraph was reworded; the split is
+   structural only.
+3. **Contact had no Form section and no Next step at all** — it was
+   hand-rolled two-column markup with the office details bolted on the
+   side, built before the Form section existed to build it from. Rewritten
+   to Hero → Form → Detail panel (where to find us) → Next step.
+
+Children's Homes is the fourth and the one worth flagging on its own,
+below.
+
+## The Form section
+
+Props exactly per the brief: `fields` (`name`/`label`/`type`/`rows`),
+`submitLabel`, optional `label`/`heading`. Every field gets a real `<label
+for>` bound by `id` — verified by a test asserting the literal
+`<label for="X"` / `id="X"` pair, not just that some label text appears
+somewhere. `min-h-11` on every input, textarea and the submit button.
+Errors (when a shared `$errors` bag has one for that field) render with
+`aria-invalid` + `aria-describedby`, guarded behind `isset($errors)` so the
+component also renders standalone — the gallery, a Blade component test —
+with no session error bag in scope.
+
+**No baked-in `action` or `method`.** The `<form>` tag is
+`$attributes->merge(...)`, so a caller who renders this component bare gets
+an inert form — no request goes anywhere, nothing is faked as sent — and a
+caller who passes `method="POST" :action="..."` gets a real one. Test:
+`tests/Feature/Sections/FormSectionTest.php`.
+
+### A conflict I flagged rather than resolved silently
+
+The brief says: *"The form does not post anywhere yet ... Do not wire a
+route to fake a success page."* Contact's form has posted somewhere real
+since Pass 1 round 2 — a working `Mail::raw` route with a honeypot and a
+throttle, covered by `tests/Feature/Pages/ContactPageTest.php`'s
+`'delivers a valid enquiry and replies to the sender'` test, which asserts
+an actual message with the actual reply-to address. That's a real
+inconsistency between the brief (written, I think, without visibility into
+the earlier pass) and the current, tested state of the code, and per
+CLAUDE.md's instruction to flag rather than guess when a document and the
+code disagree, here it is named rather than quietly picked one way.
+
+**What I did:** kept the working mail delivery. Breaking it would (a) fail
+an existing, real feature test with no replacement, and (b) contradict the
+brief's own framing of this exact form as "load-bearing" and the CTA "where
+[the CSR] conversation starts" — an intentionally inert form undermines
+that more than a working one contradicts a generic caution about fake
+success pages. The Form *section component* itself is genuinely
+submission-agnostic (see above) — it is only Contact's *page*, which wires
+it to a real route, that keeps working. If this reading is wrong, the fix
+is a one-line change to `contact.blade.php` (drop the `method`/`action`
+attributes) — nothing else depends on it posting.
+
+## Children's Homes — the mismatch worth knowing about, again
+
+§5 gives Children's Homes "the same shape as School detail, stricter media
+rules," and separately tells implementers to follow
+`prototype/rumah-anak.html`, which is a four-section page (intro, care
+model, privacy, next step) — thinner than School detail's eight. Those two
+instructions point in different directions: the full shape needs content
+(People, Context, Evidence, a facts-bearing Detail panel) the prototype
+never wrote.
+
+I built the full eight-section shape rather than the thinner one, because
+this pass's brief is explicit that spines are to be followed exactly and
+built from the table, and because Pass 1's report already flagged and
+accepted the thin version as a *known, deliberate gap* pending real Home
+data — repeating that same deviation a second time, now that the brief
+asks explicitly for the full shape, would stop being a documented
+limitation and start being a habit. The added sections use only adults
+(house parents, never named children) and the building itself:
+
+- **People** — two house-parent portraits, named in full with their role
+  (permitted; the first-name-only rule binds minors only).
+- **Context** — the systemic gap ("residential care often means an
+  institution, not a family"), not an attribute of any child.
+- **Evidence** — a dated before/after of a bedroom renovation, no people in
+  frame at all.
+- **Detail panel** — reuses the existing privacy paragraph and safeguarding
+  link verbatim (`homes.privacy.*`, unchanged), plus a facts list (homes
+  count, children in care, resident families, cost to families — all
+  placeholder numbers, clearly fixture data) and a qualitative status line
+  ("a written policy, not a habit").
+
+No Home model or fixture exists (`docs/data-contract.md` has the shape, but
+nothing produces it yet), so — like `about.blade.php` — this page is
+lang-key-driven placeholder content directly in the template rather than a
+new `App\ViewModels\HomeData` class for a single static page; adding a
+fixture class for one page with no directory to build would be the
+speculative abstraction the brief's own ponytail guidance says to skip.
+When Home records exist, the Detail panel's `facts`/`status` and the two
+portrait entries become real data with no template change, the same
+integration story every other fixture in this project already has.
+
+## Not done / out of scope
+
+- **Story detail pages, five of six school detail pages, Home records as
+  real data** — unchanged from previous passes; still deferred per spec §10
+  or still gapped for the same reasons already on record.
+- **No new route, model, or `app/ViewModels` fixture class was added.**
+  Homes' new content is template-local, per above; nothing under
+  `app/Models/**` or `database/**` was touched.
+- **`about.quote.*` lang keys are now unused** — left in place rather than
+  pruned (see above).
+
+## Commits
+
+6. `e003d40` — feat: add the Form section and its gallery entry
+7. `1f2d683` — feat: rewrite Contact against the corrected spine
+8. `259b700` — feat: rebuild Children's Homes against the corrected spine
+9. `39187c9` — fix: trim About and split Safeguarding to match the corrected spine
