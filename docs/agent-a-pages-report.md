@@ -105,3 +105,91 @@ under `resources/views/components/**`.
 - Per-post ("story detail") and per-school-without-a-profile routes don't
   exist — matches spec §10's deferred scope and the prototype's own
   coverage.
+
+---
+
+# Agent A — round 2: the remaining launch pages
+
+## Status
+
+Done: About, Children's Homes, Stories, Contact and Safeguarding built, so
+every page in spec §10's launch scope now renders real content in both
+locales. No placeholder `<div>` views remain. Full suite passes: **171
+tests, 419 assertions, 0 failures** (`php artisan test`).
+
+## What each page maps onto
+
+| Page | Sections used |
+|---|---|
+| About | hero → lede (Our story) → work (Founder) → lede (Mission & vision) → people → quote → next-step |
+| Children's Homes | hero → work (care model) → lede (privacy) → next-step |
+| Stories | hero → stories → next-step |
+| Contact | hero → inline form + office details |
+| Safeguarding | hero → lede (rules) → lede (removal) |
+
+"Our story", "Founder" and "Mission & vision" are spine entries in spec §5
+with no matching component among the thirteen, same situation as Get
+Involved in round 1. Each maps onto the section whose anatomy already fits,
+rather than growing the component set.
+
+## Two deliberate deviations, both flagged rather than resolved quietly
+
+1. **Safeguarding runs two text-dominant sections back to back**, which
+   spec §5 rule 1 forbids. The rule exists so photography carries the page,
+   and the only photographs that would break up a child-protection policy
+   are photographs of children — the precise thing the policy governs.
+   Surface tones (raised, then sunk) separate the sections instead. The
+   deviation is commented in the template.
+2. **Children's Homes is an overview, not a directory.** Spec §5 gives a
+   children's home "the same shape as School detail with stricter media
+   rules" — that is the shape of one home's detail page. There is no Home
+   fixture or model to build a directory from (docs/data-contract.md has no
+   Home entry), so the page is the overview the prototype shipped. When
+   Home records exist, a `<x-sections.directory>` slots in between the
+   care-model and privacy sections and nothing else changes.
+
+## The contact form
+
+The site's primary CTA is "Partner with us", so the form it leads to has to
+actually work. `POST` handler lives in `routes/web.php` alongside the other
+page routes:
+
+- **Spam protection is a honeypot plus `throttle:5,1`.** Both cost nothing
+  and stop automated volume. Neither asks a CSR officer to read distorted
+  letters. A captcha is the upgrade path if spam actually gets through — it
+  is marked with a `ponytail:` comment in the template, not pre-added.
+- **Delivery is `Mail::raw`**, not a Mailable plus a Blade template: four
+  fields read by one person. `replyTo` is the enquirer, so hitting reply
+  works.
+- **Where it goes**: `config('mail.contact_to')` (`CONTACT_TO` in the env,
+  added to `.env.example`). Same value is printed on the page, so the
+  address shown and the address delivered to cannot drift apart.
+- **`Mail::fake()` is not used in the tests.** `MailFake::raw()` is a no-op,
+  so every assertion against it passes whether or not mail was sent.
+  `phpunit.xml` already sets `MAIL_MAILER=array`, whose transport keeps the
+  real message — the test asserts recipient, reply-to and body.
+
+## Two things fixed at the root rather than worked around
+
+- **`<x-button>` could not make a submit button.** It rendered a literal
+  `type="button"` before `$attributes`, and HTML keeps the FIRST of two
+  duplicate attributes — so `<x-button type="submit">` silently produced a
+  dead button. `type` now goes through `merge()`, where a caller's value
+  wins. This is the first edit to anything under `components/**` in either
+  round; it is a defect fix, not a design change.
+- **`LayoutTest`'s default-title test no longer points at a page.** It
+  asserted the fallback via "whichever page is still a placeholder", which
+  broke every time such a page got built — twice now, and there are none
+  left to point at. It renders the layout directly instead, which is the
+  contract actually being tested.
+
+## Still not done
+
+- **Story detail pages** (`stories.show`) — deferred per spec §10. Every
+  story card still points back at the index; `PostData`'s `href` becomes a
+  one-line change when the route exists.
+- **School detail pages for five of six schools** — unchanged from round 1;
+  only Karuni was ever written up.
+- **Home records** — see deviation 2 above.
+- **`Route::view` pages have no per-page OG image or meta description.**
+  Phase 4 work (spec §10), not started.

@@ -36,10 +36,12 @@ it('offers light, dark and system theme choices', function () {
 });
 
 it('always emits a non-empty title', function () {
-    // /id/sekolah now has a real page-specific title (Agent A's Schools
-    // directory build), so the default-title fallback is checked against
-    // /id/tentang instead, which is still an unbuilt placeholder view.
-    $this->get('/id/tentang')->assertSee('<title>Hope for Sumba</title>', escape: false);
+    // Rendered directly rather than through a page: the fallback belongs to
+    // the layout, and every version of this test that pointed at "whichever
+    // page is still a placeholder" broke the moment that page was built.
+    // There are no placeholder pages left to point at now anyway.
+    $this->blade('<x-layouts.site>content</x-layouts.site>')
+        ->assertSee('<title>Hope for Sumba</title>', escape: false);
 });
 
 it('emits exactly one main landmark wrapping only the page content', function () {

@@ -1,3 +1,60 @@
-<x-layouts.site>
-  <div class="mx-auto max-w-content px-4 py-24">about</div>
+{{-- resources/views/pages/about.blade.php --}}
+{{-- Spine per design spec §5: Hero → Our story → Founder → Mission & vision
+     → People → Next step.
+
+     "Our story", "Founder" and "Mission & vision" are spine entries, not
+     section components — the thirteen have no component by those names.
+     Each maps onto the section whose anatomy already fits: lede for the
+     story, work (image + text, sunk) for the founder, lede again for
+     mission & vision. No components/** file was added or edited.
+
+     The two portrait/quote sections name adults in full with their role,
+     which the safeguarding rules permit; the first-name-only rule binds
+     minors. See docs/agent-a-pages-report.md. --}}
+@php($heroImage = \App\ViewModels\PlaceholderImage::make(1600, 900, __('about.hero.image_alt')))
+@php($founderImage = \App\ViewModels\PlaceholderImage::make(1200, 900, __('about.founder.image_alt')))
+@php($portraits = [
+    ['name' => __('about.people.reynold')] + \App\ViewModels\PlaceholderImage::make(800, 1000, __('about.people.reynold_alt')),
+    ['name' => __('about.people.maria')] + \App\ViewModels\PlaceholderImage::make(800, 1000, __('about.people.maria_alt')),
+    ['name' => __('about.people.yohanis')] + \App\ViewModels\PlaceholderImage::make(800, 1000, __('about.people.yohanis_alt')),
+])
+
+<x-layouts.site :title="__('about.hero.heading').' — Hope for Sumba'">
+  <x-sections.hero
+    :heading="__('about.hero.heading')"
+    :subhead="__('about.hero.body')"
+    :image="$heroImage" />
+
+  <x-sections.lede :label="__('about.story.label')" :heading="__('about.story.heading')" surface="raised">
+    <p>{{ __('about.story.body1') }}</p>
+    <p class="mt-4">{{ __('about.story.body2') }}</p>
+  </x-sections.lede>
+
+  <x-sections.work :label="__('about.founder.label')" :heading="__('about.founder.heading')" :image="$founderImage">
+    <p>{{ __('about.founder.body') }}</p>
+  </x-sections.work>
+
+  {{-- Mission and vision share one section rather than sitting in two
+       adjacent lede sections: spec §5 rule 1 forbids two text-dominant
+       sections in a row, and vision is a subhead of the same idea. --}}
+  <x-sections.lede :label="__('about.mission.label')" :heading="__('about.mission.heading')" surface="raised">
+    <p>{{ __('about.mission.body') }}</p>
+    <h3 class="mt-8 font-display text-h3 text-ink [text-wrap:balance]">{{ __('about.vision.heading') }}</h3>
+    <p class="mt-4">{{ __('about.vision.body') }}</p>
+  </x-sections.lede>
+
+  <x-sections.people
+    :label="__('about.people.label')"
+    :heading="__('about.people.heading')"
+    :portraits="$portraits" />
+
+  <x-sections.quote :attribution="__('about.quote.attribution')" :role="__('about.quote.role')">
+    “{{ __('about.quote.body') }}”
+  </x-sections.quote>
+
+  <x-sections.next-step
+    :heading="__('nextstep.heading')"
+    :body="__('nextstep.body')"
+    :partnerHref="route(app()->getLocale().'.contact')"
+    :giveHref="route(app()->getLocale().'.give')" />
 </x-layouts.site>

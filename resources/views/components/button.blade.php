@@ -13,5 +13,9 @@
 @if ($href)
   <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</a>
 @else
-  <button type="button" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</button>
+  {{-- type comes through merge, not as a literal attribute: a literal
+       type="button" would win over a caller's type="submit" (HTML keeps the
+       first of a duplicated attribute), which silently breaks every form
+       this component sits in. --}}
+  <button {{ $attributes->merge(['type' => 'button', 'class' => $classes]) }}>{{ $slot }}</button>
 @endif
