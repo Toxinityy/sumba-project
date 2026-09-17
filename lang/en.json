@@ -17,5 +17,45 @@
   "theme.dark": "Dark",
   "theme.system": "System",
   "cta.partner": "Partner with us",
-  "cta.give": "Support a school"
+  "cta.give": "Support a school",
+
+  "nextstep.heading": "Let's start a partnership.",
+  "nextstep.body": "For foundations, churches and companies looking to build a long-term programme in Sumba. We provide a proposal, an itemised budget and regular reporting.",
+
+  "school.profile_label": "Who they are",
+
+  "home.hero.heading": "Every child deserves a bright future.",
+  "home.hero.subhead": "Free schools and children's homes in Sumba, built together with local families and long-term partners.",
+  "home.hero.image_alt": "Photograph: children walking a grass path to school at golden hour, Sumba highlands",
+  "home.lede.label": "Who we are",
+  "home.lede.heading": "We build schools where there were none.",
+  "home.lede.body": "Sumba is a savanna island of widely scattered villages. For many families the nearest school is hours away on foot, and teachers are hard to bring in. Since 2007 we have worked with village elders, local churches and the district government to open free schools — and to keep them running.",
+  "home.featured.label": "Featured school",
+  "home.stories.label": "Stories",
+  "home.stories.heading": "The people behind the numbers.",
+
+  "schools.hero.label": "Schools",
+  "schools.hero.heading": "Fourteen schools, one island.",
+  "schools.hero.body": "Each school was opened at the request of its own village, and each has different needs. Six of them are shown here.",
+
+  "give.hero.label": "Get involved",
+  "give.hero.heading": "Fund something specific.",
+  "give.hero.body": "Every option below is tied to one school and one need whose progress you can follow. We send photographic and financial reporting on each.",
+  "give.corporate.heading": "Companies",
+  "give.corporate.body": "Long-term CSR programmes with itemised budgets, site visits and auditable annual reporting.",
+  "give.church.heading": "Churches",
+  "give.church.body": "Congregational partnership with one named school, including regular updates and joint visits.",
+  "give.volunteer.heading": "Volunteers",
+  "give.volunteer.body": "We host volunteers for teacher training and construction. All volunteers complete a child safeguarding screening process.",
+  "give.how.label": "How giving works",
+  "give.how.heading": "A direct transfer to the foundation.",
+  "give.how.body1": "We do not yet use an online payment gateway. Giving is by bank transfer, QRIS, Wise or PayPal, straight into an account held in the name of Yayasan Harapan Sumba.",
+  "give.how.body2": "After transferring, send us the receipt and you will have a formal acknowledgement within three working days, along with the name of the school your gift went to.",
+  "give.how.account_name_key": "Account name",
+  "give.how.bank_key": "Bank",
+  "give.how.account_number_key": "Account number",
+  "give.how.international_key": "International",
+  "give.how.acknowledgement_key": "Acknowledgement",
+  "give.how.placeholder": "PLACEHOLDER — not yet supplied",
+  "give.how.acknowledgement_value": "3 working days"
 }

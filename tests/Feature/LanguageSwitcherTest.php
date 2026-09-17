@@ -89,20 +89,23 @@ it('resolves every named route to its counterpart in every other locale', functi
  | The exact-counterpart lookup 404s in the target locale for a route that
  | only exists in the current one (e.g. a detail page not yet translated).
  | It must fall back to the nearest ANCESTOR route in the target locale
- | ("schools.index"), not the homepage — a reader on an Indonesian school
- | detail page clicking EN should land in the English schools section, not
- | on the English homepage. Register a route that exists only under "id" to
- | force that fallback path, since all eight real pages exist in both
- | locales and would never otherwise exercise it.
+ | ("homes.index"), not the homepage — a reader on an Indonesian detail page
+ | clicking EN should land in the English section's index, not on the
+ | English homepage. Register a route that exists only under "id" to force
+ | that fallback path: "schools" won't do any more, because
+ | App\ViewModels\SchoolData::find() (Agent A's fixture layer) now backs a
+ | genuine "schools.show" in both locales, so picking "homes" instead (which
+ | has no "show" route yet) keeps this test exercising the "not yet
+ | translated" case rather than a route that now genuinely resolves.
  */
 it('falls back to the nearest ancestor route when the exact counterpart is missing', function () {
-    Route::get('/id/sekolah/{school}', fn () => 'school detail')
-        ->name('id.schools.show');
+    Route::get('/id/rumah-anak/{home}', fn () => 'home detail')
+        ->name('id.homes.show');
 
-    $this->get('/id/sekolah/some-school');
+    $this->get('/id/rumah-anak/some-home');
 
     expect(LocalizedUrl::forLocale('en'))
-        ->toBe(route('en.schools.index'))
+        ->toBe(route('en.homes.index'))
         ->not->toContain('?');
 });
 

@@ -17,5 +17,45 @@
   "theme.dark": "Gelap",
   "theme.system": "Sistem",
   "cta.partner": "Bermitra dengan Kami",
-  "cta.give": "Dukung Sebuah Sekolah"
+  "cta.give": "Dukung Sebuah Sekolah",
+
+  "nextstep.heading": "Mari mulai kemitraan.",
+  "nextstep.body": "Untuk yayasan, gereja dan perusahaan yang ingin membangun program jangka panjang di Sumba. Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.",
+
+  "school.profile_label": "Siapa mereka",
+
+  "home.hero.heading": "Setiap anak berhak atas masa depan yang cerah.",
+  "home.hero.subhead": "Sekolah gratis dan rumah anak di Sumba, dibangun bersama warga dan mitra jangka panjang.",
+  "home.hero.image_alt": "Foto: anak-anak berjalan di jalan setapak menuju sekolah, cahaya pagi, dataran tinggi Sumba",
+  "home.lede.label": "Siapa kami",
+  "home.lede.heading": "Kami membangun sekolah di tempat yang belum punya sekolah.",
+  "home.lede.body": "Sumba adalah pulau savana dengan desa-desa yang tersebar jauh. Bagi banyak keluarga, sekolah terdekat berjarak beberapa jam berjalan kaki, dan guru sulit didatangkan. Sejak 2007 kami bekerja bersama tetua desa, gereja setempat dan pemerintah daerah untuk membuka sekolah gratis — dan menjaganya tetap berjalan.",
+  "home.featured.label": "Sekolah pilihan",
+  "home.stories.label": "Cerita",
+  "home.stories.heading": "Orang-orang di balik angka.",
+
+  "schools.hero.label": "Sekolah",
+  "schools.hero.heading": "Empat belas sekolah, satu pulau.",
+  "schools.hero.body": "Setiap sekolah dibuka atas permintaan desanya sendiri, dan setiap sekolah punya kebutuhan yang berbeda. Berikut enam di antaranya.",
+
+  "give.hero.label": "Dukung kami",
+  "give.hero.heading": "Pilih sesuatu yang nyata.",
+  "give.hero.body": "Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.",
+  "give.corporate.heading": "Perusahaan",
+  "give.corporate.body": "Program CSR jangka panjang dengan anggaran terperinci, kunjungan lapangan dan laporan tahunan yang dapat diaudit.",
+  "give.church.heading": "Gereja",
+  "give.church.body": "Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar berkala dan kunjungan bersama.",
+  "give.volunteer.heading": "Relawan",
+  "give.volunteer.body": "Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua relawan menjalani proses penyaringan perlindungan anak.",
+  "give.how.label": "Cara memberi",
+  "give.how.heading": "Transfer langsung ke rekening yayasan.",
+  "give.how.body1": "Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
+  "give.how.body2": "Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda.",
+  "give.how.account_name_key": "Nama rekening",
+  "give.how.bank_key": "Bank",
+  "give.how.account_number_key": "Nomor rekening",
+  "give.how.international_key": "Internasional",
+  "give.how.acknowledgement_key": "Tanda terima",
+  "give.how.placeholder": "CONTOH — belum diisi",
+  "give.how.acknowledgement_value": "3 hari kerja"
 }

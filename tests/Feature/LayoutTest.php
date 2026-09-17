@@ -36,7 +36,10 @@ it('offers light, dark and system theme choices', function () {
 });
 
 it('always emits a non-empty title', function () {
-    $this->get('/id/sekolah')->assertSee('<title>Hope for Sumba</title>', escape: false);
+    // /id/sekolah now has a real page-specific title (Agent A's Schools
+    // directory build), so the default-title fallback is checked against
+    // /id/tentang instead, which is still an unbuilt placeholder view.
+    $this->get('/id/tentang')->assertSee('<title>Hope for Sumba</title>', escape: false);
 });
 
 it('emits exactly one main landmark wrapping only the page content', function () {
