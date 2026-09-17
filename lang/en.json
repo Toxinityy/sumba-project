@@ -57,7 +57,10 @@
   "give.how.international_key": "International",
   "give.how.acknowledgement_key": "Acknowledgement",
   "give.how.placeholder": "PLACEHOLDER — not yet supplied",
-  "give.how.acknowledgement_value": "3 working days"
+  "give.how.acknowledgement_value": "3 working days",
+  "give.tiers.heading": "Six ways to give, each tied to one need.",
+  "give.ways.heading": "Whichever fits how you work.",
+  "give.how.status": "Information and redirect — not a payment gateway."
 ,
 
   "about.hero.label": "About us",
