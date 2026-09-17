@@ -48,9 +48,11 @@
     :heading="__('about.people.heading')"
     :portraits="$portraits" />
 
-  <x-sections.quote :attribution="__('about.quote.attribution')" :role="__('about.quote.role')">
-    “{{ __('about.quote.body') }}”
-  </x-sections.quote>
+  {{-- A Quote section (Maria Bulu) sat here through Pass 2. The corrected
+       spine (spec §5, 2026-09-17) ends the page at People — six sections,
+       not seven — so it's removed: not because the quote was wrong, but
+       because the spine names an exact sequence and a seventh section is
+       exactly the drift the fixed section table exists to prevent. --}}
 
   <x-sections.next-step
     :heading="__('nextstep.heading')"
