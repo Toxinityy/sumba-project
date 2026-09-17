@@ -3,7 +3,6 @@
 namespace App\Services\Images;
 
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Encoders\AvifEncoder;
 use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Encoders\WebpEncoder;
@@ -32,25 +31,27 @@ class VariantGenerator
             $format = 'jpeg';
         }
 
-        // ponytail: driver is hardcoded to GD because that's what this
-        // machine has. Production may have Imagick instead of GD — see the
-        // task report for why this isn't fixed here.
-        $manager = new ImageManager(new GdDriver());
+        // Use whichever library ImageCapabilities actually detected formats
+        // against — hardcoding GD here would silently mishandle a host where
+        // Imagick is the one that's loaded (or the one with AVIF support).
+        $manager = new ImageManager($this->capabilities->driver());
 
         $steps = self::QUALITY_STEPS;
+
+        // decode()/scaleDown() once: encode() does not mutate the image, so
+        // re-decoding and re-scaling inside the quality loop below was pure
+        // waste — up to six decodes of the same source for one variant.
+        $image = $manager->decode($sourcePath)->scaleDown(width: $width);
+        $finalWidth = $image->width();
+        $finalHeight = $image->height();
 
         $encoded = null;
         $usedQuality = end($steps);
         $hitFloor = true;
-        $finalWidth = 0;
-        $finalHeight = 0;
 
         foreach (self::QUALITY_STEPS as $quality) {
-            $image = $manager->decode($sourcePath)->scaleDown(width: $width);
             $encoded = $this->encode($image, $format, $quality);
             $usedQuality = $quality;
-            $finalWidth = $image->width();
-            $finalHeight = $image->height();
 
             if ($encoded->size() <= $budgetBytes) {
                 $hitFloor = false;

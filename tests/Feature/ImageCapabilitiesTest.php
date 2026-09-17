@@ -57,16 +57,29 @@ it('never claims a format the runtime cannot encode', function () {
     }
 })->skip(fn () => ! extension_loaded('gd') && ! extension_loaded('imagick'), 'no image extension');
 
-it('reflects this machine: GD is loaded, so avif and webp both detect as supported', function () {
-    // Pinning this down turns the abstract "detection works" tests above into
-    // a concrete claim about this environment (GD loaded, imageavif and
-    // imagewebp both present, Imagick absent) — so a regression that flips
-    // detectAvif()/detectWebp() to always return false would be caught here
-    // even though it wouldn't necessarily break the tests above.
+it('reflects this machine\'s actual encoding support, not a pinned assumption', function () {
+    // The report must match live function_exists()/extension_loaded()
+    // detection on whichever runtime happens to be running the suite. A
+    // hardcoded ['avif' => true, 'webp' => true, 'jpeg' => true] here pins
+    // this developer's machine into the suite: a CI runner whose GD lacks
+    // AVIF (common with shivammathur/setup-php and older libgd) would go
+    // red with nothing actually wrong.
     $report = app(ImageCapabilities::class)->report();
 
-    expect($report)->toBe(['avif' => true, 'webp' => true, 'jpeg' => true]);
-});
+    $expectedAvif = extension_loaded('imagick')
+        ? in_array('AVIF', array_map('strtoupper', \Imagick::queryFormats()), true)
+        : function_exists('imageavif');
+
+    $expectedWebp = extension_loaded('imagick')
+        ? in_array('WEBP', array_map('strtoupper', \Imagick::queryFormats()), true)
+        : function_exists('imagewebp');
+
+    expect($report)->toBe([
+        'avif' => $expectedAvif,
+        'webp' => $expectedWebp,
+        'jpeg' => true,
+    ]);
+})->skip(fn () => ! extension_loaded('gd') && ! extension_loaded('imagick'), 'no image extension');
 
 it('actually reads through the cache rather than recomputing every call', function () {
     // Prove report() is genuinely cache-backed: seed the cache with a
@@ -89,8 +102,36 @@ it('does not read a stale cached report left by a previous test', function () {
     // store) per test, and beforeEach() above also forgets the key.
     $report = app(ImageCapabilities::class)->report();
 
-    expect($report)->toBe(['avif' => true, 'webp' => true, 'jpeg' => true]);
+    expect($report)->not->toBe(['avif' => false, 'webp' => false, 'jpeg' => true]);
 });
+
+it('selects Imagick when it is loaded, GD otherwise', function () {
+    $driver = app(ImageCapabilities::class)->driver();
+
+    if (extension_loaded('imagick')) {
+        expect($driver)->toBeInstanceOf(\Intervention\Image\Drivers\Imagick\Driver::class);
+    } else {
+        expect($driver)->toBeInstanceOf(\Intervention\Image\Drivers\Gd\Driver::class);
+    }
+});
+
+it('bases format detection on the selected driver, not the union of both libraries', function () {
+    // If Imagick is loaded it is the selected driver, so a format it can't
+    // encode must not be reported as supported just because GD could.
+    // (This machine's actual combination is asserted above; this proves the
+    // *rule*, independent of which library happens to be present here.)
+    $caps = app(ImageCapabilities::class);
+    $report = $caps->report();
+
+    if (extension_loaded('imagick')) {
+        $imagickFormats = array_map('strtoupper', \Imagick::queryFormats());
+        expect($report['avif'])->toBe(in_array('AVIF', $imagickFormats, true));
+        expect($report['webp'])->toBe(in_array('WEBP', $imagickFormats, true));
+    } else {
+        expect($report['avif'])->toBe(function_exists('imageavif'));
+        expect($report['webp'])->toBe(function_exists('imagewebp'));
+    }
+})->skip(fn () => ! extension_loaded('gd') && ! extension_loaded('imagick'), 'no image extension');
 
 it('always ends bestChain with jpeg even if supports(jpeg) were somehow false', function () {
     // Exercise the belt-and-braces append for real, not just assume it: force

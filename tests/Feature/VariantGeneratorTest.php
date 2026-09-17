@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Images\ImageCapabilities;
 use App\Services\Images\VariantGenerator;
 
 beforeEach(function () {
@@ -44,3 +45,24 @@ it('reports the height it actually produced', function () {
 
     expect($variant->height)->toBeGreaterThan(0);
 });
+
+// The bug this guards (ImageCapabilities/VariantGenerator disagreeing about
+// which imaging library is in use) can only ever surface on the webp/avif
+// paths — every test above only ever exercises jpeg, which every driver can
+// always encode. Skipped cleanly (not xfail'd) when this runtime's selected
+// driver can't actually produce the format, per Finding 5.
+it('produces a webp variant using the same driver ImageCapabilities selected', function () {
+    $variant = $this->generator->generate($this->source, 1200, 'webp', 200_000);
+
+    expect($variant->format)->toBe('webp')
+        ->and(file_exists($variant->path))->toBeTrue()
+        ->and($variant->width)->toBe(1200);
+})->skip(fn () => ! app(ImageCapabilities::class)->supports('webp'), 'runtime cannot encode webp');
+
+it('produces an avif variant using the same driver ImageCapabilities selected', function () {
+    $variant = $this->generator->generate($this->source, 1200, 'avif', 200_000);
+
+    expect($variant->format)->toBe('avif')
+        ->and(file_exists($variant->path))->toBeTrue()
+        ->and($variant->width)->toBe(1200);
+})->skip(fn () => ! app(ImageCapabilities::class)->supports('avif'), 'runtime cannot encode avif');

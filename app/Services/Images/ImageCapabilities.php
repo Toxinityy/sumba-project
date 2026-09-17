@@ -4,6 +4,9 @@ namespace App\Services\Images;
 
 use Illuminate\Support\Facades\Cache;
 use Imagick;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Interfaces\DriverInterface;
 
 /**
  * What can this host actually encode?
@@ -12,6 +15,13 @@ use Imagick;
  * not guaranteed, and AVIF support depends on a libavif build that many
  * shared hosts do not have. Detecting rather than assuming means the pipeline
  * degrades to something that works instead of silently producing nothing.
+ *
+ * Exactly one library is ever selected — Imagick when it's loaded, GD
+ * otherwise — and the capability report reflects *that* library's formats,
+ * not the union of both. VariantGenerator must build its ImageManager with
+ * driver() rather than hardcoding a driver, or the two can disagree: GD
+ * without AVIF plus Imagick with AVIF would otherwise report "avif: yes"
+ * and then hand the encode to a GD driver that cannot produce one.
  *
  * Detection is cached: probing Imagick's format list on every request is
  * wasted work on a host we do not control and cannot speed up.
@@ -23,6 +33,15 @@ class ImageCapabilities
 
     /** Best first. JPEG is last and unconditional. */
     private const PREFERENCE = ['avif', 'webp', 'jpeg'];
+
+    /**
+     * The one driver this host's report is computed against. Imagick is
+     * preferred when available; GD is the near-universal fallback.
+     */
+    public function driver(): DriverInterface
+    {
+        return extension_loaded('imagick') ? new ImagickDriver() : new GdDriver();
+    }
 
     /** @return array<string, bool> */
     public function report(): array
@@ -57,21 +76,19 @@ class ImageCapabilities
 
     private function detectAvif(): bool
     {
-        if (function_exists('imageavif')) {
-            return true;
+        if (extension_loaded('imagick')) {
+            return in_array('AVIF', array_map('strtoupper', Imagick::queryFormats()), true);
         }
 
-        return extension_loaded('imagick')
-            && in_array('AVIF', array_map('strtoupper', Imagick::queryFormats()), true);
+        return function_exists('imageavif');
     }
 
     private function detectWebp(): bool
     {
-        if (function_exists('imagewebp')) {
-            return true;
+        if (extension_loaded('imagick')) {
+            return in_array('WEBP', array_map('strtoupper', Imagick::queryFormats()), true);
         }
 
-        return extension_loaded('imagick')
-            && in_array('WEBP', array_map('strtoupper', Imagick::queryFormats()), true);
+        return function_exists('imagewebp');
     }
 }

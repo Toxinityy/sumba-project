@@ -147,51 +147,56 @@ history on the host itself (the git history already has it).
 
 ## Performance baseline
 
-### LOCAL FLOOR — not a staging baseline (2026-09-17)
+### LOCAL FLOOR — not a staging baseline (re-run 2026-09-17)
 
 No hosting has been chosen yet, so there is no staging URL to measure.
 The numbers below come from `php artisan serve` on the development machine
-and Lighthouse run against `http://127.0.0.1:8000/id`:
+and Lighthouse run against `http://127.0.0.1:8123/id/sekolah`:
 
 ```
-npx lighthouse http://127.0.0.1:8000/id --form-factor=mobile \
+npx lighthouse http://127.0.0.1:8123/id/sekolah --form-factor=mobile \
   --throttling-method=simulate --output=json \
   --output-path=./lighthouse-local.json --chrome-flags="--headless"
 ```
 
-**LCP, TTFB, and the overall Performance score are deliberately omitted.**
-Localhost has no network latency and no shared-hosting CPU contention, so
-those numbers would be meaninglessly good and would mislead anyone who
-later compared a real staging measurement against them. They are **pending
-staging** (Task 10's deferred checklist below).
+**LCP, TTFB, and the overall Performance score are still deliberately
+omitted**, for the same reason as before: localhost has no network latency
+and no shared-hosting CPU contention, so those numbers would be
+meaninglessly good and would mislead anyone who later compared a real
+staging measurement against them. They remain **pending staging** (the
+deferred checklist below).
 
-Host-independent signals only:
+This re-run replaces the figures captured against the pre-layout
+placeholder views (commit `95df185` and earlier — before `x-layouts.site`
+existed). Both accessibility defects that entry listed are fixed and
+verified by `LayoutTest`, so the score they were dragging down is gone:
 
-- **Accessibility score:** 0.86 (86/100)
-- **Cumulative Layout Shift:** 0 — no layout shift observed, but the page
-  is a placeholder view with almost no content, so this is not a
-  meaningful signal yet either.
-- **Total transferred bytes:** 1,842 bytes (document 1,686 B + favicon
-  156 B). **Zero image bytes** — the placeholder views served at this
-  stage don't render any images, so there is no next-gen-format signal to
-  report (no `modern-image-formats` / `uses-optimized-images` audits ran
-  at all, because there were no images for them to inspect).
-- **Best Practices audit failures:** none.
-- **Accessibility audit failures:**
-  - `document-title` — the document has no `<title>` element.
-  - `landmark-one-main` — the document has no `<main>` landmark.
-  - `target-size` — touch targets lack sufficient size/spacing.
+- **Accessibility score:** 1.0 (100/100) — up from 0.86. `document-title`
+  and `landmark-one-main` are both closed: the layout emits a real
+  `<title>` and exactly one `<main>` landmark (`LayoutTest::'emits exactly
+  one main landmark...'`), and now also a skip link (`LayoutTest::'offers
+  a skip link...'`, Finding 3). No accessibility audit failures at all on
+  this page.
+- **Best Practices score:** 0.77. `is-on-https` fails only because this is
+  plain-HTTP localhost, not a real defect. `errors-in-console` fails on
+  404s for `[::1]:5173` font requests — `php artisan serve` without a
+  running Vite dev server, an artifact of this local setup, not something
+  that exists in the built/production asset pipeline. Worth a second look
+  once there's a real staging URL, not urgent before then.
+- **SEO score:** 0.92. `meta-description` fails — the page has no meta
+  description. Real, host-independent, not caused by hosting.
+- **Cumulative Layout Shift:** 0.
+- **Total transferred bytes:** 568,954 — this page (Schools index) now
+  renders real content and images, unlike the near-empty placeholder the
+  previous entry measured, so this number is not comparable to the old
+  1,842-byte figure.
 
-These are real defects in the current placeholder markup, worth fixing
-independent of hosting. They are not caused by, and will not be fixed by,
-choosing a host.
-
-**Why this is a floor, not a baseline:** these placeholder views (real
-pages arrive in a later plan) are near-empty, so the byte totals and CLS
-here are best-case numbers with almost nothing on the page. Do not treat
-this measurement as representative of the finished site — it establishes
-only that nothing is broken today, not what "good" looks like once real
-content and images are in place.
+**Why this is still a floor, not a baseline:** localhost has no network
+latency and no CPU contention, so LCP/TTFB/Performance stay excluded for
+the reason given above. Byte totals and CLS are now measured against a
+real page rather than a placeholder, but are still local-machine numbers —
+treat them as "nothing is broken today," not as what "good" looks like on
+the real host.
 
 ## Deferred staging checklist
 
@@ -221,7 +226,15 @@ site is considered launch-ready.
     --form-factor=mobile --throttling-method=simulate \
     --output=json --output-path=./lighthouse-staging.json
   ```
-- [ ] Confirm whether the host has Imagick, GD, or both. `VariantGenerator`
-      currently hardcodes the GD driver — a host with Imagick and no GD
-      would need driver selection added before image generation works
-      there at all.
+- [ ] Confirm whether the host has Imagick, GD, or both, and run
+      `php artisan images:capabilities` there to confirm the report matches.
+      `ImageCapabilities::driver()` selects Imagick when it's loaded and GD
+      otherwise, and `VariantGenerator` now builds its `ImageManager` from
+      that selection rather than a hardcoded driver — so a host with only
+      Imagick, only GD, or both installed all work, and the capability
+      report is always computed against the library that will actually do
+      the encoding. The case that matters most on shared hosting is the
+      **mixed** one this spec names (§3: "GD available, Imagick uncertain")
+      — GD without AVIF but Imagick with AVIF, or vice versa — where a
+      report keyed to the wrong library would say "avif: yes" and then hand
+      the encode to a driver that can't produce one.
