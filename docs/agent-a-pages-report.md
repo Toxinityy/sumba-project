@@ -418,9 +418,21 @@ lang-key-driven placeholder content directly in the template rather than a
 new `App\ViewModels\HomeData` class for a single static page; adding a
 fixture class for one page with no directory to build would be the
 speculative abstraction the brief's own ponytail guidance says to skip.
-When Home records exist, the Detail panel's `facts`/`status` and the two
-portrait entries become real data with no template change, the same
-integration story every other fixture in this project already has.
+
+**Correction (fix wave, 2026-09-17): the claim above was false and has been
+acted on, not just flagged.** "No template change at integration" only
+holds if the template already consumes an array — this page and
+`about.blade.php` built their facts list, images, portraits and status from
+~40 lines of `__()` calls directly in the Blade template, which means a real
+`Home`/`About` record would have been a template rewrite, exactly the
+failure `docs/data-contract.md` exists to prevent. Both now have real
+`App\ViewModels\HomeData`/`AboutData` classes (I5, `docs/pages-fix-wave-report.md`)
+and both templates were reduced to consuming `$home`/`$about` arrays, the
+same pattern `SchoolData` already used. The "adding a fixture class for one
+page … would be the speculative abstraction ponytail guidance says to skip"
+reasoning above does not hold once "no template rewrite at integration" is
+a documented promise this contract makes — the abstraction was load-bearing,
+not speculative.
 
 ## Not done / out of scope
 

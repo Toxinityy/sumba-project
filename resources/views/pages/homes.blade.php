@@ -19,27 +19,16 @@
      same way about.blade.php is — lang-key-driven placeholder content, no
      ViewModel class for a single static page. When Home records exist, the
      Detail panel's facts and status become real data with no template
-     change, same as School's current-need. --}}
-@php($heroImage = \App\ViewModels\PlaceholderImage::make(1600, 900, __('homes.hero.image_alt')))
-@php($contextImage = \App\ViewModels\PlaceholderImage::make(1200, 800, __('homes.context.image_alt')))
-@php($careImage = \App\ViewModels\PlaceholderImage::make(1200, 800, __('homes.care.image_alt')))
-@php($parents = [
-    ['name' => __('homes.people.parent1')] + \App\ViewModels\PlaceholderImage::make(800, 1000, __('homes.people.parent1_alt')),
-    ['name' => __('homes.people.parent2')] + \App\ViewModels\PlaceholderImage::make(800, 1000, __('homes.people.parent2_alt')),
-])
-@php($before = \App\ViewModels\PlaceholderImage::make(1200, 800, __('homes.evidence.before_alt')) + ['caption' => __('homes.evidence.before_caption')])
-@php($after = \App\ViewModels\PlaceholderImage::make(1200, 800, __('homes.evidence.after_alt')) + ['caption' => __('homes.evidence.after_caption')])
-@php($facts = [
-    ['key' => __('homes.facts.homes_key'), 'value' => __('homes.facts.homes_value')],
-    ['key' => __('homes.facts.children_key'), 'value' => __('homes.facts.children_value')],
-    ['key' => __('homes.facts.parents_key'), 'value' => __('homes.facts.parents_value')],
-    ['key' => __('homes.facts.cost_key'), 'value' => __('homes.facts.cost_value')],
-])
+     change, same as School's current-need.
 
+     I5: image/portrait/evidence/facts assembly moved to
+     App\ViewModels\HomeData — this template now only consumes $home,
+     matching docs/data-contract.md's "No Blade template should change at
+     integration time" for every other launch page. --}}
 <x-layouts.site :title="__('homes.hero.heading').' — Hope for Sumba'">
   <x-sections.hero
     :heading="__('homes.hero.heading')"
-    :image="$heroImage" />
+    :image="$home['heroImage']" />
 
   <x-sections.lede :label="__('homes.hero.label')" surface="raised">
     <p>{{ __('homes.hero.body') }}</p>
@@ -48,19 +37,19 @@
   <x-sections.people
     :label="__('homes.people.label')"
     :heading="__('homes.people.heading')"
-    :portraits="$parents" />
+    :portraits="$home['people']" />
 
-  <x-sections.context :label="__('homes.hero.label')" :heading="__('homes.context.heading')" :image="$contextImage">
+  <x-sections.context :label="__('homes.hero.label')" :heading="__('homes.context.heading')" :image="$home['contextImage']">
     <p>{{ __('homes.context.body') }}</p>
   </x-sections.context>
 
-  <x-sections.work :label="__('homes.care.label')" :heading="__('homes.care.heading')" :image="$careImage">
+  <x-sections.work :label="__('homes.care.label')" :heading="__('homes.care.heading')" :image="$home['careImage']">
     <p>{{ __('homes.care.body') }}</p>
   </x-sections.work>
 
-  <x-sections.evidence :label="__('homes.evidence.label')" :heading="__('homes.evidence.heading')" :before="$before" :after="$after" />
+  <x-sections.evidence :label="__('homes.evidence.label')" :heading="__('homes.evidence.heading')" :before="$home['evidence']['before']" :after="$home['evidence']['after']" />
 
-  <x-sections.current-need :label="__('homes.privacy.label')" :heading="__('homes.privacy.heading')" :status="__('homes.status')" :facts="$facts">
+  <x-sections.current-need :label="__('homes.privacy.label')" :heading="__('homes.privacy.heading')" :status="$home['status']" :facts="$home['facts']">
     <p>{{ __('homes.privacy.body') }}</p>
     <p class="mt-4">
       <a href="{{ route(app()->getLocale().'.safeguarding') }}"

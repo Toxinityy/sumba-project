@@ -45,7 +45,13 @@ foreach (config('locales.supported') as $locale) {
                 'stories' => PostData::recent(3),
             ]))->name('home')->defaults('locale', $locale);
 
-            Route::view($segments['about'], 'pages.about')->name('about')->defaults('locale', $locale);
+            // About and Children's Homes moved off Route::view() (I5): both
+            // now resolve a fixture (App\ViewModels\AboutData / HomeData)
+            // that reads app()->getLocale(), which Route::view()'s $data
+            // argument can't see (it's evaluated once at registration).
+            Route::get($segments['about'], fn () => view('pages.about', [
+                'about' => \App\ViewModels\AboutData::get(),
+            ]))->name('about')->defaults('locale', $locale);
 
             Route::get($segments['schools'], fn () => view('pages.schools', [
                 'schools' => SchoolData::all(),
@@ -64,7 +70,9 @@ foreach (config('locales.supported') as $locale) {
                 return view('pages.school', ['school' => $school]);
             })->name('schools.show')->defaults('locale', $locale);
 
-            Route::view($segments['homes'], 'pages.homes')->name('homes.index')->defaults('locale', $locale);
+            Route::get($segments['homes'], fn () => view('pages.homes', [
+                'home' => \App\ViewModels\HomeData::get(),
+            ]))->name('homes.index')->defaults('locale', $locale);
 
             Route::get($segments['stories'], fn () => view('pages.stories', [
                 // Ask for more than exist: the index shows every story there

@@ -113,6 +113,30 @@ Same shape as School minus `level`, plus `care_model` (a paragraph).
 named, and the site never states why a child is in care. The data layer must
 not expose a name field for home residents at all — see Post below.
 
+**I5 update (2026-09-17): this section previously had no `facts` shape at
+all, while the page renders a four-row facts list — a real gap, found while
+moving Children's Homes off template-local content into
+`App\ViewModels\HomeData` (see docs/pages-fix-wave-report.md). `facts`
+follows the exact shape School detail already uses:**
+
+```php
+[
+    // ... School detail's shape minus 'level', plus:
+    'care_model' => 'Anak-anak tinggal dalam kelompok kecil...',  // paragraph
+    'facts' => [                       // for <x-sections.current-need>
+        ['key' => 'Rumah anak',              'value' => '2'],
+        ['key' => 'Anak yang diasuh',        'value' => '18'],
+        ['key' => 'Keluarga pengasuh tetap', 'value' => '2'],
+        ['key' => 'Biaya bagi keluarga',     'value' => 'Gratis'],
+    ],
+    'people' => [ /* house-parent portraits, full names permitted — adults, not residents */ ],
+]
+```
+
+Same rule as School: `facts` values are strings, and `status` (fed to the
+same `<x-sections.current-need>`) is a qualitative string, never a number —
+rule 1 below applies here exactly as it does to School.
+
 ---
 
 ## Post (stories and news)
@@ -222,6 +246,22 @@ flag the page can use to render the inline fallback note:
 ```
 
 Missing translations **fall back, they do not 404**.
+
+**I6 carve-out (2026-09-17): `_fallback_locale` is contract-only until real
+translations exist.** Nothing in the codebase emits it and nothing reads
+it — no fixture produces it (every fixture's content exists in both
+locales), no component renders spec §7's quiet inline fallback note, and no
+test covers either direction. This is a known, deliberate gap, not an
+oversight: implementing it means editing stabilised section components to
+render the note (itself translated, per spec §7), which is out of scope for
+a docs/fixture pass and belongs with the data-layer workstream once a real
+model actually has an untranslated field to fall back from. Until then,
+**the "no Blade template should change at integration time" promise above
+does not cover `_fallback_locale`** — the component that renders spec §7's
+note will need to change (or be added to) when the data layer first
+produces this key for real, and that change is expected, not a broken
+promise. Flag it in that workstream's report rather than assuming the
+promise silently extends to cover it.
 
 ---
 
