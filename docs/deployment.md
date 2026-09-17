@@ -64,6 +64,11 @@ so restore before running `php artisan test` again.
    - `APP_ENV=production`
    - `APP_DEBUG=false`
    - `APP_KEY=` the value copied in step 4
+   - `APP_LOCALE=id` — without it, `config:cache` in step 9 freezes the
+     locale config into the cache file at request time, and a page served
+     before any locale-prefixed route middleware runs would fall back to
+     `config/app.php`'s own default rather than `config/locales.php`'s.
+     Matching `.env.example` keeps the two in agreement.
    - the database credentials for this host
    - leave `QUEUE_CONNECTION`, `SESSION_DRIVER`, `CACHE_STORE` as `database`
      (matching `.env.example`)

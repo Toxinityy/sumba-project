@@ -76,9 +76,15 @@ return [
     | by Laravel's translation / localization methods. This option can be
     | set to any locale for which you plan to have translation strings.
     |
+    | config/locales.php ('default') is the single source of truth for which
+    | locale is authoritative on this site — it is required directly here
+    | (not via config('locales.default'), which would race config/app.php's
+    | own load order) so this value can never drift out of agreement with
+    | it. Override with APP_LOCALE only for local debugging.
+    |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', (require __DIR__.'/locales.php')['default']),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
