@@ -193,3 +193,106 @@ page routes:
 - **Home records** — see deviation 2 above.
 - **`Route::view` pages have no per-page OG image or meta description.**
   Phase 4 work (spec §10), not started.
+
+---
+
+# Agent A — Pass 2: the corrected spine and the Ways section
+
+## Status
+
+Done: everything in the brief. Full suite passes: **176 tests, 435
+assertions, 0 failures** (`php artisan test`).
+
+## What changed
+
+1. **`<x-sections.ways>`** (new) — three-column audience-segmented prose.
+   Props: `ways` (array of `['heading' => ..., 'body' => ...]`), plus
+   optional `label`/`heading` like the other collection sections. Follows
+   the same padding (`py-14 md:py-24`), surface token (`bg-sunk`, to break
+   up two `bg-raised` neighbours on Get Involved), and `max-w-prose`
+   conventions as the twelve existing sections. Stacks to one column below
+   `md:` with no fixed widths. Test:
+   `tests/Feature/Sections/WaysSectionTest.php`.
+
+2. **`<x-sections.directory>` extended, not replaced.** Added
+   `cards='school'|'tier'` (default `'school'`), the smallest change that
+   lets it render `<x-cards.tier>`. Both existing callers
+   (`pages/schools.blade.php`, the gallery's school-grid block) pass no
+   `cards` prop and are byte-for-byte unaffected — proved by the pre-existing
+   directory test still passing plus two new ones in
+   `tests/Feature/Sections/RemainingSectionsTest.php` (tier mode renders
+   tier cards; default mode still renders school cards, not tier markup).
+
+3. **Get Involved rewritten** against the corrected spine: Hero →
+   Directory (`cards="tier"`) → Ways → Detail panel (`current-need`,
+   repurposed for "how giving works") → Next step. The page now contains
+   zero raw `<section>` elements — every section is a component call. The
+   hand-rolled 3-column block and inline tier grid from Pass 1 are gone.
+   `current-need`'s `status` prop (previously always a school's
+   "needs N more partners" line) carries
+   "Informasi dan pengalihan — bukan gerbang pembayaran" /
+   "Information and redirect — not a payment gateway" here — a genuinely
+   qualitative status, so no component change was needed to reuse it for
+   a non-school subject. Bank/account-number values stay
+   `give.how.placeholder` ("CONTOH — belum diisi" /
+   "PLACEHOLDER — not yet supplied"); only the account name
+   ("Yayasan Harapan Sumba") and the service names (Wise / PayPal) are
+   real strings, matching the prototype's own placeholder discipline.
+
+4. **Gallery updated**: added `data-section="ways"` and
+   `data-section="directory-tier"` blocks with their own fixture data, and
+   widened `GalleryTest`'s section-name list from thirteen to the current
+   set. The gallery now renders every one of spec §5's fourteen section
+   types, tier mode included.
+
+5. **`LanguageSwitcherTest`'s ancestor-fallback test made durable.** It
+   used to register a fake `id.homes.show` to force the "missing
+   counterpart" path — exactly the kind of premise that breaks the moment
+   Children's Homes detail pages land, as flagged in the brief. It now
+   registers both fixture routes under a segment name
+   (`zzz_test_stub`) that isn't in `config('locales.segments')` and never
+   will be, so the test is self-contained. Fixing this also surfaced a
+   real gotcha: `RouteServiceProvider` only calls
+   `refreshNameLookups()` once, from an `app->booted()` callback that has
+   already fired by the time any test body runs — a route named via
+   `Route::get(...)->name(...)` *inside* a test is invisible to
+   `Route::has()`/`route()` until that lookup is rebuilt by hand. The test
+   now calls `app('router')->getRoutes()->refreshNameLookups()` itself.
+   This also means the *old* version of this test was passing for the
+   wrong reason: its fake route was never actually resolvable either, so
+   `LocalizedUrl::forLocale()` was silently taking the final backstop path
+   rather than the ancestor-fallback path the test claimed to exercise —
+   worth knowing if a similar dynamic-route fixture shows up elsewhere in
+   the suite.
+
+   `LayoutTest`'s default-title test needed no change — it already
+   renders `<x-layouts.site>` directly rather than pointing at a page, per
+   the comment left in Pass 1 round 2, so it was already durable.
+
+## Where the corrected spec still doesn't fully match the components
+
+- **`current-need` is now visibly overloaded.** Spec §5 explicitly keeps
+  the filename "because the component kept its original name when the
+  job broadened" — that's a deliberate, documented decision, not a defect.
+  But its prop names still read as school-specific (`status` renders as
+  an accent-coloured "needs N more partners"-shaped line) even though Get
+  Involved now feeds it a sentence about payment mechanics. It works
+  today because `status` is just a styled string with no school-specific
+  validation, but a future caller reusing this component for a genuinely
+  status-less subject would find the required `status` prop mildly
+  awkward. Not a contract violation, not touched, just worth naming.
+- **`directory`'s `schools` prop name is now generic-content-with-a-
+  school-specific-name.** Renaming it (e.g. to `items`) would be the
+  cleaner long-term shape, but the brief scoped this to a "minimal
+  backwards-compatible extension," and renaming the prop is exactly the
+  kind of change that isn't minimal — every existing call site would need
+  updating for no behavioural gain. Left as `schools` with a comment
+  explaining the tier mode reuses it for tiers.
+- Everything else in the corrected §5 table now has a real component and
+  a real page using it in the role the spine names. No other gaps found.
+
+## Commits
+
+3. `100925f` — feat: add the Ways section and a tier mode for Directory
+4. `8550319` — feat: rewrite Get Involved against the corrected spine
+5. `715440a` — test: make the ancestor-fallback test independent of unbuilt pages
