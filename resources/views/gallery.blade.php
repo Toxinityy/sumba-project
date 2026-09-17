@@ -56,6 +56,18 @@
       'hook' => 'Ingin menjadi guru dan mengajar di kampung halamannya sendiri.',
       'image' => $image(800, 1000, 'Potret lingkungan seorang murid'),
   ];
+
+  $tier1 = [
+      'title' => 'Ruang kelas', 'cost' => 'Rp 180.000.000', 'costApprox' => 'approx. USD 11,000',
+      'description' => 'Satu ruang kelas lengkap dengan meja, kursi dan papan tulis.',
+      'image' => $image(800, 600, 'Ruang kelas baru'),
+  ];
+
+  $tier2 = [
+      'title' => 'Beasiswa tahunan', 'cost' => 'Rp 3.600.000', 'costApprox' => 'approx. USD 220',
+      'description' => 'Menutup biaya seragam, buku dan transportasi satu murid selama setahun.',
+      'image' => $image(800, 600, 'Murid dengan buku pelajaran'),
+  ];
 @endphp
 
 <x-layouts.site title="Galeri komponen">
@@ -126,6 +138,20 @@
   <div data-section="directory">
     <x-sections.directory label="Sekolah" heading="Empat belas sekolah, satu pulau."
       :schools="[$school1, $school2, $school3]" />
+  </div>
+
+  <div data-section="directory-tier">
+    <x-sections.directory cards="tier" label="Dukung" heading="Enam cara memberi."
+      :schools="[$tier1, $tier2]" />
+  </div>
+
+  <div data-section="ways">
+    <x-sections.ways label="Cara terlibat" heading="Cara yang sesuai dengan Anda."
+      :ways="[
+        ['heading' => 'Perusahaan', 'body' => 'Program CSR jangka panjang dengan anggaran terperinci dan laporan tahunan.'],
+        ['heading' => 'Gereja', 'body' => 'Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar berkala.'],
+        ['heading' => 'Relawan', 'body' => 'Pelatihan guru dan pembangunan, dengan penyaringan perlindungan anak.'],
+      ]" />
   </div>
 
   <div data-section="current-need">

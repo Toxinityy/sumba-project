@@ -44,3 +44,31 @@ it('renders a directory grid of school cards', function () {
         ]]]
     )->assertSee('TK Harapan Karuni');
 });
+
+// Spec §5: Directory is "card grid - schools, homes, projects, or
+// sponsorship tiers". cards="tier" is the smallest extension that lets it
+// render <x-cards.tier> without changing the default (schools) behaviour
+// the schools directory page and the gallery already depend on.
+it('renders a directory grid of sponsorship tier cards when cards is "tier"', function () {
+    $this->blade(
+        '<x-sections.directory cards="tier" :schools="$tiers" />',
+        ['tiers' => [[
+            'title' => 'Ruang kelas', 'cost' => 'Rp 180.000.000', 'costApprox' => null,
+            'description' => 'Satu ruang kelas lengkap.',
+            'image' => ['sources' => ['jpeg' => ['/i.jpg 800w']], 'width' => 800, 'height' => 600, 'alt' => 'Ruang kelas'],
+        ]]]
+    )->assertSee('Ruang kelas')
+     ->assertSee('Rp 180.000.000');
+});
+
+it('still renders school cards by default when cards is omitted', function () {
+    $this->blade(
+        '<x-sections.directory :schools="$schools" />',
+        ['schools' => [[
+            'href' => '/id/sekolah/karuni', 'level' => 'TK', 'name' => 'TK Harapan Karuni',
+            'location' => 'Karuni', 'need' => 'A reading room.', 'status' => 'Needs 4 more partners',
+            'image' => ['sources' => ['jpeg' => ['/i.jpg 800w']], 'width' => 800, 'height' => 1000, 'alt' => 'Pupils'],
+        ]]]
+    )->assertSee('TK Harapan Karuni')
+     ->assertDontSee('Rp ', escape: false);
+});

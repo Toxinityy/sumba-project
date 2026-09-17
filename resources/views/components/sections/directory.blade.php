@@ -1,5 +1,11 @@
 {{-- resources/views/components/sections/directory.blade.php --}}
-@props(['schools', 'label' => null, 'heading' => null])
+{{-- Spec §5: Directory is "card grid - schools, homes, projects, or
+     sponsorship tiers". `cards` names which card partial renders the grid,
+     defaulting to 'school' so both existing callers (the schools directory
+     page and the gallery) keep rendering exactly as before with no change
+     at their call sites. 'tier' is the only other value implemented so
+     far, for Get Involved's sponsorship tiers. --}}
+@props(['schools' => [], 'cards' => 'school', 'label' => null, 'heading' => null])
 
 <section class="bg-raised py-14 md:py-24">
   <div class="mx-auto max-w-content px-4">
@@ -13,16 +19,27 @@
     {{-- No filtering or pagination at launch: content volume is small.
          The grid grows without a rewrite when it isn't. --}}
     <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-      @foreach ($schools as $school)
-        <x-cards.school
-          :href="$school['href']"
-          :level="$school['level']"
-          :name="$school['name']"
-          :location="$school['location']"
-          :need="$school['need']"
-          :status="$school['status']"
-          :image="$school['image']" />
-      @endforeach
+      @if ($cards === 'tier')
+        @foreach ($schools as $tier)
+          <x-cards.tier
+            :title="$tier['title']"
+            :cost="$tier['cost']"
+            :costApprox="$tier['costApprox']"
+            :description="$tier['description']"
+            :image="$tier['image']" />
+        @endforeach
+      @else
+        @foreach ($schools as $school)
+          <x-cards.school
+            :href="$school['href']"
+            :level="$school['level']"
+            :name="$school['name']"
+            :location="$school['location']"
+            :need="$school['need']"
+            :status="$school['status']"
+            :image="$school['image']" />
+        @endforeach
+      @endif
     </div>
   </div>
 </section>
