@@ -5,10 +5,10 @@ namespace App\Models\Concerns;
 use Illuminate\Database\Eloquent\Builder;
 
 /*
- | A null published_at is the draft state. Spec §6 asks for a `status` enum
- | here, but `status` is already taken on School and Home by the qualitative
- | progress string the data contract fixes, so publication rides on the
- | timestamp Post needs anyway. See the note in docs — flagged, not guessed.
+ | A null published_at is the draft state. `status` on School and Home is the
+ | editor's qualitative sentence, not a publication state, so publication
+ | rides on the timestamp Post needs anyway. Spec §6 said otherwise until the
+ | correction dated 2026-09-17; that note records why.
  */
 trait Publishable
 {

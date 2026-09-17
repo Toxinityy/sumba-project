@@ -29,7 +29,7 @@ This rules out the standard nonprofit vocabulary — desaturated photography, a 
 | 1 | **Filament**, not Statamic | Statamic's free tier is single-user with no multi-site and no revisions — it cannot do a bilingual, three-editor site. Pro is $349 + $99/yr. Filament is free and mainstream in Laravel, which is also the better handover story. |
 | 2 | Structured entities + fixed narrative templates, **plus one flexible page type** | The §5 narrative spine only holds if it's structural. One escape hatch with a curated block set covers rare one-offs without letting layout drift across the whole site. |
 | 3 | Translation lag expected; **fallback, not 404** | Missing locale renders the source language with a quiet inline note. Filament shows per-locale completeness. |
-| 4 | **No numeric funding anywhere** | No goals, no amounts raised, no progress bars. A bar frozen at 40% for six months actively damages credibility. Status is a short qualitative enum; `current_need` is one sentence. |
+| 4 | **No numeric funding anywhere** | No goals, no amounts raised, no progress bars. A bar frozen at 40% for six months actively damages credibility. Status is a short qualitative sentence an editor writes; `current_need` is one sentence. |
 | 5 | Design for small content volume, schema grows | Content inventory not settled. No filtering or pagination at launch; the model supports adding them without a rewrite. |
 | 6 | **Visual system: Open Field (light) + Dusk Savanna (dark)** | One system at two luminances, sharing a warm neutral family and a gold accent hue — not two directions. |
 | 7 | Safeguarding standard proposed and **enforced in schema** | No policy existed. The site's rules are structural: minors have no surname field, consent gates publishing, EXIF is stripped unconditionally. |
@@ -183,7 +183,7 @@ Giving is information-plus-redirect (PayPal, Wise, bank transfer, QRIS) with no 
 
 | Model | Core fields | Notes |
 |---|---|---|
-| **School** | level (TK/SMP/SMA), location, hero, gallery, pupil/teacher counts, `current_need`, `status` | Status is a short enum, never a number |
+| **School** | level (TK/SMP/SMA), location, hero, gallery, pupil/teacher counts, `current_need`, `status` | Status is a translated qualitative sentence, never a number — see the correction below |
 | **Home** | Same shape plus care model | Stricter media rules |
 | **Project** | status (planned/underway/complete), before + after image with dated captions, optional school/home relation | Powers Projects and Impact |
 | **Post** | `kind` (profile/update/news), title, slug, hook, body, featured image, published_at, optional subject fields, optional relations | The blog and the story feed |
@@ -192,6 +192,10 @@ Giving is information-plus-redirect (PayPal, Wise, bank transfer, QRIS) with no 
 | **Stat** | label, value, `as_of` | `as_of` makes staleness visible to the team |
 | **MediaAsset** | file, caption, consent record, `depicts_minor`, named crops, focal point | Wraps every upload |
 | **Consent** | subject, guardian, date, scope, review date, signed form scan | See §9 |
+
+**Why `status` was corrected (2026-09-17).** This table called School and Home `status` "a short enum". `docs/data-contract.md` called it a qualitative string, and the school card — built, tested and committed — renders sentences no enum can produce ("Butuh 4 mitra lagi", "Didanai penuh tahun ini"). Both documents agreed on the load-bearing rule, that it is never a number, so the table's wording was the error and the component is the fixed point. `status` is a translated JSON string.
+
+Consequence: `status` being taken means publication state is not an enum either. A null `published_at` is the draft state on School, Home, Project and Post, which Post needed regardless.
 
 **Post kinds:** `profile` (student/teacher/community/founder stories, portrait 4:5 card) and `update` / `news` (3:2, date-led). Relations to School, Home or Project let a post surface on that entity's page automatically.
 
@@ -205,7 +209,7 @@ Blocks *inside an article body* are editorial. Blocks that arrange *page section
 
 Filament is an admin panel builder, not a CMS, so these are build items rather than features. Vera publishes without a reviewer, which makes them necessary rather than nice:
 
-- **Draft → preview:** a `status` enum plus a signed preview route rendering the real Blade template with unpublished content. ~1 day.
+- **Draft → preview:** a null `published_at` is the draft state (see the correction above), plus a signed preview route rendering the real Blade template with unpublished content. ~1 day.
 - **Revision history:** activity-log package or a versions table storing the translatable JSON payload, with a rollback action. ~1–2 days.
 - **Media library:** `spatie/laravel-medialibrary` with the Filament plugin — browsable, reusable uploads. Built regardless, since the conversion pipeline hangs off it.
 
@@ -335,6 +339,10 @@ Not chasing coverage on Blade templates. Feature tests on what fails silently an
 | Confirm Imagick/AVIF availability on the host | Dev | Week 1, gates the image strategy |
 | Dhani briefed on the export spec and tall crops | Dev/Reynold | Before the shoot finishes |
 | Deferred pages scheduled post-launch | Team | Gallery, Partners, Impact, Projects |
+| `spatie/laravel-medialibrary` adopted, or not | Dev | `MediaAsset` is currently a plain table whose columns map onto it; the decision belongs with whoever builds the upload pipeline |
+| EXIF stripping on upload, GPS included (§9) | Dev | No owner. Highest-severity safeguarding gap still open — the schema cannot enforce it, only the upload path can |
+| Revision history and the signed preview route | Dev | No owner. Listed under "Editor experience to build" and not yet built |
+| Consent withdrawal reaching rich-text body images | Dev | `Consent::withdraw()` unpublishes attached assets now; images embedded in body HTML are only reachable once the §8 rewrite pass exists |
 
 ---
 
