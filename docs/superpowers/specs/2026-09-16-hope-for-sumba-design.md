@@ -118,7 +118,7 @@ Pull quotes: serif, italic, 28–32px, generous leading. Both faces self-hosted 
 
 ## 5. Section system
 
-Fourteen sections. Every page is a sequence of them; **no page invents new ones, and no spine may name anything absent from this table.**
+Fifteen sections. Every page is a sequence of them; **no page invents new ones, and no spine may name anything absent from this table.**
 
 | Section | Job | Dominant |
 |---|---|---|
@@ -134,6 +134,7 @@ Fourteen sections. Every page is a sequence of them; **no page invents new ones,
 | Directory | Card grid — schools, homes, projects, or sponsorship tiers | Card grid |
 | Detail panel | Prose beside a scannable facts list — a school's current need, how giving works, a project's status | Prose + facts |
 | Ways | Audience-segmented prose in three columns — corporate, church, volunteer | Three-up prose |
+| Form | Collect a partnership or volunteer enquiry | Labelled fields + submit |
 | Next step | What the reader does now | Prose + actions |
 | Partners | Social proof | Logo strip |
 
@@ -158,8 +159,13 @@ Every name below is a section from the table above. Where a section serves a spe
 | Impact | Hero → Stat band → Stories → Evidence → Next step |
 | About | Hero → Lede (our story) → Work (founder) → Lede (mission & vision) → People (the team) → Next step |
 | Get Involved | Hero → Directory (sponsorship tiers) → Ways (corporate, church, volunteer) → Detail panel (how giving works) → Next step |
+| Stories | Hero → Stories → Next step |
+| Contact | Hero → Form (partnership enquiry) → Detail panel (where to find us) → Next step |
+| Safeguarding | Hero → Lede → Lede → Lede (policy page — exempt from rule 1, see below) |
 
 The Project and Impact spines are recorded here for completeness; both pages are deferred past launch (§10).
+
+**Policy pages are exempt from rule 1.** Safeguarding — and any later terms or privacy page — is a document, not a photo essay. It is several prose blocks in sequence, which rule 1 would otherwise forbid. The rule exists to prevent walls of prose on narrative pages; applying it here would mean inventing visual rhythm on a child-protection policy, which is worse than the wall it prevents. The exemption is named here so it is a decision rather than an undocumented deviation, and it extends to no other page.
 
 **Why this section was rewritten (2026-09-17).** The original spines named *Featured school*, *Tiers*, *Corporate*, *Church*, *Volunteer*, *How giving works*, *Status*, *Our story*, *Founder* and *Mission & vision* — ten names, none of which existed in the section table. The spec told implementers to build from a fixed set and then handed them a page plan referencing things outside it. This surfaced when the Get Involved page was built: with no section to use, it was assembled from hand-rolled markup, which is precisely the drift the fixed section set exists to prevent. *Ways* is the only genuinely new section; the rest were content roles misnamed as structure.
 
@@ -288,7 +294,7 @@ A **Safeguarding page** in both locales: the policy in plain language, how conse
 | Phase | Weeks | Contents | Definition of done |
 |---|---|---|---|
 | **0 — Foundations** | 1 | Laravel + Filament, deploy path, staging URL, locale routing, self-hosted subset fonts, Tailwind tokens, image pipeline with capability detection, Cloudflare | A two-locale page on staging serving a responsive AVIF/WebP hero under 200KB, Lighthouse run against staging |
-| **1 — Design system** | 2 | Fourteen sections as Blade components, card and quote components, both themes | Component gallery renders every section in both locales at 400px and 1440px |
+| **1 — Design system** | 2 | Fifteen sections as Blade components, card and quote components, both themes | Component gallery renders every section in both locales at 400px and 1440px |
 | **2 — Models and panel** | 3–4 | Nine models, translatable fields, media library, consent gate, EXIF stripping, draft preview, revisions | **Vera can create a school and a post end to end and preview them** — and she gets access that day |
 | **3 — Pages** | 4–6 | Launch pages, both locales, forms with spam protection | All launch pages live on staging in both locales |
 | **4 — Launch readiness** | 6–8 | Content and photography in, hreflang, sitemap, OG images, accessibility audit, throttled-mobile performance, safeguarding page live, analytics, backup **with a tested restore** | Launch checklist signed off |
