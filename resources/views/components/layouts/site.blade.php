@@ -34,8 +34,12 @@
   </script>
 </head>
 <body class="bg-surface text-ink font-body">
+  <a href="#main"
+     class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-ink focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-accent-strong">
+    {{ __('nav.skip_to_content') }}
+  </a>
   <x-site-nav />
-  <main>{{ $slot }}</main>
+  <main id="main">{{ $slot }}</main>
   <x-site-footer />
   <x-theme-switcher />
 </body>

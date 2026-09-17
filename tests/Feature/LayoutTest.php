@@ -56,3 +56,17 @@ it('emits reciprocal hreflang alternates plus x-default on an English page too',
         ->assertSee('hreflang="en"', escape: false)
         ->assertSee('hreflang="x-default"', escape: false);
 });
+
+it('offers a skip link targeting the main landmark, as the first focusable element', function () {
+    $html = $this->get('/id/sekolah')->getContent();
+
+    $bodyStart = strpos($html, '<body');
+    $skipLinkPos = strpos($html, 'href="#main"');
+    $navPos = strpos($html, '<x-site-nav');
+    $navPos = $navPos === false ? strpos($html, '<header') : $navPos;
+
+    expect($skipLinkPos)->not->toBeFalse()
+        ->and($skipLinkPos)->toBeGreaterThan($bodyStart)
+        ->and($skipLinkPos)->toBeLessThan($navPos)
+        ->and($html)->toContain('<main id="main">');
+});
