@@ -72,6 +72,18 @@ so restore before running `php artisan test` again.
    - the database credentials for this host
    - leave `QUEUE_CONNECTION`, `SESSION_DRIVER`, `CACHE_STORE` as `database`
      (matching `.env.example`)
+   - `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`,
+     `MAIL_FROM_ADDRESS` — the host's real SMTP credentials.
+   - `CONTACT_TO` — the real inbox the "Partner with us" form delivers to.
+     **If any of these six keys are left out, the contact form does not fail
+     loudly — it silently logs every enquiry to `storage/logs/laravel.log`
+     instead of sending it, and the contact page keeps printing the
+     placeholder address `halo@contoh.org` ("contoh" is Indonesian for
+     "example") as the ministry's own.** A boot-time check in
+     `App\Providers\AppServiceProvider` refuses to serve the site at all in
+     production while either of those two conditions holds, specifically so
+     this is caught at deploy time rather than discovered months later when
+     a donor's enquiry never arrived.
 7. In cPanel File Manager, set permissions so the web server can write to
    `storage/` and `bootstrap/cache/`: select each directory, "Permissions",
    apply recursively, and set `775` (or `755` if the host's PHP runs as the
@@ -112,6 +124,16 @@ so restore before running `php artisan test` again.
     `USERNAME` and PHP path placeholders too) under cPanel's "Cron Jobs",
     scheduled every minute, so queued jobs actually get processed.
 11. Point Cloudflare (free tier) at `example.org`.
+12. **Restrict the origin to Cloudflare's IP ranges.** The app trusts `*` as
+    a proxy (`bootstrap/app.php`) so `CF-Connecting-IP`/`X-Forwarded-For` are
+    read as the real visitor IP — correct only if every request Laravel sees
+    actually came through Cloudflare. If the origin is directly reachable,
+    anyone can forge that header and spoof any IP, defeating the contact
+    form's rate limit entirely. Most shared-hosting plans have no firewall
+    control for this; where the host offers one (cPanel's IP Blocker/ModSecurity,
+    or an .htaccess allow-list keyed on Cloudflare's published ranges at
+    https://www.cloudflare.com/ips/), apply it. Where it isn't offered, this
+    is a known gap — flag it to whoever chooses hosting.
 
 ### Rollback
 
