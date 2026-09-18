@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hope for Sumba - Beranda (draf editorial)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   TOKENS — light ("Open Field") is the bare :root.
+   Dark ("Dusk Savanna") redefines under prefers-color-scheme,
+   guarded so an explicit [data-theme="light"] can still opt out,
+   and again under an explicit [data-theme="dark"].
+   ============================================================ */
+:root{
+  --surface:#F7F8F3; --raised:#FFFFFF; --sunk:#ECEEE3;
+  --ink:#1E2A22; --ink-muted:#4B5A4E;
+  --accent:#96660E; --accent-ink:#FFFFFF;
+  --border:#DEDFCE;
+  --badge-bg:#EFE3C8; --badge-ink:#5A3E0E;
+  --inverse:#1E2A22; --inverse-ink:#F7F8F3; --inverse-muted:#B9C4BB;
+  --placeholder-a:#DEDFCE; --placeholder-b:#C9CDB8;
+  --shadow: 0 24px 60px -30px rgba(30,42,34,0.35);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surface:#211A15; --raised:#2B231C; --sunk:#1A1410;
+    --ink:#F5EFE6; --ink-muted:#C9BEB0;
+    --accent:#E8A23A; --accent-ink:#241A0E;
+    --border:#3B322A;
+    --badge-bg:#3B322A; --badge-ink:#E8A23A;
+    --inverse:#3A2E22; --inverse-ink:#F5EFE6; --inverse-muted:#D8C9B8;
+    --placeholder-a:#332A22; --placeholder-b:#241C16;
+    --shadow: 0 24px 60px -30px rgba(0,0,0,0.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:#211A15; --raised:#2B231C; --sunk:#1A1410;
+  --ink:#F5EFE6; --ink-muted:#C9BEB0;
+  --accent:#E8A23A; --accent-ink:#241A0E;
+  --border:#3B322A;
+  --badge-bg:#3B322A; --badge-ink:#E8A23A;
+  --inverse:#3A2E22; --inverse-ink:#F5EFE6; --inverse-muted:#D8C9B8;
+  --placeholder-a:#332A22; --placeholder-b:#241C16;
+  --shadow: 0 24px 60px -30px rgba(0,0,0,0.6);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--surface);
+  color:var(--ink);
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;}
+.wrap{max-width:1320px;margin-inline:auto;padding-inline:20px;}
+@media (min-width:768px){ .wrap{padding-inline:40px;} }
+
+h1,h2,h3,.display{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:500;
+  letter-spacing:-0.01em;
+  margin:0;
+}
+.eng{
+  font-family:"Plus Jakarta Sans",sans-serif;
+  font-style:italic;
+  font-weight:400;
+  color:var(--ink-muted);
+}
+
+/* ---------- theme toggle (review aid, not part of the page's real chrome) ---------- */
+.theme-toggle{
+  position:fixed; top:16px; right:16px; z-index:80;
+  background:var(--raised); color:var(--ink);
+  border:1px solid var(--border); border-radius:999px;
+  font:600 12px/1 "Plus Jakarta Sans",sans-serif;
+  padding:10px 16px; cursor:pointer;
+  box-shadow:var(--shadow);
+}
+
+/* ---------- nav ---------- */
+.site-nav{
+  position:sticky; top:0; z-index:70;
+  background:color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.site-nav .wrap{
+  height:68px; display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+.brand{ font-family:"Fraunces",serif; font-weight:600; font-size:19px; }
+.brand .eng{ font-size:11px; display:block; font-style:normal; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-muted); }
+.nav-links{ display:none; gap:28px; font-size:14px; font-weight:500; list-style:none; margin:0; padding:0; }
+@media (min-width:900px){ .nav-links{ display:flex; } }
+.nav-links a{ text-decoration:none; }
+.nav-cta{
+  white-space:nowrap;
+  background:var(--accent); color:var(--accent-ink);
+  padding:11px 18px; border-radius:8px;
+  font-weight:600; font-size:13px; text-decoration:none;
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:15px 26px; border-radius:8px;
+  font-weight:600; font-size:15px; text-decoration:none;
+  white-space:nowrap; border:1px solid transparent;
+  transition:transform .15s ease;
+}
+.btn:active{ transform:translateY(1px) scale(0.98); }
+.btn-primary{ background:var(--accent); color:var(--accent-ink); }
+.btn-secondary{ background:transparent; color:var(--ink); border-color:var(--ink); }
+
+/* ---------- placeholder photography ---------- */
+.ph{
+  position:relative; overflow:hidden;
+  background:
+    repeating-linear-gradient(135deg, var(--placeholder-a) 0 2px, transparent 2px 14px),
+    linear-gradient(155deg, var(--placeholder-b), var(--placeholder-a));
+  border:1px solid var(--border);
+}
+.ph-label{
+  position:absolute; left:0; right:0; bottom:0;
+  padding:14px 16px;
+  font-size:12px; line-height:1.4; color:var(--ink-muted);
+  background:linear-gradient(to top, color-mix(in srgb, var(--placeholder-b) 70%, transparent), transparent);
+}
+.ph-label b{ color:var(--ink); font-weight:600; }
+
+/* ============================================================
+   HERO — asymmetric split. Copy left (wider), placeholder photo
+   right, overlapped by a floating fact card that breaks both
+   the grid and the photo edge.
+   ============================================================ */
+.hero{
+  padding:40px 0 72px;
+  position:relative;
+}
+.hero-grid{
+  display:grid; gap:28px;
+  grid-template-columns:1fr;
+}
+@media (min-width:1000px){
+  .hero-grid{ grid-template-columns:1.15fr 0.85fr; align-items:center; gap:8px; }
+}
+.hero-copy{ position:relative; z-index:2; }
+.hero-eyebrow{
+  font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:18px; display:inline-block;
+}
+.hero h1{
+  font-size:clamp(2.3rem, 5.4vw, 3.8rem);
+  line-height:1.06;
+  max-width:14ch;
+}
+.hero h1 em{
+  font-style:italic; font-weight:400; font-optical-sizing:auto;
+  color:var(--accent);
+}
+.hero .eng{
+  display:block; margin-top:16px; font-size:clamp(1rem,1.6vw,1.25rem); max-width:38ch;
+}
+.hero-sub{
+  margin-top:22px; max-width:46ch; color:var(--ink-muted); font-size:16px;
+}
+.hero-actions{ margin-top:32px; display:flex; flex-wrap:wrap; gap:14px; }
+.hero-visual{ position:relative; }
+.hero-photo{ aspect-ratio:4/5; border-radius:4px; }
+@media (min-width:1000px){ .hero-photo{ margin-top:-24px; } }
+.hero-fact{
+  position:relative; margin-top:-64px; margin-inline:20px; z-index:3;
+  background:var(--raised); border:1px solid var(--border); border-radius:4px;
+  box-shadow:var(--shadow);
+  padding:22px 24px; max-width:340px;
+}
+@media (min-width:1000px){
+  .hero-fact{ position:absolute; left:-64px; bottom:-40px; margin:0; }
+}
+.hero-fact .num{ font-family:"Fraunces",serif; font-weight:600; font-size:2.4rem; color:var(--accent); line-height:1; }
+.hero-fact p{ margin:8px 0 0; font-size:13.5px; color:var(--ink-muted); }
+
+/* ============================================================
+   SECTION SHELLS — deliberately varied rhythm, not a repeated
+   py-14/py-24 template. Each section sets its own vertical
+   measure and background so the page doesn't read as one
+   component stamped N times.
+   ============================================================ */
+section{ position:relative; }
+.sec-tight{ padding:56px 0; }
+.sec-normal{ padding:88px 0; }
+.sec-loose{ padding:120px 0; }
+.on-sunk{ background:var(--sunk); }
+.on-inverse{ background:var(--inverse); color:var(--inverse-ink); }
+.on-inverse .ink-muted, .on-inverse p{ color:var(--inverse-muted); }
+.on-inverse h2{ color:var(--inverse-ink); }
+
+.kicker{
+  font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:14px; display:inline-block;
+}
+h2.title{ font-size:clamp(1.9rem,3.6vw,2.7rem); line-height:1.12; max-width:18ch; }
+.lede{ margin-top:16px; max-width:56ch; color:var(--ink-muted); font-size:17px; }
+.on-inverse .lede{ color:var(--inverse-muted); }
+
+/* ---------- who we are ---------- */
+.who{
+  display:grid; gap:40px; grid-template-columns:1fr; align-items:start;
+}
+@media (min-width:960px){
+  .who{ grid-template-columns:0.9fr 1.1fr; gap:56px; }
+}
+.who-photo{ aspect-ratio:5/6; border-radius:4px; }
+.who-body p{ margin:0 0 18px; color:var(--ink-muted); max-width:52ch; }
+.who-body p:first-of-type{ font-size:19px; color:var(--ink); font-family:"Fraunces",serif; font-weight:400; line-height:1.4; }
+
+/* ---------- the challenge ---------- */
+.challenge-list{
+  margin-top:48px; display:grid; gap:0;
+  border-top:1px solid var(--border);
+}
+.challenge-row{
+  display:grid; grid-template-columns:1fr; gap:8px;
+  padding:28px 0; border-bottom:1px solid var(--border);
+}
+@media (min-width:820px){
+  .challenge-row{ grid-template-columns:0.5fr 1fr 1.4fr; align-items:baseline; gap:24px; }
+}
+.challenge-row .n{ font-family:"Fraunces",serif; font-weight:300; font-size:2.6rem; color:var(--accent); font-style:italic; }
+.challenge-row h3{ font-size:1.15rem; font-weight:600; font-family:"Plus Jakarta Sans",sans-serif; }
+.challenge-row p{ margin:0; color:var(--inverse-muted); max-width:52ch; }
+
+/* ---------- what we do : asymmetric bento ---------- */
+.work-grid{
+  margin-top:48px; display:grid; gap:18px;
+  grid-template-columns:1fr;
+}
+@media (min-width:860px){
+  .work-grid{ grid-template-columns:1.4fr 1fr 1fr; grid-template-rows:auto auto; }
+  .work-card.lg{ grid-row:span 2; }
+}
+.work-card{
+  background:var(--raised); border:1px solid var(--border); border-radius:4px;
+  padding:28px; display:flex; flex-direction:column; gap:14px;
+}
+.work-card.lg{ padding:36px; justify-content:flex-end; min-height:340px; }
+.work-mark{ font-family:"Fraunces",serif; font-style:italic; font-weight:400; font-size:2.1rem; color:var(--accent); }
+.work-card h3{ font-size:1.25rem; font-weight:600; font-family:"Plus Jakarta Sans",sans-serif; }
+.work-card p{ margin:0; color:var(--ink-muted); font-size:14.5px; }
+.work-card.tint{ background:linear-gradient(160deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, var(--ink)) 100%); color:var(--accent-ink); border:none; }
+.work-card.tint p{ color:color-mix(in srgb, var(--accent-ink) 82%, transparent); }
+.work-card.tint .work-mark{ color:var(--accent-ink); }
+
+/* ---------- scale ---------- */
+.scale-row{
+  margin-top:48px; display:grid; gap:32px 24px;
+  grid-template-columns:repeat(2,1fr);
+}
+@media (min-width:760px){ .scale-row{ grid-template-columns:repeat(4,1fr); } }
+.scale-item:nth-child(2){ margin-top:26px; }
+.scale-item:nth-child(4){ margin-top:-10px; }
+@media (max-width:759px){ .scale-item{ margin-top:0 !important; } }
+.scale-item .num{ font-family:"Fraunces",serif; font-weight:500; font-size:clamp(2.4rem,5vw,3.6rem); line-height:1; color:var(--ink); }
+.scale-item .num em{ font-style:italic; color:var(--accent); font-weight:400; }
+.scale-item p{ margin:10px 0 0; font-size:14px; color:var(--ink-muted); max-width:20ch; }
+
+/* ---------- evidence before/after ---------- */
+.evidence{ display:grid; gap:2px; grid-template-columns:1fr; margin-top:44px; }
+@media (min-width:760px){ .evidence{ grid-template-columns:1fr 1fr; } }
+.evidence-pane{ aspect-ratio:4/3; position:relative; }
+.evidence-tag{
+  position:absolute; top:14px; left:14px;
+  background:var(--raised); color:var(--ink);
+  font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+  padding:6px 12px; border-radius:3px; border:1px solid var(--border);
+}
+
+/* ---------- pull quote ---------- */
+.quote-wrap{ position:relative; }
+.quote-mark{
+  font-family:"Fraunces",serif; font-size:7rem; line-height:1; color:var(--accent);
+  opacity:0.5; position:absolute; top:-10px; left:-6px; font-style:italic;
+  pointer-events:none; user-select:none;
+}
+blockquote{
+  margin:0; padding-left:0;
+  font-family:"Fraunces",serif; font-style:italic; font-weight:400; font-optical-sizing:auto;
+  font-size:clamp(1.6rem,3.6vw,2.7rem); line-height:1.35;
+  max-width:22ch; color:var(--ink);
+  padding-top:1.15em; padding-bottom:0.15em;
+}
+.quote-attr{ margin-top:28px; font-style:normal; font-family:"Plus Jakarta Sans",sans-serif; font-size:14px; color:var(--ink-muted); }
+.quote-attr b{ color:var(--ink); font-weight:600; }
+.quote-layout{ display:grid; grid-template-columns:1fr; gap:32px; }
+@media (min-width:1000px){ .quote-layout{ grid-template-columns:1.4fr 0.6fr; align-items:end; } }
+.quote-photo{ aspect-ratio:3/4; border-radius:4px; }
+@media (min-width:1000px){ .quote-photo{ margin-bottom:-40px; } }
+
+/* ============================================================
+   THE BADGE — school-level mark.
+   TK / SMP / SMA are treated as a typographic "growth mark":
+   each level pulls a different point on Fraunces's own optical-
+   size and weight axes, so the type itself performs the idea
+   of a child moving from early years into upper secondary.
+   Shape is a notched label tag (clip-path), pinned to overlap
+   the card photo rather than sitting inside a flat pill.
+   ============================================================ */
+.level-badge{
+  position:absolute; top:16px; left:16px; z-index:3;
+  background:var(--badge-bg); color:var(--badge-ink);
+  padding:10px 14px 9px 16px;
+  clip-path:polygon(0 0, 100% 0, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transform:rotate(-2deg);
+  box-shadow:0 10px 22px -12px rgba(0,0,0,0.45);
+  min-width:76px;
+}
+.level-badge .abbr{
+  font-family:"Fraunces",serif;
+  display:block; line-height:0.9;
+}
+.level-badge .full{
+  display:block; margin-top:5px;
+  font-family:"Plus Jakarta Sans",sans-serif; font-weight:600;
+  font-size:9px; letter-spacing:0.09em; text-transform:uppercase;
+  opacity:0.85;
+}
+/* TK — early years: light weight, small optical size, italic. Delicate. */
+.level-badge.tk .abbr{ font-style:italic; font-weight:400; font-size:1.5rem; font-optical-sizing:auto; font-variation-settings:"opsz" 12; }
+/* SMP — junior high: mid weight, mid optical size, upright. */
+.level-badge.smp .abbr{ font-style:normal; font-weight:560; font-size:1.6rem; font-optical-sizing:auto; font-variation-settings:"opsz" 60; }
+/* SMA — senior high: full weight, max optical size, upright, wider. */
+.level-badge.sma .abbr{ font-style:normal; font-weight:680; font-size:1.7rem; letter-spacing:0.01em; font-optical-sizing:auto; font-variation-settings:"opsz" 144; }
+
+/* ---------- featured schools ---------- */
+.schools-grid{ margin-top:48px; display:grid; gap:24px; grid-template-columns:1fr; }
+@media (min-width:760px){ .schools-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (min-width:1150px){ .schools-grid{ grid-template-columns:1.3fr 1fr 1fr; } }
+.school-card{ background:var(--raised); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+.school-card.feature{ grid-row:span 2; }
+@media (max-width:1149px){ .school-card.feature{ grid-row:auto; } }
+.school-photo{ position:relative; aspect-ratio:4/3; }
+.school-card.feature .school-photo{ aspect-ratio:4/3; }
+@media (min-width:1150px){ .school-card.feature .school-photo{ aspect-ratio:1/1; } }
+.school-body{ padding:22px; }
+.school-body h3{ font-size:1.2rem; font-weight:600; font-family:"Plus Jakarta Sans",sans-serif; }
+.school-loc{ font-size:13px; color:var(--ink-muted); margin-top:4px; }
+.school-note{ margin-top:14px; font-size:14px; color:var(--ink-muted); border-top:1px solid var(--border); padding-top:14px; }
+.school-note b{ color:var(--accent); font-weight:700; }
+
+/* ---------- stories ---------- */
+.stories-scroller{
+  margin-top:44px; display:grid; grid-auto-flow:column; grid-auto-columns:82%;
+  gap:20px; overflow-x:auto; padding-bottom:12px; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+@media (min-width:760px){ .stories-scroller{ grid-auto-columns:44%; } }
+@media (min-width:1150px){ .stories-scroller{ grid-auto-columns:31%; } }
+.story-card{ scroll-snap-align:start; background:var(--raised); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+.story-photo{ aspect-ratio:16/10; }
+.story-body{ padding:20px; }
+.story-body h3{ font-family:"Fraunces",serif; font-weight:500; font-size:1.2rem; line-height:1.3; }
+.story-body p{ margin:10px 0 0; font-size:14px; color:var(--ink-muted); }
+
+/* ---------- partners ---------- */
+.partners-row{
+  margin-top:44px; display:grid; gap:1px; background:var(--border);
+  grid-template-columns:repeat(2,1fr); border:1px solid var(--border);
+}
+@media (min-width:640px){ .partners-row{ grid-template-columns:repeat(3,1fr); } }
+@media (min-width:960px){ .partners-row{ grid-template-columns:repeat(5,1fr); } }
+.partner-tile{
+  background:var(--raised); padding:26px 14px; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:10px; text-align:center;
+}
+.partner-tile svg{ width:40px; height:40px; }
+.partner-tile span{ font-size:11.5px; font-weight:600; color:var(--ink-muted); letter-spacing:0.01em; }
+
+/* ---------- final CTA ---------- */
+.cta-band{
+  background:var(--inverse); color:var(--inverse-ink);
+  border-radius:4px; padding:56px 32px;
+  display:grid; gap:32px; grid-template-columns:1fr;
+}
+@media (min-width:900px){ .cta-band{ grid-template-columns:1.3fr 0.9fr; align-items:center; padding:64px 56px; } }
+.cta-band h2{ color:var(--inverse-ink); font-size:clamp(1.8rem,3.4vw,2.4rem); max-width:16ch; }
+.cta-band p{ color:var(--inverse-muted); margin-top:14px; max-width:44ch; }
+.cta-actions{ display:flex; flex-wrap:wrap; gap:14px; }
+.cta-band .btn-secondary{ border-color:var(--inverse-muted); color:var(--inverse-ink); }
+
+/* ---------- footer ---------- */
+footer{ padding:48px 0; border-top:1px solid var(--border); }
+.foot-grid{ display:grid; gap:28px; grid-template-columns:1fr; }
+@media (min-width:760px){ .foot-grid{ grid-template-columns:1.4fr 1fr 1fr; } }
+.foot-grid h4{ margin:0 0 14px; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-muted); }
+.foot-grid ul{ list-style:none; margin:0; padding:0; display:grid; gap:9px; font-size:14px; }
+.foot-grid a{ text-decoration:none; }
+.foot-bottom{ margin-top:36px; padding-top:20px; border-top:1px solid var(--border); font-size:13px; color:var(--ink-muted); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .btn{ transition:none; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Ganti tema terang/gelap">Tema: sistem</button>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <div class="brand">Harapan untuk Sumba<span class="eng">Hope for Sumba</span></div>
+    <ul class="nav-links">
+      <li><a href="#siapa-kami">Siapa Kami</a></li>
+      <li><a href="#yang-kami-kerjakan">Program</a></li>
+      <li><a href="#sekolah">Sekolah</a></li>
+      <li><a href="#cerita">Cerita</a></li>
+    </ul>
+    <a class="nav-cta" href="#bermitra">Bermitra dengan Kami</a>
+  </div>
+</nav>
+
+<!-- ============================= HERO ============================= -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="hero-eyebrow">Sumba Timur &amp; Sumba Barat, NTT</span>
+      <h1>Anak-anak Sumba tumbuh <em>lebih jauh</em> dari sekadar bertahan.</h1>
+      <span class="eng">Children in Sumba grow further than survival.</span>
+      <p class="hero-sub">Kami membangun dan menjalankan sekolah gratis serta rumah anak di pelosok Sumba, tempat jarak ke sekolah terdekat, kekurangan guru, dan listrik yang belum merata masih menjadi kenyataan sehari-hari.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#bermitra">Bermitra dengan Kami</a>
+        <a class="btn btn-secondary" href="#sekolah">Dukung Sebuah Sekolah</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="ph hero-photo">
+        <div class="ph-label"><b>Foto:</b> anak-anak berjalan kaki menuju sekolah di pagi hari, jalan tanah, perbukitan Anakalang di latar belakang.</div>
+      </div>
+      <div class="hero-fact">
+        <span class="num">14</span>
+        <p>Sekolah dan rumah anak aktif tersebar di sembilan desa, dari Waingapu hingga Waikabubak.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= WHO WE ARE ============================= -->
+<section id="siapa-kami" class="sec-normal">
+  <div class="wrap who">
+    <div class="ph who-photo">
+      <div class="ph-label"><b>Foto:</b> staf lokal dan guru berbincang di beranda sekolah, sore hari, cahaya alami.</div>
+    </div>
+    <div class="who-body">
+      <p>Kami adalah tim guru, perawat, dan staf lokal Sumba, bekerja sama dengan mitra dari luar pulau yang percaya bahwa pendidikan adalah bentuk kasih yang paling tahan lama.</p>
+      <p>Hope for Sumba berdiri sejak lebih dari satu dekade lalu, dimulai dari satu ruang kelas di Kambera. Hari ini tim kami tinggal dan bekerja di desa-desa yang kami layani, bukan mengunjunginya sesekali. Setiap kepala sekolah, guru, dan pengasuh rumah anak adalah warga Sumba sendiri.</p>
+      <p>Kami tidak menjalankan program darurat. Kami menjalankan lembaga pendidikan jangka panjang, dengan kurikulum, laporan tahunan, dan struktur tata kelola yang bisa diaudit siapa pun.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= THE CHALLENGE ============================= -->
+<section class="sec-loose on-inverse">
+  <div class="wrap">
+    <span class="kicker">Kenyataan di lapangan</span>
+    <h2 class="title">Ini bukan soal anak-anak yang kurang mampu. Ini soal sistem yang belum sampai ke mereka.</h2>
+    <p class="lede">Tiga hal yang paling sering menentukan apakah seorang anak di pelosok Sumba bisa terus bersekolah.</p>
+    <div class="challenge-list">
+      <div class="challenge-row">
+        <span class="n">01</span>
+        <h3>Jarak</h3>
+        <p>Di banyak desa seperti Karuni dan Melolo, sekolah negeri terdekat berjarak lebih dari dua jam berjalan kaki melewati jalan tanah yang licin saat hujan.</p>
+      </div>
+      <div class="challenge-row">
+        <span class="n">02</span>
+        <h3>Guru</h3>
+        <p>Sekolah pelosok sering hanya punya dua atau tiga guru untuk enam tingkat kelas, sehingga satu guru mengajar beberapa kelas sekaligus dalam satu hari.</p>
+      </div>
+      <div class="challenge-row">
+        <span class="n">03</span>
+        <h3>Listrik</h3>
+        <p>Sebagian wilayah layanan kami belum terjangkau jaringan listrik negara, sehingga kegiatan belajar malam dan asrama bergantung pada tenaga surya mandiri.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= WHAT WE DO ============================= -->
+<section id="yang-kami-kerjakan" class="sec-normal">
+  <div class="wrap">
+    <h2 class="title">Yang kami kerjakan, dari kelas hingga rumah.</h2>
+    <p class="lede">Empat bentuk kerja yang saling menopang, bukan empat proyek terpisah.</p>
+    <div class="work-grid">
+      <div class="work-card lg tint">
+        <span class="work-mark">Aa</span>
+        <h3>Sekolah gratis, TK sampai SMA</h3>
+        <p>Tiga belas sekolah berjenjang lengkap, dari taman kanak-kanak hingga sekolah menengah atas, tanpa biaya SPP bagi keluarga yang bersekolah di sana.</p>
+      </div>
+      <div class="work-card">
+        <span class="work-mark">Rr</span>
+        <h3>Rumah anak</h3>
+        <p>Tempat tinggal bagi anak-anak yang rumahnya terlalu jauh untuk pulang-pergi setiap hari, dengan pengasuh tetap yang tinggal bersama mereka.</p>
+      </div>
+      <div class="work-card">
+        <span class="work-mark">Gg</span>
+        <h3>Pelatihan guru</h3>
+        <p>Lokakarya rutin bagi guru lokal, termasuk guru dari sekolah negeri di sekitar, agar keahlian mengajar tidak bergantung pada satu orang saja.</p>
+      </div>
+      <div class="work-card">
+        <span class="work-mark">Dd</span>
+        <h3>Kesehatan &amp; gizi</h3>
+        <p>Pemeriksaan kesehatan berkala dan makan siang bergizi di setiap sekolah, dikelola bersama puskesmas setempat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= SCALE ============================= -->
+<section class="sec-tight on-sunk">
+  <div class="wrap">
+    <h2 class="title">Skala kerja kami hari ini.</h2>
+    <div class="scale-row">
+      <div class="scale-item">
+        <span class="num">14</span>
+        <p>Sekolah dan rumah anak aktif</p>
+      </div>
+      <div class="scale-item">
+        <span class="num"><em>1.180</em></span>
+        <p>Anak bersekolah tahun ini</p>
+      </div>
+      <div class="scale-item">
+        <span class="num">62</span>
+        <p>Guru dan pengasuh lokal</p>
+      </div>
+      <div class="scale-item">
+        <span class="num"><em>9</em></span>
+        <p>Desa terlayani, dari Waingapu hingga Waikabubak</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= EVIDENCE ============================= -->
+<section class="sec-normal">
+  <div class="wrap">
+    <h2 class="title">Perubahan yang bisa dilihat, bukan dijanjikan.</h2>
+    <p class="lede">Ruang kelas di Kambera, lima tahun terpisah.</p>
+    <div class="evidence">
+      <div class="ph evidence-pane">
+        <span class="evidence-tag">2019</span>
+        <div class="ph-label">Dinding bambu dan atap alang-alang, satu ruang untuk dua tingkat kelas sekaligus.</div>
+      </div>
+      <div class="ph evidence-pane">
+        <span class="evidence-tag">2024</span>
+        <div class="ph-label">Dinding batako, delapan jendela kaca, dan ruang kelas terpisah untuk tiap tingkat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= HUMAN VOICE ============================= -->
+<section class="sec-loose">
+  <div class="wrap quote-layout">
+    <div class="quote-wrap">
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <blockquote>
+        Dulu saya mengira sekolah hanya tempat menghitung dan membaca. Sekarang saya tahu itu tempat pertama Ama percaya dirinya bisa jadi apa saja.
+        <div class="quote-attr">- <b>Ibu Ana</b>, wali murid, Sekolah Kambera</div>
+      </blockquote>
+    </div>
+    <div class="ph quote-photo">
+      <div class="ph-label"><b>Foto:</b> potret wali murid di depan rumahnya, ekspresi tenang dan percaya diri, bukan sedih.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FEATURED SCHOOLS ============================= -->
+<section id="sekolah" class="sec-normal on-sunk">
+  <div class="wrap">
+    <h2 class="title">Sekolah-sekolah yang bisa Anda dukung.</h2>
+    <p class="lede">Setiap sekolah punya kebutuhan berbeda. Pilih yang paling sesuai dengan yang ingin Anda tumbuhkan.</p>
+    <div class="schools-grid">
+
+      <article class="school-card feature">
+        <div class="ph school-photo">
+          <div class="level-badge sma"><span class="abbr">SMA</span><span class="full">Menengah Atas</span></div>
+          <div class="ph-label"><b>Foto:</b> siswa SMA di laboratorium sains sederhana, sedang mengamati sampel bersama.</div>
+        </div>
+        <div class="school-body">
+          <h3>SMA Harapan Kambera</h3>
+          <p class="school-loc">Kambera, Sumba Timur &middot; 210 siswa</p>
+          <p class="school-note"><b>Butuh 4 mitra lagi</b> untuk melengkapi peralatan laboratorium sains.</p>
+        </div>
+      </article>
+
+      <article class="school-card">
+        <div class="ph school-photo">
+          <div class="level-badge tk"><span class="abbr">TK</span><span class="full">Taman Kanak-kanak</span></div>
+          <div class="ph-label"><b>Foto:</b> anak-anak TK duduk melingkar di lantai, bermain dengan balok kayu.</div>
+        </div>
+        <div class="school-body">
+          <h3>TK Ceria Waingapu</h3>
+          <p class="school-loc">Waingapu, Sumba Timur &middot; 68 anak</p>
+          <p class="school-note">Ruang bermain baru sedang dibangun bertahap sepanjang tahun ini.</p>
+        </div>
+      </article>
+
+      <article class="school-card">
+        <div class="ph school-photo">
+          <div class="level-badge smp"><span class="abbr">SMP</span><span class="full">Menengah Pertama</span></div>
+          <div class="ph-label"><b>Foto:</b> guru menulis di papan tulis, kelas SMP dengan jendela besar terbuka.</div>
+        </div>
+        <div class="school-body">
+          <h3>SMP Terang Lewa</h3>
+          <p class="school-loc">Lewa, Sumba Timur &middot; 145 siswa</p>
+          <p class="school-note">Perpustakaan kecil baru dibuka, koleksi buku masih terus bertambah.</p>
+        </div>
+      </article>
+
+      <article class="school-card">
+        <div class="ph school-photo">
+          <div class="level-badge smp"><span class="abbr">SMP</span><span class="full">Menengah Pertama</span></div>
+          <div class="ph-label"><b>Foto:</b> siswa berlatih menanam sayur di kebun sekolah.</div>
+        </div>
+        <div class="school-body">
+          <h3>SMP Anakalang Bersinar</h3>
+          <p class="school-loc">Anakalang, Sumba Tengah &middot; 132 siswa</p>
+          <p class="school-note">Kebun sekolah mulai memasok sebagian kebutuhan makan siang.</p>
+        </div>
+      </article>
+
+      <article class="school-card">
+        <div class="ph school-photo">
+          <div class="level-badge tk"><span class="abbr">TK</span><span class="full">Taman Kanak-kanak</span></div>
+          <div class="ph-label"><b>Foto:</b> anak-anak TK menyanyi bersama guru di halaman sekolah, pagi hari.</div>
+        </div>
+        <div class="school-body">
+          <h3>TK Pelangi Waikabubak</h3>
+          <p class="school-loc">Waikabubak, Sumba Barat &middot; 54 anak</p>
+          <p class="school-note">Butuh 2 mitra lagi untuk melanjutkan program gizi harian.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================= STORIES ============================= -->
+<section id="cerita" class="sec-normal">
+  <div class="wrap">
+    <h2 class="title">Cerita dari sekolah dan rumah anak.</h2>
+    <div class="stories-scroller">
+      <article class="story-card">
+        <div class="ph story-photo">
+          <div class="ph-label"><b>Foto:</b> Deri, siswa kelas 5, membaca buku sendirian di teras rumah.</div>
+        </div>
+        <div class="story-body">
+          <h3>Deri belajar membaca di usia sepuluh tahun, dan sekarang mengajari adiknya</h3>
+          <p>Sumba Timur, cerita ditulis Maret 2026</p>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="ph story-photo">
+          <div class="ph-label"><b>Foto:</b> Vinsen mengoperasikan panel surya kecil di atap sekolah bersama gurunya.</div>
+        </div>
+        <div class="story-body">
+          <h3>Vinsen dan teman-temannya merawat panel surya sekolah mereka sendiri</h3>
+          <p>Anakalang, cerita ditulis Januari 2026</p>
+        </div>
+      </article>
+      <article class="story-card">
+        <div class="ph story-photo">
+          <div class="ph-label"><b>Foto:</b> Ratih memegang sertifikat kelulusan SMP, tersenyum bersama ibunya.</div>
+        </div>
+        <div class="story-body">
+          <h3>Ratih adalah lulusan SMP pertama dari desanya yang melanjutkan ke SMA</h3>
+          <p>Karuni, cerita ditulis November 2025</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= PARTNERS ============================= -->
+<section class="sec-tight on-sunk">
+  <div class="wrap">
+    <h2 class="title">Mitra yang berjalan bersama kami.</h2>
+    <div class="partners-row">
+      <div class="partner-tile">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="var(--accent)" stroke-width="1.5"/><text x="20" y="26" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="var(--accent)">CS</text></svg>
+        <span>Yayasan Cahaya Sumba</span>
+      </div>
+      <div class="partner-tile">
+        <svg viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="4" stroke="var(--accent)" stroke-width="1.5"/><text x="20" y="26" text-anchor="middle" font-family="Fraunces, serif" font-size="16" fill="var(--accent)">KP</text></svg>
+        <span>Konsorsium Pendidikan NTT</span>
+      </div>
+      <div class="partner-tile">
+        <svg viewBox="0 0 40 40" fill="none"><polygon points="20,3 37,32 3,32" stroke="var(--accent)" stroke-width="1.5" fill="none"/><text x="20" y="28" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="var(--accent)">GS</text></svg>
+        <span>Gereja Sumba Bersatu</span>
+      </div>
+      <div class="partner-tile">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="var(--accent)" stroke-width="1.5"/><line x1="20" y1="2" x2="20" y2="38" stroke="var(--accent)" stroke-width="1.5"/><text x="20" y="26" text-anchor="middle" font-family="Fraunces, serif" font-size="14" fill="var(--accent)">MA</text></svg>
+        <span>Mitra Alumni Sumba</span>
+      </div>
+      <div class="partner-tile">
+        <svg viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="16" stroke="var(--accent)" stroke-width="1.5"/><text x="20" y="26" text-anchor="middle" font-family="Fraunces, serif" font-size="14" fill="var(--accent)">DP</text></svg>
+        <span>Dewan Pendidikan Waingapu</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FINAL CTA ============================= -->
+<section id="bermitra" class="sec-normal">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Sebuah sekolah butuh mitra jangka panjang, bukan sekali derma.</h2>
+        <p>Kami menyiapkan proposal kemitraan lengkap dengan rencana kerja dan kontak lapangan, sehingga tim CSR atau yayasan Anda punya semua yang dibutuhkan untuk mengambil keputusan.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="#">Bermitra dengan Kami</a>
+        <a class="btn btn-secondary" href="#sekolah">Dukung Sebuah Sekolah</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand">Harapan untuk Sumba<span class="eng">Hope for Sumba</span></div>
+      <p style="margin-top:14px;color:var(--ink-muted);max-width:40ch;font-size:14px;">Yayasan pendidikan yang menjalankan sekolah gratis dan rumah anak di Sumba, Nusa Tenggara Timur.</p>
+    </div>
+    <div>
+      <h4>Jelajahi</h4>
+      <ul>
+        <li><a href="#siapa-kami">Siapa Kami</a></li>
+        <li><a href="#sekolah">Sekolah</a></li>
+        <li><a href="#cerita">Cerita</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Kontak</h4>
+      <ul>
+        <li>Waingapu, Sumba Timur, NTT</li>
+        <li>mitra@hopeforsumba.org</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>Hope for Sumba</span>
+    <span>Laporan tahunan tersedia atas permintaan mitra.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  var root = document.documentElement;
+  var current = null;
+  btn.addEventListener('click', function(){
+    if(current === 'dark'){ current = 'light'; }
+    else if(current === 'light'){ current = null; }
+    else { current = 'dark'; }
+    if(current){ root.setAttribute('data-theme', current); btn.textContent = 'Tema: ' + (current === 'dark' ? 'gelap' : 'terang'); }
+    else { root.removeAttribute('data-theme'); btn.textContent = 'Tema: sistem'; }
+  });
+})();
+</script>
+
+</body>
+</html>
