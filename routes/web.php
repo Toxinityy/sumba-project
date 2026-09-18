@@ -80,6 +80,19 @@ foreach (config('locales.supported') as $locale) {
                 'stories' => PostData::recent(24),
             ]))->name('stories.index')->defaults('locale', $locale);
 
+            // Story detail: Hero → Lede → Quote → Next step (spec §5). {slug}
+            // is a real URI parameter, same forwarding note as schools.show
+            // above. Only PostData::recent()'s three profiles have full
+            // detail content; a photo-essay slug (or an unknown one) 404s
+            // rather than rendering a page with no lede/quote to show.
+            Route::get($segments['stories'].'/{slug}', function (string $slug) {
+                $post = PostData::find($slug);
+
+                abort_unless($post !== null && isset($post['quote']), 404);
+
+                return view('pages.story', ['post' => $post]);
+            })->name('stories.show')->defaults('locale', $locale);
+
             Route::get($segments['give'], fn () => view('pages.give', [
                 'tiers' => TierData::all(),
             ]))->name('give')->defaults('locale', $locale);
@@ -128,6 +141,36 @@ foreach (config('locales.supported') as $locale) {
                 return back()->with('contact.sent', true);
             })->middleware('throttle:5,1')->name('contact.send')->defaults('locale', $locale);
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
+
+            // Gallery, Partners, Impact and Projects are deferred past launch
+            // (spec §10) — built in this pass so the whole site is clickable
+            // for review, not because launch scope changed. config/locales.php
+            // ('segments') is Agent B's file, not this workstream's, so these
+            // four use a literal translated-segment map inline rather than
+            // adding to it. Report note: whoever owns config/locales.php
+            // should fold this map into 'segments' once these pages are
+            // scheduled for real (docs/agent-a-pages-report.md, Pass 4).
+            $deferredSegments = [
+                'gallery' => ['id' => 'galeri', 'en' => 'gallery'],
+                'partners' => ['id' => 'mitra', 'en' => 'partners'],
+                'impact' => ['id' => 'dampak', 'en' => 'impact'],
+                'projects' => ['id' => 'proyek', 'en' => 'projects'],
+            ];
+
+            Route::get($deferredSegments['gallery'][$locale], fn () => view('pages.gallery', [
+                'essays' => PostData::photoEssays(),
+            ]))->name('gallery.index')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['partners'][$locale], fn () => view('pages.partners'))
+                ->name('partners')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['impact'][$locale], fn () => view('pages.impact', [
+                'stats' => StatData::all(),
+                'stories' => PostData::recent(3),
+            ]))->name('impact')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['projects'][$locale], fn () => view('pages.projects'))
+                ->name('projects')->defaults('locale', $locale);
         });
 }
 
