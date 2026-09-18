@@ -2,8 +2,17 @@
 // tests/Feature/Pages/HomePageTest.php
 
 it('renders the home page in both locales', function () {
-    $this->get('/id')->assertOk()->assertSee('Setiap anak berhak atas masa depan yang cerah.');
-    $this->get('/en')->assertOk()->assertSee('Every child deserves a bright future.');
+    // The masthead now splits at the accented word, which is set in Fraunces
+    // italic at the accent colour, so the sentence is no longer one contiguous
+    // run of text in the markup. Both halves plus the <em> are asserted, which
+    // is a stricter check than the single assertSee this replaced.
+    $this->get('/id')->assertOk()
+        ->assertSee('Setiap anak berhak atas masa depan yang')
+        ->assertSee('<em>cerah.</em>', escape: false);
+
+    $this->get('/en')->assertOk()
+        ->assertSee('Every child deserves a')
+        ->assertSee('<em>bright future.</em>', escape: false);
 });
 
 it('shows the stat band, the featured school and story teasers', function () {
