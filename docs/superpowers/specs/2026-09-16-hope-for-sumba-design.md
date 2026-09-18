@@ -159,7 +159,11 @@ Every name below is a section from the table above. Where a section serves a spe
 | Impact | Hero → Stat band → Stories → Evidence → Next step |
 | About | Hero → Lede (our story) → Work (founder) → Lede (mission & vision) → People (the team) → Next step |
 | Get Involved | Hero → Directory (sponsorship tiers) → Ways (corporate, church, volunteer) → Detail panel (how giving works) → Next step |
+| Schools directory | Hero → Directory (schools) → Next step |
 | Stories | Hero → Stories → Next step |
+| Story detail | Hero → Lede → Quote → Next step |
+| Gallery | Hero → Stories (photo essays) → Next step |
+| Partners | Hero → Lede → Partners → Next step |
 | Contact | Hero → Form (partnership enquiry) → Detail panel (where to find us) → Next step |
 | Safeguarding | Hero → Lede → Lede → Lede (policy page — exempt from rule 1, see below) |
 
