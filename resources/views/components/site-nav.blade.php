@@ -11,7 +11,10 @@
     {{-- No fixed widths: Indonesian labels run 15-20% longer than English and
          must not be clipped or forced to wrap mid-word. --}}
     <nav class="flex flex-wrap items-center gap-4" aria-label="{{ __('nav.label') }}">
-      @foreach (['about', 'schools.index', 'homes.index', 'stories.index', 'give', 'contact'] as $name)
+      {{-- gallery.index/partners/impact/projects are deferred past launch
+           (spec §10) but built for this review pass, so they're listed
+           here too — see docs/agent-a-pages-report.md, Pass 4. --}}
+      @foreach (['about', 'schools.index', 'homes.index', 'stories.index', 'gallery.index', 'partners', 'impact', 'projects', 'give', 'contact'] as $name)
         <a href="{{ route("{$locale}.{$name}") }}"
            class="flex min-h-11 items-center px-2 text-[15px] font-semibold text-ink-muted hover:text-accent"
            @if (request()->routeIs("{$locale}.{$name}")) aria-current="page" @endif>
