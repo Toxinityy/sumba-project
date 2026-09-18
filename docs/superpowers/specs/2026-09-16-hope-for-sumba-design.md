@@ -91,7 +91,22 @@ The dark `inverse-surface` is deliberately distinct from `surface-raised`. If th
 
 **Geometry (both themes):** radius 6 / 10 / 14px, buttons 8px.
 
-**Accessibility:** WCAG AA on all text — 4.5:1 body, 3:1 large. All 17 pairs verified with the relative-luminance formula. The light-mode gold at 4.68:1 is the tightest and must not be darkened further without re-checking.
+**Accessibility:** WCAG AA on all text — 4.5:1 body, 3:1 large. The light-mode gold at 4.68:1 is the tightest and must not be darkened further without re-checking.
+
+**Correction (2026-09-18) — accent is not safe on every ground.** This section previously said "all 17 pairs verified". That verification covered the pairs someone thought to list, not every pairing the palette permits, and two real combinations fail:
+
+| Light `accent #96660E` on | Ratio | |
+|---|---|---|
+| `surface #F7F8F3` | 4.68:1 | pass |
+| `surface-raised #FFFFFF` | 5.00:1 | pass |
+| **`surface-sunk #ECEEE3`** | **4.26:1** | **fails AA** |
+| **`badge-bg #EFE3C8`** | **3.92:1** | **fails AA** |
+
+Dark-mode accent clears AA on all four grounds.
+
+**The rule: in light mode, accent may be used as TEXT only on `surface` and `surface-raised`.** On `surface-sunk` or `badge-bg`, accent-coloured text uses `badge-ink` (`#5A3E0E` light, `#F0C97D` dark) — same hue family, 8.41:1 and 7.74:1 respectively. Accent remains fine as a *background* with `accent-ink` on it, and as a non-text element such as a rule or a border.
+
+Nothing violates this today — no `bg-sunk` component uses `text-accent`, and the badge uses `badge-ink`. It is written down because it is a trap: the palette invites using accent structurally, and a green token test proves nothing about pairings nobody listed. **The contrast test must assert accent's ratio on every surface token, not on a hand-picked list.**
 
 **Theme resolution — three states, not two.** An explicit choice stamps `data-theme` on the root and wins in both directions. The default "system" setting stamps nothing, so the bare `:root` must carry a complete light palette and the dark media query is guarded as `:root:not([data-theme="light"])`.
 
@@ -107,6 +122,12 @@ The dark `inverse-surface` is deliberately distinct from `surface-raised`. If th
 | Caption/label | Plus Jakarta Sans | 14, uppercase, +0.08em |
 
 Pull quotes: serif, italic, 28–32px, generous leading. Both faces self-hosted and subset; variable axes trimmed to the weights used; `font-display: swap`; two critical faces preloaded.
+
+**Fraunces' range is the editorial lever (added 2026-09-18).** The table above sets sizes; it says nothing about weight, and the first build pinned Fraunces at weight 500 everywhere. It is a five-axis variable face — `opsz 9–144`, `wght 100–900`, `SOFT`, `WONK`, and a true italic — and the unused range is where editorial character comes from without introducing a single new colour.
+
+The governing idea is **distance between extremes in one typeface**: low weight at large size (280–330 at 56–200px) gives the high stroke contrast of a magazine masthead rather than a bold web headline, and it costs nothing. Set against a small mark at `opsz 14 / wght 700`, the same face reads as two voices of one publication, because Fraunces' optical-size axis genuinely redraws the letterforms.
+
+**Landing-page exception to the type table:** on the single landing page that carries the whole narrative, section headings are set at the H1 size (44px desktop) rather than H2's 32px, because there they *are* the top-level moments and no page H1 competes with them. The masthead stays at Display. This exception applies to the landing page only.
 
 ### Layout
 
@@ -139,6 +160,15 @@ Fifteen sections. Every page is a sequence of them; **no page invents new ones, 
 | Partners | Social proof | Logo strip |
 
 *Detail panel* is implemented as `<x-sections.current-need>` — the component kept its original name when the job broadened, to avoid a rename across built and reviewed code.
+
+**Section geometry is per-section, not global (added 2026-09-18).** The first build gave all fifteen sections identical geometry — the same vertical padding, the same max-width, the same centred container, then a symmetric two-column or three-up grid. The result read as assembled rather than designed, and the client's verdict was "too flat and tiresome".
+
+The cause was the uniform geometry, **not the fixed section set.** Those are separable, and the distinction matters: the section set is what produced zero hand-rolled sections across fourteen pages, and retiring it would lose that protection and buy nothing. So the set stays fixed and the geometry varies:
+
+- **Four padding steps**, not one. Coupled sections sit tight; pivots get air.
+- **Four container relationships**: inside the 1200px content width, inside a wider 1440px band, full-bleed to the viewport, and offset into the grid.
+- **Overlap is permitted and load-bearing** — a plate bleeding past a gutter, a card pulled up across a section boundary, a pull quote breaking its measure.
+- **One dark chapter rather than alternating inversion.** A continuous inverse field the reader passes through reads as a designed movement; flipping light and dark section by section reads as a broken theme.
 
 **Three rules produce the rhythm:**
 
