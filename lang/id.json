@@ -19,10 +19,7 @@
   "footer.address": "Yayasan Harapan Sumba",
   "footer.registration": "Nomor registrasi yayasan: belum diisi.",
 
-  "theme.label": "Tampilan",
-  "theme.light": "Terang",
-  "theme.dark": "Gelap",
-  "theme.system": "Sistem",
+  "theme.toggle": "Mode gelap",
 
   "cta.partner": "Bermitra dengan Kami",
   "cta.give": "Dukung Sebuah Sekolah",

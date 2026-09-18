@@ -109,3 +109,34 @@
         }
     }
 }
+
+/*
+  Sun/moon theme toggle. Shows the theme you would switch TO: moon in light
+  mode, sun in dark mode. Resolved with the same three states as the colour
+  tokens in tokens.css, so the correct icon is on screen before JavaScript
+  runs and never flashes the wrong one:
+    - bare :root (light, and "system" on a light device)  -> moon
+    - "system" on a dark device                            -> sun
+    - explicit data-theme="dark"                           -> sun
+*/
+@layer components {
+    .theme-toggle__sun {
+        display: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .theme-toggle__moon {
+            display: none;
+        }
+        :root:not([data-theme="light"]) .theme-toggle__sun {
+            display: block;
+        }
+    }
+
+    :root[data-theme="dark"] .theme-toggle__moon {
+        display: none;
+    }
+    :root[data-theme="dark"] .theme-toggle__sun {
+        display: block;
+    }
+}

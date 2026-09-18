@@ -44,6 +44,7 @@
 
     <div class="flex items-center gap-3">
       <x-language-switcher />
+      <x-theme-switcher />
       {{-- The primary CTA, present from the first screen on wide viewports
            only: below that the four nav items plus the language switcher
            already fill the bar, and the hero carries the same action. --}}
