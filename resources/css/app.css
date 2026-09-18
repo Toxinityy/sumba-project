@@ -1,6 +1,9 @@
 @import './fonts.css';
 @import 'tailwindcss';
 @import './tokens.css';
+/* Editorial geometry/type for the landing page. Loaded last and unlayered so
+   its classes beat utilities where both apply; every class in it is opt-in. */
+@import './landing.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -79,6 +82,11 @@
         font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
         font-size: 18px;
         line-height: 1.7;
+        /* The landing page's full-bleed plate is pulled past the viewport's
+           left edge on purpose. `clip` lets that happen without producing a
+           horizontal scrollbar, and unlike `hidden` it does not create a
+           scroll container that would break `position: sticky` on the nav. */
+        overflow-x: clip;
     }
 
     @media (max-width: 720px) {
