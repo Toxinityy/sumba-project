@@ -1,6 +1,12 @@
 {{-- resources/views/components/site-footer.blade.php --}}
 @php($locale = app()->getLocale())
 
+{{--
+  The footer is where the six pages folded out of the nav stay reachable.
+  About, Children's Homes, Impact, Partners, Gallery and Projects all keep
+  their routes and are all linked here, so nothing 404s and no existing link
+  breaks — they just stop competing for attention in a ten-item menu.
+--}}
 <footer class="bg-inverse text-inverse-ink">
   <div class="mx-auto max-w-content px-4 pb-12 pt-20">
     <div class="mb-16 grid gap-12 md:grid-cols-3">
@@ -10,7 +16,7 @@
       </div>
       <div class="flex flex-col gap-2">
         <p class="text-caption uppercase tracking-[0.08em] text-inverse-ink-muted">{{ __('footer.explore') }}</p>
-        @foreach (['about', 'schools.index', 'homes.index', 'stories.index'] as $name)
+        @foreach (['schools.index', 'stories.index', 'about', 'homes.index', 'impact', 'projects', 'partners', 'gallery.index'] as $name)
           <a href="{{ route("{$locale}.{$name}") }}" class="flex min-h-11 items-center hover:underline">{{ __('nav.' . $name) }}</a>
         @endforeach
       </div>

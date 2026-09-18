@@ -30,6 +30,14 @@
   --inverse-surface: #1e2a22;
   --inverse-ink: #f7f8f3;
   --inverse-ink-muted: #b9c2b4;
+  /* Accent ON the inverse ground. The light palette's --accent (#96660e) is
+     4.68:1 on --surface but only 1.6:1 on --inverse-surface, so the inverse
+     chapter needs its own accent value rather than reusing the surface one.
+     #e8a23a is the dark palette's accent, measured 6.85:1 on light
+     --inverse-surface (#1e2a22) and 6.06:1 on dark --inverse-surface
+     (#3a2e22) — AA in both themes. Its ink pair is 7.86:1 on it. */
+  --inverse-accent: #e8a23a;
+  --inverse-accent-ink: #241a0e;
 
   /* Geometry is theme-independent: corners that move on a theme toggle read
      as two different sites. The --radius-* custom properties themselves are
@@ -59,6 +67,8 @@
     --inverse-surface: #3a2e22;
     --inverse-ink: #f5efe6;
     --inverse-ink-muted: #cfc4b4;
+  --inverse-accent: #e8a23a;
+  --inverse-accent-ink: #241a0e;
   }
 }
 
@@ -79,4 +89,6 @@
   --inverse-surface: #3a2e22;
   --inverse-ink: #f5efe6;
   --inverse-ink-muted: #cfc4b4;
+  --inverse-accent: #e8a23a;
+  --inverse-accent-ink: #241a0e;
 }

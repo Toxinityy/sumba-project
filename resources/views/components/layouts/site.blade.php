@@ -41,6 +41,5 @@
   <x-site-nav />
   <main id="main">{{ $slot }}</main>
   <x-site-footer />
-  <x-theme-switcher />
 </body>
 </html>

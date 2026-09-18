@@ -30,8 +30,25 @@ it('never renders a surname for the safeguarded student profile', function () {
         ->and($html)->not->toContain('role="progressbar"');
 });
 
-it('404s for a school slug with no detail profile yet', function () {
-    $this->get('/id/sekolah/anakalang')->assertNotFound();
+// Pass 4: every one of SchoolData's six schools now has a full detail
+// profile (see docs/agent-a-pages-report.md, Pass 4), so the premise of
+// "a school slug with no detail profile yet" no longer exists — the same
+// test-fragility pattern flagged twice before (LayoutTest, the
+// ancestor-fallback test) would repeat here if this test just changed the
+// slug it points at. Instead, assert all six render and each stays
+// distinct — the thing that could actually regress now.
+it('renders every one of the six schools, each with a distinct status', function () {
+    $statuses = [];
+
+    foreach (['karuni', 'anakalang', 'kambera', 'melolo', 'lewa', 'waikabubak'] as $slug) {
+        $html = $this->get("/id/sekolah/{$slug}")->assertOk()->getContent();
+        $status = \App\ViewModels\SchoolData::find($slug)['status'];
+
+        expect($html)->toContain($status);
+        $statuses[] = $status;
+    }
+
+    expect(array_unique($statuses))->toHaveCount(6);
 });
 
 it('404s for an unknown school slug', function () {

@@ -36,6 +36,26 @@ dataset('textPairs', [
     'dark ink on inverse'           => ['#F5EFE6', '#3A2E22'],
     'dark muted on inverse'         => ['#CFC4B4', '#3A2E22'],
     'dark badge-ink on badge'       => ['#F0C97D', '#3B2E1C'],
+
+    // Pairings the landing-page redesign introduced (2026-09-18). Every one is
+    // a combination that now appears on a real page, not a hypothetical.
+    'light ink on sunk'             => ['#1E2A22', '#ECEEE3'],
+    'light muted on sunk'          => ['#4B5A4E', '#ECEEE3'],
+    'light badge-ink on sunk'      => ['#5A3E0E', '#ECEEE3'],
+    'light ink on badge'           => ['#1E2A22', '#EFE3C8'],
+    'light muted on badge'         => ['#4B5A4E', '#EFE3C8'],
+    'light muted on raised'        => ['#4B5A4E', '#FFFFFF'],
+    'light ink on raised'          => ['#1E2A22', '#FFFFFF'],
+    'light inverse-accent on inverse' => ['#E8A23A', '#1E2A22'],
+    'dark ink on sunk'             => ['#F5EFE6', '#1A1410'],
+    'dark muted on sunk'           => ['#C9BEB0', '#1A1410'],
+    'dark badge-ink on sunk'       => ['#F0C97D', '#1A1410'],
+    'dark ink on badge'            => ['#F5EFE6', '#3B2E1C'],
+    'dark muted on badge'          => ['#C9BEB0', '#3B2E1C'],
+    'dark muted on raised'         => ['#C9BEB0', '#2B231C'],
+    'dark ink on raised'           => ['#F5EFE6', '#2B231C'],
+    'dark inverse-accent on inverse'  => ['#E8A23A', '#3A2E22'],
+    'inverse-accent-ink on inverse-accent' => ['#241A0E', '#E8A23A'],
 ]);
 
 it('meets WCAG AA for body text', function (string $fg, string $bg) {
@@ -75,4 +95,40 @@ it('declares every token used by a theme in the base :root block', function () {
     ] as $token) {
         expect($base)->toContain($token);
     }
+});
+
+// Spec §4's correction (2026-09-18) asks for exactly this: the contrast test
+// must assert the accent-family text colour against EVERY surface token, not a
+// hand-picked list. Light --accent is 4.26:1 on --surface-sunk and 3.92:1 on
+// --badge-bg, so on those two grounds the accent-family text token is
+// --badge-ink. The assertion is over the whole mapping, so a future component
+// that reaches for accent text on a tinted ground has a test that already
+// covers the ground it landed on.
+dataset('accentFamilyOnEverySurface', [
+    'light: accent on surface'      => ['#96660E', '#F7F8F3'],
+    'light: accent on raised'       => ['#96660E', '#FFFFFF'],
+    'light: badge-ink on sunk'      => ['#5A3E0E', '#ECEEE3'],
+    'light: badge-ink on badge-bg'  => ['#5A3E0E', '#EFE3C8'],
+    'light: inverse-accent on inverse' => ['#E8A23A', '#1E2A22'],
+    'dark: accent on surface'       => ['#E8A23A', '#211A15'],
+    'dark: accent on raised'        => ['#E8A23A', '#2B231C'],
+    'dark: badge-ink on sunk'       => ['#F0C97D', '#1A1410'],
+    'dark: badge-ink on badge-bg'   => ['#F0C97D', '#3B2E1C'],
+    'dark: inverse-accent on inverse'  => ['#E8A23A', '#3A2E22'],
+]);
+
+it('clears AA for accent-family text on every surface token', function (string $fg, string $bg) {
+    expect(contrastRatio($fg, $bg))->toBeGreaterThanOrEqual(4.5);
+})->with('accentFamilyOnEverySurface');
+
+it('records why sunk and tinted grounds may not use accent as text', function () {
+    // The two ratios the spec correction names. This test exists so that
+    // "just use text-accent, it passed on surface" is contradicted by a number
+    // in the suite rather than by a paragraph in a document.
+    expect(contrastRatio('#96660E', '#ECEEE3'))->toBeLessThan(4.5)
+        ->and(contrastRatio('#96660E', '#EFE3C8'))->toBeLessThan(4.5);
+
+    // And the substitute really does clear it on both.
+    expect(contrastRatio('#5A3E0E', '#ECEEE3'))->toBeGreaterThanOrEqual(4.5)
+        ->and(contrastRatio('#5A3E0E', '#EFE3C8'))->toBeGreaterThanOrEqual(4.5);
 });

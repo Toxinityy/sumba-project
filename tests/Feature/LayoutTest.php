@@ -28,11 +28,39 @@ it('applies a saved theme before the body parses to avoid a flash', function () 
     expect($themeScript)->toBeLessThan($headEnd);
 });
 
-it('offers light, dark and system theme choices', function () {
+it('puts one sun/moon theme toggle in the nav, right after the language switcher', function () {
+    $html = $this->get('/id/sekolah')->getContent();
+
+    // Exactly one toggle, carrying both icons — CSS decides which is visible.
+    expect(substr_count($html, 'data-theme-toggle'))->toBe(1)
+        ->and($html)->toContain('theme-toggle__moon')
+        ->and($html)->toContain('theme-toggle__sun');
+
+    // Inside the sticky header, and after the ID/EN switcher rather than
+    // somewhere else in the bar.
+    $headerStart = strpos($html, '<header');
+    $headerEnd = strpos($html, '</header>');
+    // Searched from the header onward: hreflang="en" also appears earlier, in
+    // the <head>'s alternate-language link, which would make this ordering
+    // check pass no matter where the toggle sat.
+    $langSwitch = strpos($html, 'hreflang="en"', $headerStart);
+    $toggle = strpos($html, 'data-theme-toggle');
+
+    expect($toggle)->toBeGreaterThan($headerStart)
+        ->and($toggle)->toBeLessThan($headerEnd)
+        ->and($toggle)->toBeGreaterThan($langSwitch);
+});
+
+it('gives the theme toggle a real accessible name in both languages', function () {
+    // An icon-only button with no name is announced as just "button".
+    $this->get('/id/sekolah')->assertSee('aria-label="Mode gelap"', escape: false);
+    $this->get('/en/schools')->assertSee('aria-label="Dark mode"', escape: false);
+});
+
+it('no longer renders the old floating three-button theme panel', function () {
     $this->get('/id/sekolah')
-        ->assertSee('data-theme-btn="light"', escape: false)
-        ->assertSee('data-theme-btn="dark"', escape: false)
-        ->assertSee('data-theme-btn="system"', escape: false);
+        ->assertDontSee('data-theme-btn', escape: false)
+        ->assertDontSee('fixed bottom-4 right-4', escape: false);
 });
 
 it('always emits a non-empty title', function () {

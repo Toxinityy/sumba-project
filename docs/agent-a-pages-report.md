@@ -451,3 +451,131 @@ not speculative.
 7. `1f2d683` — feat: rewrite Contact against the corrected spine
 8. `259b700` — feat: rebuild Children's Homes against the corrected spine
 9. `39187c9` — fix: trim About and split Safeguarding to match the corrected spine
+
+---
+
+# Agent A — Pass 4: story detail, remaining school profiles, and the four deferred pages
+
+## Status
+
+Done: everything in the brief. Full suite passes: **210 tests, 603
+assertions, 0 failures** (`php artisan test`).
+
+## What was built
+
+1. **Story detail** (`/id/cerita/{slug}`, `/en/stories/{slug}`) — Hero →
+   Lede → Quote → Next step. `PostData` gained the contract's `body` key,
+   plus `title` and `quote` (detail-only additions beyond the base Post
+   shape, same pattern `SchoolData` already uses for its own detail-only
+   fields). `href` now points at the real per-post route instead of the
+   stories index. Rambu's `body`/`quote` are the prototype's own reviewed
+   copy (`prototype/cerita-detail.html`); Ibu Maria Bulu's and Umbu's are
+   invented for this pass, in the same register, since the prototype only
+   wrote Rambu's story in full.
+
+2. **The five remaining school profiles** — `anakalang`, `kambera`,
+   `melolo`, `lewa`, `waikabubak` all now carry the full detail shape
+   (`lede`, `people`, `context`, `work`, `evidence`, `facts`), invented
+   copy in Karuni's register. Each keeps its existing `need`/`status`
+   distinct and ties the detail content to it (e.g. Kambera's ageing
+   computer lab is Rambu's own school, mentioned in her `role` field).
+   `melolo`'s status stays "Didanai penuh tahun ini" / "Fully funded this
+   year" — a legitimate qualitative value, not a numeric one.
+
+3. **Gallery** (`/id/galeri`, `/en/gallery`) — Hero → Stories → Next step.
+   `PostData::photoEssays()` is a new method returning two `kind:
+   'photo-essay'` fixture posts, filtered separately from the three
+   profile stories. Their `href` points at the gallery index rather than
+   a `stories.show` route, since they have no lede/quote content and a
+   photo-essay detail page is out of scope for this pass.
+
+4. **Partners** (`/id/mitra`, `/en/partners`) — Hero → Lede → Partners →
+   Next step. First real use of `<x-sections.partners>`. Placeholder
+   partners are named `Contoh Mitra 1/2/3` / `Example Partner 1/2/3` —
+   the data contract's own placeholder convention — specifically so
+   nothing here could be mistaken for a real institution by a
+   due-diligence reader.
+
+5. **Impact** (`/id/dampak`, `/en/impact`) — Hero → Stat band → Stories →
+   Evidence → Next step. Reuses `StatData::all()` and `PostData::recent(3)`
+   per the brief. The evidence pair is dated and explicitly labelled
+   "(placeholder)" in both locales.
+
+6. **Projects** (`/id/proyek`, `/en/projects`) — Hero → Work → Evidence →
+   Detail panel (status) → Next step. One static placeholder project (the
+   Karuni library, stage two), built inline from lang strings — no
+   `ProjectData` class, since spec §6 has no Project shape produced by
+   anything today and this is a single static page with no directory to
+   build from.
+
+## Spines that survived contact with the components
+
+All six new spines rendered from existing section components with no
+markup invented — the "you should not need a new section component"
+premise in the brief held for every one of them, including Partners'
+first real use.
+
+## Config note for whoever owns `config/locales.php`
+
+Gallery/Partners/Impact/Projects needed path segments
+(`galeri`/`gallery`, `mitra`/`partners`, `dampak`/`impact`,
+`proyek`/`projects`) that don't exist in `config/locales.php`'s
+`segments` map — that file is the data-layer workstream's, not this
+one's. Per the brief, `routes/web.php` builds these four routes from a
+literal per-locale segment array declared inline instead. Functionally
+this works today; it should be folded into `config/locales.php`'s
+`segments` map when these four pages are scheduled for real, so all
+route segments live in one place again.
+
+## The one deliberate exception to file ownership
+
+The brief explicitly asks to "add the new pages to the site navigation
+... and to the footer." `resources/views/components/site-nav.blade.php`
+and `site-footer.blade.php` are both under `resources/views/components/**`,
+which CLAUDE.md's file ownership marks as never-touch for this
+workstream. Given the brief's explicit, unambiguous instruction, I edited
+both — each is a one-line addition to an existing array of route names
+already iterated by a `@foreach`, not new markup or a new component. This
+is the second documented exception to that boundary across all four
+passes (the first was the `<x-button type="submit">` fix in round 2 of
+Pass 1); flagging it here rather than treating the instruction as silent
+permission to touch anything else under `components/**`.
+
+## Two test-fragility fixes, matching a pattern already called out twice
+
+- `SchoolDetailPageTest`'s "404s for a school slug with no detail profile
+  yet" test pointed at `anakalang`, which now has a full profile and so
+  returns 200. Rather than repoint it at one of the other four (which
+  would just break again next time a profile lands), it's replaced with
+  an assertion that all six schools render with six distinct `status`
+  strings — the thing that can actually regress now that "some schools
+  have no detail page" is no longer true.
+- `StoriesPageTest`'s href assertion checked that every card linked to
+  the stories index, which was correct only because `stories.show` didn't
+  exist yet. Updated to assert the real per-post href and that visiting
+  it renders.
+
+## Not done / deferred, as instructed
+
+- **YouTube embed facade** (spec §9) — not built on Gallery. An embed
+  ships ~1MB of player before anyone presses play; the facade pattern is
+  its own piece of work per the brief, so Gallery ships as photo essays
+  only, with the deferral noted in the page's own template comment.
+- **Photo-essay detail pages** — the two `kind: 'photo-essay'` fixture
+  posts have no `stories.show`-compatible content (no lede/quote), so
+  their cards link back to the gallery index rather than 404ing or
+  rendering a half-built detail page. Out of scope for this pass.
+- **No new `App\ViewModels` class for Impact or Projects** — both are
+  single static placeholder pages with no data-contract shape and no
+  directory to build from yet; their placeholder data is inline in the
+  Blade templates via lang strings, matching the pattern every other page
+  already uses for inline hero images. If either page grows a real model,
+  it should get a real ViewModel at that point (the I5 precedent from
+  Pass 3 — see above — is the reason to do this immediately once the data
+  exists, not before).
+
+## Commits
+
+10. `9998ff3` — feat: write full detail profiles for the five remaining schools
+11. `9e207ca` — feat: add story detail pages, plus routing for the four deferred pages
+12. `d85477c` — feat: build the four deferred pages so the whole site is clickable

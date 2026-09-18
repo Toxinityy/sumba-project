@@ -1,5 +1,6 @@
 <?php
 
+use App\ViewModels\PartnerData;
 use App\ViewModels\PostData;
 use App\ViewModels\SchoolData;
 use App\ViewModels\StatData;
@@ -39,10 +40,23 @@ foreach (config('locales.supported') as $locale) {
             // argument is evaluated once at route registration and can't
             // see app()->getLocale(). Pages whose content is entirely in the
             // translation files stay on Route::view().
+            // The landing page carries the whole narrative (see
+            // resources/views/pages/home.blade.php), so it pulls from every
+            // fixture rather than three. 'anakalang' is the lead school and is
+            // removed from the rail list below it so it appears once, not
+            // twice; the voice is Ibu Maria Bulu's own quote from her profile,
+            // rather than a fourth copy of the same words in a lang file.
             Route::get('/', fn () => view('pages.home', [
-                'stats' => StatData::all(),
-                'featuredSchool' => SchoolData::find('karuni'),
+                'stats' => StatData::scale(),
+                'challenge' => StatData::challenge(),
+                'featuredSchool' => SchoolData::find('anakalang'),
+                'schools' => array_values(array_filter(
+                    SchoolData::all(),
+                    fn (array $school) => $school['slug'] !== 'anakalang',
+                )),
                 'stories' => PostData::recent(3),
+                'voice' => PostData::find('ibu-maria-bulu')['quote'],
+                'partners' => PartnerData::all(),
             ]))->name('home')->defaults('locale', $locale);
 
             // About and Children's Homes moved off Route::view() (I5): both
@@ -79,6 +93,19 @@ foreach (config('locales.supported') as $locale) {
                 // is, and grows without a change here when posts are added.
                 'stories' => PostData::recent(24),
             ]))->name('stories.index')->defaults('locale', $locale);
+
+            // Story detail: Hero → Lede → Quote → Next step (spec §5). {slug}
+            // is a real URI parameter, same forwarding note as schools.show
+            // above. Only PostData::recent()'s three profiles have full
+            // detail content; a photo-essay slug (or an unknown one) 404s
+            // rather than rendering a page with no lede/quote to show.
+            Route::get($segments['stories'].'/{slug}', function (string $slug) {
+                $post = PostData::find($slug);
+
+                abort_unless($post !== null && isset($post['quote']), 404);
+
+                return view('pages.story', ['post' => $post]);
+            })->name('stories.show')->defaults('locale', $locale);
 
             Route::get($segments['give'], fn () => view('pages.give', [
                 'tiers' => TierData::all(),
@@ -128,6 +155,36 @@ foreach (config('locales.supported') as $locale) {
                 return back()->with('contact.sent', true);
             })->middleware('throttle:5,1')->name('contact.send')->defaults('locale', $locale);
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
+
+            // Gallery, Partners, Impact and Projects are deferred past launch
+            // (spec §10) — built in this pass so the whole site is clickable
+            // for review, not because launch scope changed. config/locales.php
+            // ('segments') is Agent B's file, not this workstream's, so these
+            // four use a literal translated-segment map inline rather than
+            // adding to it. Report note: whoever owns config/locales.php
+            // should fold this map into 'segments' once these pages are
+            // scheduled for real (docs/agent-a-pages-report.md, Pass 4).
+            $deferredSegments = [
+                'gallery' => ['id' => 'galeri', 'en' => 'gallery'],
+                'partners' => ['id' => 'mitra', 'en' => 'partners'],
+                'impact' => ['id' => 'dampak', 'en' => 'impact'],
+                'projects' => ['id' => 'proyek', 'en' => 'projects'],
+            ];
+
+            Route::get($deferredSegments['gallery'][$locale], fn () => view('pages.gallery', [
+                'essays' => PostData::photoEssays(),
+            ]))->name('gallery.index')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['partners'][$locale], fn () => view('pages.partners'))
+                ->name('partners')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['impact'][$locale], fn () => view('pages.impact', [
+                'stats' => StatData::all(),
+                'stories' => PostData::recent(3),
+            ]))->name('impact')->defaults('locale', $locale);
+
+            Route::get($deferredSegments['projects'][$locale], fn () => view('pages.projects'))
+                ->name('projects')->defaults('locale', $locale);
         });
 }
 

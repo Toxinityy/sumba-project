@@ -1,0 +1,696 @@
+/* resources/css/landing.css
+   ===========================================================================
+   Editorial geometry and type, ported from docs/design/landing-opus.html.
+
+   WHY THIS IS REAL CSS AND NOT TAILWIND UTILITIES
+   Three things here cannot be expressed as utilities without inventing a
+   utility per value: `font-variation-settings` on a five-axis variable face,
+   the gradient placeholder plates (which compose four `color-mix()` stops per
+   variant), and the overlaps — negative margins measured against the
+   container, not against a spacing step. Tailwind 4 is CSS-first, so this
+   file sits beside tokens.css rather than fighting the utility layer.
+
+   Loaded unlayered, AFTER `@import "tailwindcss"`, so these classes beat
+   utilities where both apply. Every class here is opt-in: a section emits one
+   only when its caller passes the matching prop, so nothing leaks onto the
+   deep pages.
+
+   SPEC §5 "Section geometry is per-section, not global": four padding steps,
+   four container relationships, load-bearing overlap, one dark chapter.
+   =========================================================================== */
+
+:root {
+  /* The side gutter the design measures its bleeds against. Tailwind's px-4
+     is a fixed 16px; the bleeds need a value they can negate exactly. */
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+}
+
+/* ===========================================================================
+   1. TYPE — Fraunces' axes
+   The face carries opsz 9-144 and wght 100-900 (verified against
+   public/fonts/fraunces-latin.woff2). It does NOT carry SOFT or WONK: the
+   Google Fonts query in docs/fonts.md never requested them, so the design's
+   SOFT/WONK settings are omitted here rather than written down as no-ops.
+   `font-optical-sizing: none` is required because the file's opsz default is
+   9 — without it the browser picks opsz from the font size and the explicit
+   setting below is the only thing that redraws the letterforms.
+   =========================================================================== */
+.ed-masthead,
+.ed-h2,
+.ed-h3,
+.ed-fig,
+.ed-quote,
+.ed-stat__fig,
+.ed-need,
+.ed-name,
+.ed-mono,
+.lvl__i.is-on {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-optical-sizing: none;
+}
+
+/* Low weight at large size: a magazine masthead, not a bold web headline. */
+.ed-masthead {
+  margin: 0;
+  font-size: clamp(2.15rem, 4.6vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  font-variation-settings: 'opsz' 144, 'wght' 330;
+  text-wrap: balance;
+}
+.ed-masthead em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'wght' 360;
+  color: var(--accent);
+  /* italic descenders on a long Indonesian word need real clearance */
+  line-height: 1.12;
+  padding-bottom: 0.06em;
+  display: inline-block;
+}
+
+/* Spec §4's landing-page exception: section heads sit at the H1 size, because
+   on the one page that carries the whole narrative they ARE the top-level
+   moments and no page H1 competes with them. */
+.ed-h2 {
+  margin: 0;
+  font-size: clamp(1.72rem, 3.6vw, 2.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.016em;
+  font-variation-settings: 'opsz' 48, 'wght' 420;
+  text-wrap: balance;
+}
+.ed-h3 {
+  margin: 0;
+  font-size: clamp(1.28rem, 2.3vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'opsz' 32, 'wght' 500;
+}
+.ed-name {
+  font-variation-settings: 'opsz' 24, 'wght' 560;
+  font-size: 1.1rem;
+  letter-spacing: -0.008em;
+}
+.ed-mono {
+  font-variation-settings: 'opsz' 20, 'wght' 640;
+  letter-spacing: 0.01em;
+}
+.ed-need {
+  font-variation-settings: 'opsz' 30, 'wght' 460;
+  font-size: clamp(1.3rem, 2.6vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+/* The English second language. Indonesian leads and sets every measurement;
+   English trails at 0.82rem so it can never drive a width. */
+.ed-en {
+  display: block;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.82rem;
+  letter-spacing: 0.005em;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--ink-muted);
+  margin-top: 0.7rem;
+  max-width: 46ch;
+}
+.on-chapter .ed-en,
+.on-inverse .ed-en {
+  color: var(--inverse-ink-muted);
+}
+
+/* Eyebrow label. SPEC §4 CONTRAST RULE: in light mode --accent is 4.26:1 on
+   --surface-sunk and 3.92:1 on --badge-bg, both below AA. So the label only
+   uses --accent on surface/raised; on sunk and tint grounds it switches to
+   --badge-ink (8.41:1 and 7.74:1 light, 11.60:1 and 8.38:1 dark). --accent is
+   never darkened to make this go away. */
+.ed-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+.on-sunk .ed-label,
+.on-tint .ed-label {
+  color: var(--badge-ink);
+}
+.on-chapter .ed-label,
+.on-inverse .ed-label {
+  color: var(--inverse-accent);
+}
+
+.ed-lead {
+  font-size: 1.16em;
+  line-height: 1.62;
+}
+
+/* An inline link in editorial copy. Same contrast rule as .ed-label: --accent
+   on surface/raised, --badge-ink on sunk/tint, --inverse-accent on the dark
+   chapter. The underline is a border so its weight and offset are controllable
+   and it never collides with a descender. */
+.ed-txtlink {
+  font-weight: 700;
+  font-size: 0.97rem;
+  text-decoration: none;
+  color: var(--accent);
+  border-bottom: 1.5px solid color-mix(in oklab, var(--accent) 40%, transparent);
+  padding-bottom: 1px;
+}
+.ed-txtlink:hover { border-bottom-color: var(--accent); }
+.on-sunk .ed-txtlink,
+.on-tint .ed-txtlink {
+  color: var(--badge-ink);
+  border-bottom-color: color-mix(in oklab, var(--badge-ink) 40%, transparent);
+}
+.on-sunk .ed-txtlink:hover,
+.on-tint .ed-txtlink:hover { border-bottom-color: var(--badge-ink); }
+.on-chapter .ed-txtlink,
+.on-inverse .ed-txtlink {
+  color: var(--inverse-accent);
+  border-bottom-color: color-mix(in oklab, var(--inverse-accent) 45%, transparent);
+}
+.on-chapter .ed-txtlink:hover,
+.on-inverse .ed-txtlink:hover { border-bottom-color: var(--inverse-accent); }
+
+/* The wordmark. Same family as the masthead, two thirds of the way up the
+   weight axis, so the bar reads as part of the publication rather than as
+   chrome bolted on top of it. */
+.ed-brand {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 24, 'wght' 600;
+  font-size: clamp(1.02rem, 3.4vw, 1.16rem);
+  letter-spacing: -0.018em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ed-brand span { color: var(--accent); }
+
+/* ===========================================================================
+   2. GEOMETRY — four padding steps, four container relationships
+   =========================================================================== */
+.ed-wrap {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.ed-wrap--wide {
+  max-width: 1440px;
+}
+
+/* Step 1-4. Coupled sections sit tight; pivots get air. */
+.pad-xl { padding-block: clamp(4.5rem, 11vw, 9.5rem); }
+.pad-l  { padding-block: clamp(3.5rem, 8vw, 7rem); }
+.pad-m  { padding-block: clamp(2.75rem, 5.5vw, 4.5rem); }
+.pad-s  { padding-block: clamp(2rem, 3.5vw, 2.75rem); }
+
+/* Joins, not steps: three sections that share one continuous field get the
+   padding of a single section distributed across them, so the reader sees one
+   chapter with no internal boundary. */
+.pad-open  { padding-block: clamp(4.5rem, 11vw, 9.5rem) 0; }
+.pad-mid   { padding-block: 0; }
+/* The extra floor is what stops the overlapping card below from reaching up
+   into the pull quote. */
+.pad-close { padding-block: clamp(3.5rem, 8vw, 7rem) clamp(7rem, 13vw, 12rem); }
+/* No top padding at all: used both by the receiving half of an overlap (the
+   element inside is pulled UP across the previous section's boundary) and by a
+   section continuing the ground colour of the one above it. */
+.pad-cont { padding-block: 0 clamp(4.5rem, 11vw, 9.5rem); }
+
+.ed-g12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+/* Grounds. `chapter` is the one continuous inverse field; `inverse` stays for
+   the single-band uses on the deep pages. */
+.on-surface { background: var(--surface); color: var(--ink); }
+.on-raised  { background: var(--surface-raised); color: var(--ink); }
+.on-sunk    { background: var(--surface-sunk); color: var(--ink); }
+.on-tint    { background: var(--badge-bg); color: var(--ink); }
+.on-inverse,
+.on-chapter { background: var(--inverse-surface); color: var(--inverse-ink); }
+
+.ed-muted { color: var(--ink-muted); }
+.on-chapter .ed-muted,
+.on-inverse .ed-muted { color: var(--inverse-ink-muted); }
+.ed-prose { max-width: 68ch; }
+
+/* Container relationship 4: offset into the grid rather than centred in it. */
+.ed-offset { grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  .ed-offset { grid-column: 4 / 12; }
+}
+
+/* ===========================================================================
+   3. PLACEHOLDER PLATES
+   Tonal fields built only from palette tokens, so they theme correctly and
+   fetch nothing. Each is captioned with the photograph that belongs in it.
+   When real photography lands, a plate takes a `background-image` and drops
+   its ::before and its caption — aspect ratio, bleed, overlap and caption
+   geometry all live in the frame, not the fill, so nothing moves.
+   =========================================================================== */
+.plate {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunk);
+  isolation: isolate;
+}
+.plate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(118% 82% at 16% 4%, var(--p-hi), transparent 58%),
+    linear-gradient(167deg, var(--p-a) 0%, var(--p-b) 52%, var(--p-c) 100%);
+}
+/* One soft horizon, standing in for the light in a Sumba photograph. */
+.plate::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58%;
+  height: 22%;
+  z-index: -1;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--p-hi) 55%, transparent), transparent);
+  filter: blur(14px);
+}
+.plate--field {
+  --p-a: var(--surface-raised);
+  --p-b: var(--border);
+  --p-c: color-mix(in oklab, var(--ink-muted) 72%, var(--border));
+  --p-hi: color-mix(in oklab, var(--badge-bg) 62%, var(--accent));
+}
+.plate--grass {
+  --p-a: var(--badge-bg);
+  --p-b: color-mix(in oklab, var(--badge-bg) 62%, var(--accent));
+  --p-c: color-mix(in oklab, var(--badge-ink) 78%, var(--ink));
+  --p-hi: color-mix(in oklab, var(--badge-bg) 62%, var(--surface-raised));
+}
+.plate--dusk {
+  --p-a: color-mix(in oklab, var(--inverse-surface) 72%, var(--accent));
+  --p-b: var(--inverse-surface);
+  --p-c: color-mix(in oklab, var(--inverse-surface) 74%, #000);
+  --p-hi: color-mix(in oklab, var(--accent) 48%, var(--badge-bg));
+}
+/* The caption sits on a SOLID ground, not on the gradient, so its ratio is a
+   fixed 13.96:1 light / 11.53:1 dark whatever the fill underneath is doing. */
+.plate__slug {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
+  font-size: 0.7rem;
+  line-height: 1.4;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.6rem 0.85rem;
+  margin: 0;
+}
+
+/* ===========================================================================
+   4. THE LEVEL LADDER
+   TK / SMP / SMA is real, scannable information a foreign donor does not
+   know, so the mark shows the whole ladder every time and lights the rung
+   this school is on. Repetition becomes a running index: the lit rung moves
+   down the rail as you scan, and every SMA is findable by looking for the
+   mark at the bottom.
+
+   Differentiation is optical size (opsz 14 vs the sans), weight (700) and a
+   3px accent rule — never contrast alone. Unlit rungs stay at --ink-muted:
+   6.85:1 on surface, 7.31:1 on raised, 6.24:1 on sunk. They are never
+   dropped below the threshold to look "off".
+   =========================================================================== */
+.lvl {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lvl__i {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  color: var(--ink-muted);
+}
+.lvl__i.is-on {
+  font-variation-settings: 'opsz' 14, 'wght' 700;
+  font-size: 27px;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  position: relative;
+}
+.lvl__age {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  /* Below 760px the ladder is a row and the age range is pushed right. */
+  margin-left: auto;
+}
+@media (min-width: 760px) {
+  /* A vertical rail beside the card. */
+  .lvl {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding-left: 0.85rem;
+    border-left: 1px solid var(--border);
+  }
+  .lvl__i.is-on {
+    line-height: 1.06;
+    margin-block: 0.12rem;
+  }
+  .lvl__i.is-on::before {
+    content: '';
+    position: absolute;
+    left: -0.85rem;
+    top: 0.34em;
+    width: 3px;
+    height: 1.1em;
+    background: var(--accent);
+    border-radius: 2px;
+    transform: translateX(-1px);
+    transition: height 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lvl__age {
+    margin-left: 0;
+    margin-top: 0.35rem;
+  }
+}
+.ed-schoolrow:hover .lvl__i.is-on::before { height: 1.6em; }
+
+.on-chapter .lvl__i,
+.on-inverse .lvl__i,
+.on-chapter .lvl__age,
+.on-inverse .lvl__age { color: var(--inverse-ink-muted); }
+.on-chapter .lvl__i.is-on,
+.on-inverse .lvl__i.is-on { color: var(--inverse-ink); }
+@media (min-width: 760px) {
+  .on-chapter .lvl,
+  .on-inverse .lvl { border-left-color: color-mix(in oklab, var(--inverse-ink) 22%, transparent); }
+  .on-chapter .lvl__i.is-on::before,
+  .on-inverse .lvl__i.is-on::before { background: var(--inverse-accent); }
+}
+
+/* ===========================================================================
+   5. HERO — asymmetric split, the plate bleeding past the gutter and hanging
+   below the hero's own boundary. OVERLAP 1 of 3.
+   =========================================================================== */
+.ed-hero { padding-block: clamp(2.5rem, 5vw, 4rem) 0; overflow: visible; }
+.ed-hero__grid { align-items: end; }
+.ed-hero__copy { grid-column: 1 / -1; }
+.ed-hero__plate { grid-column: 1 / -1; margin-top: 2.5rem; }
+@media (min-width: 900px) {
+  .ed-hero__copy { grid-column: 1 / 8; padding-bottom: clamp(3rem, 6vw, 5.5rem); }
+  .ed-hero__plate {
+    grid-column: 8 / 13;
+    margin-top: 0;
+    /* bleed past the container into the right gutter, and hang below */
+    margin-right: calc(-1 * var(--gutter));
+    margin-bottom: -4.5rem;
+  }
+}
+/* Sized to the viewport rather than to its own ratio, so the headline and its
+   actions always fit above the fold. */
+.ed-hero__plate .plate { aspect-ratio: auto; height: clamp(300px, 46vh, 560px); }
+@media (min-width: 900px) { .ed-hero__plate .plate { height: clamp(340px, 56vh, 560px); } }
+/* The design also pushed the plate to the VIEWPORT's right edge above 1441px,
+   with `calc((1440px - 100vw)/2 - var(--gutter))`. That is not ported: 100vw
+   includes the classic scrollbar, so on a scrollbar-reserving platform it
+   overshoots by half the scrollbar width and the page gains ~8px of horizontal
+   scroll — and clipping it at the root element made Chrome mispaint scrolled
+   content. The bleed past the gutter, which is the move the brief names, is in
+   the rule above and is unaffected; on screens wider than the 1440px band the
+   plate now stops at the band's edge instead of the window's. Noted in
+   docs/landing-redesign-report.md. */
+.ed-hero__rule { width: 56px; height: 3px; background: var(--accent); border-radius: 2px; }
+
+/* ===========================================================================
+   6. PEOPLE — offset prose, then a staggered portrait band
+   =========================================================================== */
+.ed-portband { display: grid; grid-template-columns: 1fr; gap: clamp(1rem, 2.4vw, 2rem); }
+@media (min-width: 640px) { .ed-portband { grid-template-columns: repeat(3, 1fr); align-items: start; } }
+@media (min-width: 900px) {
+  .ed-portband > *:nth-child(1) { margin-top: 3.5rem; }
+  .ed-portband > *:nth-child(3) { margin-top: 1.75rem; }
+}
+
+/* ===========================================================================
+   7. LEDGER — the challenge as a figure ledger. No cards, uneven spans,
+   hairlines only. Every measure is a circumstance or a gap in the system;
+   none of them is an attribute of a child (the dignity rule).
+   =========================================================================== */
+.ed-ledger { row-gap: clamp(2.25rem, 4vw, 3.25rem); }
+.ed-measure { grid-column: 1 / -1; border-top: 2px solid var(--ink); padding-top: 1.15rem; }
+@media (min-width: 860px) {
+  .ed-measure:nth-child(1) { grid-column: 1 / 6; }
+  .ed-measure:nth-child(2) { grid-column: 6 / 10; margin-top: 3.25rem; }
+  .ed-measure:nth-child(3) { grid-column: 10 / 13; margin-top: 6.5rem; }
+}
+.ed-fig {
+  display: block;
+  font-size: clamp(3.2rem, 7.5vw, 5.1rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-variation-settings: 'opsz' 144, 'wght' 290;
+  font-variant-numeric: lining-nums tabular-nums;
+  /* On sunk ground, accent text fails AA — badge-ink is the same hue family
+     at 8.41:1 light / 11.60:1 dark. Spec §4. */
+  color: var(--badge-ink);
+}
+/* A measure is not always a number: "after dark" is a measure too. */
+.ed-fig--word { font-size: clamp(1.9rem, 3.6vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; }
+
+/* ===========================================================================
+   8. WORK — interlocking grid. The wide plate is full-bleed to the viewport's
+   left edge (container relationship 3), and the copy beside it hangs down
+   past the plate into row two.
+   =========================================================================== */
+.ed-work { row-gap: 0; }
+.ed-work__wide { grid-column: 1 / -1; order: 1; }
+.ed-work__lead { grid-column: 1 / -1; order: 2; }
+.ed-work__narrow { grid-column: 1 / -1; order: 3; margin-top: clamp(1.25rem, 2.5vw, 2rem); }
+.ed-work__note { grid-column: 1 / -1; order: 4; margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+@media (min-width: 900px) {
+  .ed-work { align-items: start; }
+  .ed-work__wide {
+    grid-column: 1 / 7;
+    /* The one section that does not respect the container at all. body carries
+       overflow-x: clip so this cannot produce a horizontal scrollbar. */
+    margin-left: calc(-1 * (var(--gutter) + max(0px, (100vw - 1200px) / 2)));
+  }
+  .ed-work__wide .plate { border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+  .ed-work__lead {
+    grid-column: 7 / 13;
+    padding-top: clamp(2rem, 5vw, 4.5rem);
+    margin-bottom: clamp(-7rem, -6vw, -3rem);
+  }
+  .ed-work__narrow { grid-column: 1 / 4; margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+  .ed-work__note { grid-column: 7 / 12; }
+}
+.ed-work__lead .ed-h2 { font-size: clamp(1.5rem, 2.7vw, 2.15rem); }
+
+/* ===========================================================================
+   9. THE DARK CHAPTER — scale, evidence and one human voice as a single
+   continuous inverse field. Not alternating inversion: flipping light and
+   dark section by section reads as a broken theme.
+   =========================================================================== */
+.ed-stats { align-items: end; row-gap: clamp(2.5rem, 5vw, 3.5rem); }
+.ed-stat--big { grid-column: 1 / -1; }
+.ed-stat--pair { grid-column: 1 / -1; display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); }
+@media (min-width: 860px) {
+  .ed-stat--big { grid-column: 1 / 7; }
+  .ed-stat--pair {
+    grid-column: 8 / 13;
+    grid-template-columns: 1fr;
+    border-left: 1px solid color-mix(in oklab, var(--inverse-ink) 22%, transparent);
+    padding-left: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+.ed-stat__fig {
+  display: block;
+  font-variation-settings: 'opsz' 144, 'wght' 280;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+}
+.ed-stat--big .ed-stat__fig { font-size: clamp(6rem, 17vw, 12.5rem); }
+.ed-stat--pair .ed-stat__fig { font-size: clamp(3.4rem, 7vw, 5.2rem); }
+
+/* Evidence, an offset pair on a shared timeline rather than two equal halves. */
+.ed-evid { align-items: start; row-gap: 2rem; }
+.ed-evid__a, .ed-evid__b { grid-column: 1 / -1; }
+@media (min-width: 820px) {
+  .ed-evid__a { grid-column: 1 / 7; margin-top: clamp(2rem, 5vw, 4.5rem); }
+  .ed-evid__b { grid-column: 7 / 13; }
+}
+.ed-evid figcaption { display: flex; gap: 0.7rem; align-items: baseline; }
+.ed-evid figcaption b {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 18, 'wght' 620;
+  font-weight: 400;
+  color: var(--inverse-accent);
+}
+
+/* The voice. OVERLAP 3 of 3: the quote breaks its own measure, set wider than
+   the prose column and indented so the opening quote mark hangs outside it. */
+.ed-voice { border-top: 1px solid color-mix(in oklab, var(--inverse-ink) 22%, transparent); }
+.ed-quote {
+  margin: 0;
+  font-size: clamp(1.7rem, 4.6vw, 3.3rem);
+  line-height: 1.24;
+  letter-spacing: -0.014em;
+  font-style: italic;
+  font-variation-settings: 'opsz' 72, 'wght' 320;
+  max-width: 26ch;
+  text-indent: -0.44em;
+  padding-bottom: 0.08em;
+}
+@media (min-width: 900px) {
+  .ed-quote { max-width: 30ch; margin-left: clamp(0rem, 4vw, 5rem); }
+  .ed-quote__by { margin-left: clamp(0rem, 4vw, 5rem); }
+}
+
+/* ===========================================================================
+   10. SCHOOLS — one lead treatment, then an alternating rail list. Not a 3-up.
+   OVERLAP 2 of 3: the lead card is pulled up across the dark chapter's lower
+   boundary, so the two sections interlock instead of abutting.
+   =========================================================================== */
+.ed-lead-school {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(-6rem, -9vw, -3rem);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 26px 60px color-mix(in oklab, var(--ink) 16%, transparent);
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+}
+@media (min-width: 900px) { .ed-lead-school { grid-template-columns: 1.15fr 0.85fr; align-items: center; } }
+.ed-lead-school__body { display: flex; flex-direction: column; gap: clamp(0.9rem, 2vw, 1.6rem); }
+/* The ladder only sits beside the text once it is a vertical rail. */
+@media (min-width: 760px) { .ed-lead-school__body { flex-direction: row; } }
+.ed-lead-school__text { min-width: 0; }
+
+.ed-where { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.03em; color: var(--ink-muted); }
+
+/* Funding state is a sentence an editor writes. No numbers, no bars, ever. */
+.ed-state {
+  display: inline-block;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--badge-ink);
+  background: var(--badge-bg);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.7rem;
+}
+
+.ed-schoollist { display: grid; gap: 0; }
+.ed-schoolrow {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+.ed-schoolrow:last-child { border-bottom: 1px solid var(--border); }
+@media (min-width: 760px) {
+  .ed-schoolrow { grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.62fr); }
+  .ed-schoolrow--flip { grid-template-columns: minmax(0, 0.62fr) auto minmax(0, 1fr); }
+  .ed-schoolrow--flip .ed-schoolrow__plate { order: -1; }
+}
+.ed-schoolrow .ed-need {
+  font-size: clamp(1.1rem, 1.9vw, 1.3rem);
+  font-variation-settings: 'opsz' 24, 'wght' 450;
+}
+.ed-schoolrow .plate { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.ed-schoolrow:hover .plate { transform: scale(1.015); }
+
+/* ===========================================================================
+   11. STORIES — staggered, three different aspect ratios
+   =========================================================================== */
+.ed-stories { row-gap: clamp(2rem, 4vw, 3rem); }
+.ed-story { grid-column: 1 / -1; }
+@media (min-width: 760px) {
+  .ed-story:nth-child(1) { grid-column: 1 / 6; }
+  .ed-story:nth-child(2) { grid-column: 6 / 10; margin-top: clamp(2rem, 5vw, 4.5rem); }
+  .ed-story:nth-child(3) { grid-column: 10 / 13; margin-top: clamp(1rem, 2vw, 1.5rem); }
+}
+.ed-kind {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-weight: 700;
+  color: var(--badge-ink);
+}
+
+/* ===========================================================================
+   12. PARTNERS — a short band, deliberately the fastest section on the page.
+   Monogram marks: typographic, no external files, correct in both themes.
+   =========================================================================== */
+.ed-partners { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.ed-partners__in { display: grid; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+@media (min-width: 900px) { .ed-partners__in { grid-template-columns: 0.8fr 1.2fr; } }
+.ed-mark {
+  display: grid;
+  place-items: center;
+  width: clamp(4rem, 9vw, 5.25rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  font-size: 1.16rem;
+  color: var(--ink-muted);
+}
+
+/* ===========================================================================
+   13. NEXT STEP — a large tinted field, asymmetric rather than three equal
+   columns. "Bermitra dengan Kami" precedes "Dukung Sebuah Sekolah": a CSR
+   department cannot click Donate.
+   =========================================================================== */
+.ed-next { align-items: start; row-gap: clamp(2.25rem, 4vw, 3rem); }
+.ed-next__head { grid-column: 1 / -1; }
+.ed-next__ways { grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  .ed-next__head { grid-column: 1 / 6; }
+  .ed-next__ways { grid-column: 7 / 13; }
+}
+.ed-way { padding-block: 1.35rem; border-top: 1px solid color-mix(in oklab, var(--badge-ink) 28%, transparent); }
+.ed-way:first-child { border-top: 0; padding-top: 0; }
+
+/* ===========================================================================
+   14. MOTION — hierarchy on load, sequence on scroll. Collapses entirely
+   under prefers-reduced-motion (the base rule lives in app.css).
+   =========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .ed-rise {
+      animation: ed-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 46%;
+    }
+  }
+}
+@keyframes ed-rise {
+  from { opacity: 0.001; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}

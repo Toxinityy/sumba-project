@@ -61,6 +61,12 @@
       "skillPath": "skills/explain-interface/SKILL.md",
       "computedHash": "e30c30938fce98dcf8156c083f89b8015e3042f460bb9228dedeac8e4a8df557"
     },
+    "graphify": {
+      "source": "graphify-labs/graphify",
+      "sourceType": "github",
+      "skillPath": "graphify/SKILL.md",
+      "computedHash": "be47fe095b4bbfc4c0ec555e24365088492279e52ab10ad2187fcb39597fe65d"
+    },
     "interface-review": {
       "source": "jakubkrehel/skills",
       "sourceType": "github",

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="id" data-theme-default="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hope for Sumba</title>
+<meta name="description" content="Sekolah gratis dan rumah anak di Pulau Sumba. Halaman muka, pass desain editorial.">
+
+<!--
+  ============================================================================
+  Hope for Sumba, landing page redesign. Design pass only, one file.
+  Palette locked to the approved Open Field / Dusk Savanna tokens.
+  ----------------------------------------------------------------------------
+  TYPE, the part that was being wasted.
+  Fraunces is a five axis variable face. The old site pinned it at wght 500 and
+  used none of the rest. Here the axes do the editorial work, no new colour:
+
+    role            opsz   wght   SOFT  WONK  ital
+    masthead        144    330    0     1     0    high stroke contrast
+    masthead accent 144    360    0     1     1    one italic word, same family
+    figure numerals 144    290    0     0     0    thin annual report numerals
+    section head    48     420    0     1     0
+    pull quote      72     320    60    1     1    soft terminals, a human voice
+    level mark      14     700    0     0     0    small optical size, heavy
+
+  The masthead and the level mark are the two extremes of both axes in the same
+  typeface. That distance is the whole "editorial" effect.
+  ----------------------------------------------------------------------------
+  RADIUS SCALE (from the spec, applied as a rule, not per component):
+    14px plates and large fields | 10px cards | 8px buttons | 6px small marks
+  ----------------------------------------------------------------------------
+  PHOTOGRAPHY. No external images by design. Every .plate is a tonal field
+  built only from palette tokens, labelled with the photograph that belongs in
+  it. When real photography lands, a .plate takes a background-image and its
+  ::before gradient plus .plate__slug are dropped. Aspect ratio, bleed, overlap
+  and caption geometry are all in the frame, not the fill, so nothing moves.
+  ============================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..600&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================================================
+   1. TOKENS
+   The bare :root carries the COMPLETE light palette so the default "system"
+   state, which stamps no data-theme attribute, is never half themed.
+   =========================================================================== */
+:root{
+  --surface:#F7F8F3;
+  --raised:#FFFFFF;
+  --sunk:#ECEEE3;
+  --ink:#1E2A22;
+  --ink-muted:#4B5A4E;
+  --accent:#96660E;
+  --accent-ink:#FFFFFF;
+  --accent-quiet:#5A3E0E;      /* accent-coloured TEXT on tinted grounds */
+  --border:#DEDFCE;
+  --rule:#DEDFCE;
+  --tint:#EFE3C8;              /* badge-bg, used here as a large field */
+  --tint-ink:#1E2A22;
+  --tint-accent:#5A3E0E;       /* badge-ink */
+  --inverse:#1E2A22;
+  --on-inverse:#F7F8F3;
+  --on-inverse-muted:#C9BEB0;
+  --on-inverse-accent:#E8A23A;
+  --on-inverse-rule:#3B322A;
+  --inv-btn:#E8A23A;
+  --inv-btn-ink:#241A0E;
+  --focus:#96660E;
+
+  --gutter:clamp(1rem,4vw,3.5rem);
+  --content:1200px;
+  --prose:66ch;
+
+  --r-plate:14px; --r-card:10px; --r-btn:8px; --r-mark:6px;
+
+  --sans:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
+  --disp:"Fraunces",Georgia,"Times New Roman",serif;
+}
+
+/* Dark by system preference. Guarded so an explicit light choice still wins. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --surface:#211A15;
+    --raised:#2B231C;
+    --sunk:#1A1410;
+    --ink:#F5EFE6;
+    --ink-muted:#C9BEB0;
+    --accent:#E8A23A;
+    --accent-ink:#241A0E;
+    --accent-quiet:#F0C97D;
+    --border:#3B322A;
+    --rule:#3B322A;
+    --tint:#3B2E1C;
+    --tint-ink:#F5EFE6;
+    --tint-accent:#F0C97D;
+    --inverse:#3A2E22;
+    --on-inverse:#F5EFE6;
+    --on-inverse-muted:#C9BEB0;
+    --on-inverse-accent:#E8A23A;
+    --on-inverse-rule:#3B322A;
+    --inv-btn:#E8A23A;
+    --inv-btn-ink:#241A0E;
+    --focus:#E8A23A;
+  }
+}
+
+/* Dark by explicit choice. Same block again, because a colour defined only
+   inside a media query renders one theme's text on the other's ground. */
+:root[data-theme="dark"]{
+  --surface:#211A15;
+  --raised:#2B231C;
+  --sunk:#1A1410;
+  --ink:#F5EFE6;
+  --ink-muted:#C9BEB0;
+  --accent:#E8A23A;
+  --accent-ink:#241A0E;
+  --accent-quiet:#F0C97D;
+  --border:#3B322A;
+  --rule:#3B322A;
+  --tint:#3B2E1C;
+  --tint-ink:#F5EFE6;
+  --tint-accent:#F0C97D;
+  --inverse:#3A2E22;
+  --on-inverse:#F5EFE6;
+  --on-inverse-muted:#C9BEB0;
+  --on-inverse-accent:#E8A23A;
+  --on-inverse-rule:#3B322A;
+  --inv-btn:#E8A23A;
+  --inv-btn-ink:#241A0E;
+  --focus:#E8A23A;
+}
+
+/* ===========================================================================
+   2. BASE
+   =========================================================================== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--surface);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:1.0625rem;
+  line-height:1.7;
+  font-weight:400;
+  overflow-x:clip;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+@media (min-width:768px){ body{font-size:1.125rem} }
+
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+p{margin:0 0 1.1em}
+p:last-child{margin-bottom:0}
+
+:focus-visible{
+  outline:2.5px solid var(--focus);
+  outline-offset:3px;
+  border-radius:var(--r-mark);
+}
+.sr{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+}
+.skip{
+  position:absolute;left:var(--gutter);top:-4rem;z-index:60;
+  background:var(--accent);color:var(--accent-ink);
+  padding:.7rem 1.1rem;border-radius:var(--r-btn);font-weight:600;
+  transition:top .15s ease;
+}
+.skip:focus{top:.75rem}
+
+/* ===========================================================================
+   3. TYPE
+   =========================================================================== */
+.masthead,.h2,.h3,.fig,.quote{font-family:var(--disp);font-optical-sizing:none}
+
+.masthead{
+  margin:0;
+  font-size:clamp(2.15rem,4.6vw,3.5rem);
+  line-height:1.04;
+  letter-spacing:-.022em;
+  font-variation-settings:'opsz' 144,'wght' 330,'SOFT' 0,'WONK' 1;
+  text-wrap:balance;
+}
+.masthead em{
+  font-style:italic;
+  font-variation-settings:'opsz' 144,'wght' 360,'SOFT' 20,'WONK' 1;
+  color:var(--accent);
+  /* italic descenders on "bercahaya" need real clearance */
+  line-height:1.12;
+  padding-bottom:.06em;
+  display:inline-block;
+}
+.h2{
+  margin:0;
+  font-size:clamp(1.72rem,3.6vw,2.75rem);
+  line-height:1.14;
+  letter-spacing:-.016em;
+  font-variation-settings:'opsz' 48,'wght' 420,'SOFT' 0,'WONK' 1;
+  text-wrap:balance;
+}
+.h3{
+  margin:0;
+  font-size:clamp(1.28rem,2.3vw,1.6rem);
+  line-height:1.2;
+  letter-spacing:-.01em;
+  font-variation-settings:'opsz' 32,'wght' 500,'SOFT' 0,'WONK' 0;
+}
+/* English secondary. The site is bilingual; Indonesian leads and sets every
+   measurement, English trails at 0.82em so it can never drive a width. */
+.en{
+  display:block;
+  font-family:var(--sans);
+  font-style:italic;
+  font-size:.82rem;
+  letter-spacing:.005em;
+  line-height:1.45;
+  font-weight:500;
+  color:var(--ink-muted);
+  margin-top:.7rem;
+  max-width:46ch;
+}
+.en--inv{color:var(--on-inverse-muted)}
+.en--tint{color:var(--ink-muted)}
+
+.label{
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.11em;
+  font-weight:700;
+  color:var(--accent);
+  margin:0 0 1.15rem;
+}
+.label--quiet{color:var(--accent-quiet)}
+.label--inv{color:var(--on-inverse-accent)}
+
+.lead{font-size:1.16em;line-height:1.62;color:var(--ink)}
+.muted{color:var(--ink-muted)}
+.prose{max-width:var(--prose)}
+
+/* ===========================================================================
+   4. LAYOUT PRIMITIVES
+   Section padding is deliberately NOT uniform. Coupled sections sit tight,
+   pivots get air. That variation is the rhythm the old build was missing.
+   =========================================================================== */
+.wrap{max-width:var(--content);margin-inline:auto;padding-inline:var(--gutter)}
+.wrap--wide{max-width:1440px}
+section{position:relative}
+.pad-xl{padding-block:clamp(4.5rem,11vw,9.5rem)}
+.pad-l {padding-block:clamp(3.5rem,8vw,7rem)}
+.pad-m {padding-block:clamp(2.75rem,5.5vw,4.5rem)}
+.pad-s {padding-block:clamp(2rem,3.5vw,2.75rem)}
+
+.g12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(1.25rem,3vw,2.5rem)}
+.on-surface{background:var(--surface)}
+.on-raised {background:var(--raised)}
+.on-sunk   {background:var(--sunk)}
+/* One dark chapter, not alternating inversion: scale, evidence and the voice
+   are a single continuous field the reader passes through. */
+.chapter-dark{background:var(--inverse);color:var(--on-inverse)}
+/* extra floor so the overlapping card below never reaches the pull quote */
+.chapter-dark{padding-bottom:clamp(7rem,13vw,12rem)}
+.chapter-dark .muted{color:var(--on-inverse-muted)}
+.on-tint{background:var(--tint);color:var(--tint-ink)}
+
+/* ===========================================================================
+   5. BUTTONS
+   =========================================================================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:.55rem;
+  /* never sized to English: min-width is generous, padding is em based, and
+     the label is allowed to be as long as Indonesian needs */
+  min-height:3rem;
+  padding:.8rem 1.5rem;
+  border-radius:var(--r-btn);
+  font-family:var(--sans);
+  font-size:1rem;
+  font-weight:700;
+  line-height:1.25;
+  letter-spacing:-.005em;
+  text-decoration:none;
+  border:1.5px solid transparent;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:transform .16s cubic-bezier(.16,1,.3,1),background-color .16s ease,border-color .16s ease;
+}
+.btn--primary{background:var(--accent);color:var(--accent-ink)}
+.btn--secondary{background:transparent;color:var(--ink);border-color:var(--ink-muted)}
+.btn--inv{background:var(--inv-btn);color:var(--inv-btn-ink)}
+.btn--inv-ghost{background:transparent;color:var(--on-inverse);border-color:var(--on-inverse-muted)}
+.btn:hover{transform:translateY(-1px)}
+.btn--secondary:hover{border-color:var(--ink);background:color-mix(in oklab,var(--ink) 6%,transparent)}
+.btn--inv-ghost:hover{border-color:var(--on-inverse);background:color-mix(in oklab,var(--on-inverse) 10%,transparent)}
+.btn:active{transform:translateY(0) scale(.985)}
+.actions{display:flex;flex-wrap:wrap;gap:.85rem}
+
+.txtlink{
+  font-weight:700;font-size:.97rem;text-decoration:none;
+  color:var(--accent);
+  border-bottom:1.5px solid color-mix(in oklab,var(--accent) 40%,transparent);
+  padding-bottom:1px;
+}
+.txtlink:hover{border-bottom-color:var(--accent)}
+.txtlink--inv{color:var(--on-inverse-accent);border-bottom-color:color-mix(in oklab,var(--on-inverse-accent) 45%,transparent)}
+.txtlink--quiet{color:var(--accent-quiet);border-bottom-color:color-mix(in oklab,var(--accent-quiet) 40%,transparent)}
+
+/* ===========================================================================
+   6. PHOTO PLATES
+   Tonal fields from palette tokens only. Three variants so the page carries
+   colour with zero photographs in it. Swap in background-image later.
+   =========================================================================== */
+.plate{
+  position:relative;
+  overflow:hidden;
+  border-radius:var(--r-plate);
+  background:var(--sunk);
+  isolation:isolate;
+}
+.plate::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(118% 82% at 16% 4%, var(--p-hi), transparent 58%),
+    linear-gradient(167deg, var(--p-a) 0%, var(--p-b) 52%, var(--p-c) 100%);
+}
+/* one soft horizon, standing in for the light in a Sumba photograph */
+.plate::after{
+  content:"";position:absolute;left:0;right:0;top:58%;height:22%;z-index:-1;
+  background:linear-gradient(180deg,color-mix(in oklab,var(--p-hi) 55%,transparent),transparent);
+  filter:blur(14px);
+}
+.plate--field{
+  --p-a:var(--raised);
+  --p-b:var(--border);
+  --p-c:color-mix(in oklab,var(--ink-muted) 72%,var(--border));
+  --p-hi:color-mix(in oklab,var(--tint) 62%,var(--accent));
+}
+.plate--grass{
+  --p-a:var(--tint);
+  --p-b:color-mix(in oklab,var(--tint) 62%,var(--accent));
+  --p-c:color-mix(in oklab,var(--accent-quiet) 78%,var(--ink));
+  --p-hi:color-mix(in oklab,var(--tint) 62%,var(--raised));
+}
+.plate--dusk{
+  --p-a:color-mix(in oklab,var(--inverse) 72%,var(--accent));
+  --p-b:var(--inverse);
+  --p-c:color-mix(in oklab,var(--inverse) 74%,#000);
+  --p-hi:color-mix(in oklab,var(--accent) 48%,var(--tint));
+}
+/* Placeholder label. Solid ground, so the ratio is fixed at 13.96:1 in light
+   and 11.53:1 in dark whatever the gradient underneath is doing. */
+.plate__slug{
+  position:absolute;inset-inline:0;bottom:0;
+  background:var(--inverse);
+  color:var(--on-inverse);
+  font-size:.7rem;
+  line-height:1.4;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  font-weight:600;
+  padding:.6rem .85rem;
+  margin:0;
+}
+.ar-45{aspect-ratio:4/5}
+.ar-11{aspect-ratio:1/1}
+.ar-34{aspect-ratio:3/4}
+.ar-32{aspect-ratio:3/2}
+.ar-169{aspect-ratio:16/9}
+.ar-219{aspect-ratio:21/9}
+
+/* ===========================================================================
+   7. NAV, one line at desktop, 68px
+   =========================================================================== */
+.nav{
+  position:sticky;top:0;z-index:50;
+  /* Opaque, not frosted. A translucent bar sitting over the dark chapter
+     darkened its ground enough to pull the accent wordmark to 3.86:1. An
+     opaque bar holds the verified 4.68:1 at every scroll position. */
+  background:var(--surface);
+  border-bottom:1px solid var(--rule);
+}
+.nav__in{
+  max-width:1440px;margin-inline:auto;padding-inline:var(--gutter);
+  position:relative;
+  height:68px;display:flex;align-items:center;gap:clamp(.5rem,2vw,1.75rem);
+}
+.brand{
+  font-family:var(--disp);
+  font-variation-settings:'opsz' 24,'wght' 600,'SOFT' 0,'WONK' 1;
+  font-size:clamp(1.02rem,3.4vw,1.16rem);letter-spacing:-.018em;text-decoration:none;
+  white-space:nowrap;margin-right:auto;
+}
+.brand span{color:var(--accent)}
+.nav__links{display:none;gap:clamp(.9rem,1.7vw,1.6rem);align-items:center}
+@media (min-width:1024px){ .nav__links{display:flex} }
+.nav__links a{
+  font-size:.93rem;font-weight:600;text-decoration:none;color:var(--ink-muted);
+  white-space:nowrap;padding:.35rem 0;border-bottom:2px solid transparent;
+}
+.nav__links a:hover{color:var(--ink);border-bottom-color:var(--accent)}
+.nav__tools{display:flex;align-items:center;gap:.5rem}
+.lang{display:flex;border:1px solid var(--border);border-radius:var(--r-mark);overflow:hidden}
+.lang a{
+  font-size:.76rem;font-weight:700;letter-spacing:.06em;text-decoration:none;
+  padding:.36rem .5rem;color:var(--ink-muted);
+}
+.lang a[aria-current]{background:var(--ink);color:var(--surface)}
+.themebtn{
+  font-family:var(--sans);font-size:.76rem;font-weight:700;letter-spacing:.05em;
+  background:transparent;color:var(--ink-muted);
+  border:1px solid var(--border);border-radius:var(--r-mark);
+  padding:.36rem .6rem;cursor:pointer;white-space:nowrap;
+}
+.themebtn:hover{color:var(--ink);border-color:var(--ink-muted)}
+/* the word "Tampilan:" is what pushed the nav past 400px. Drop the key, keep
+   the value; the button still announces its full label to assistive tech. */
+.themebtn__k{display:none}
+@media (min-width:700px){ .themebtn__k{display:inline} }
+.nav .btn{display:none;min-height:2.6rem;padding:.5rem 1.05rem;font-size:.9rem}
+@media (min-width:1180px){ .nav .btn{display:inline-flex} }
+
+/* mobile disclosure, native details, no script */
+.menu{display:block}
+@media (min-width:1024px){ .menu{display:none} }
+.menu>summary{
+  list-style:none;cursor:pointer;
+  font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid var(--border);border-radius:var(--r-mark);
+  padding:.45rem .7rem;color:var(--ink-muted);
+}
+.menu>summary::-webkit-details-marker{display:none}
+.menu[open]>summary{color:var(--ink);border-color:var(--ink-muted)}
+.menu__panel{
+  position:absolute;right:var(--gutter);top:calc(100% - .35rem);
+  width:min(19rem,calc(100vw - 2*var(--gutter)));
+  background:var(--raised);border:1px solid var(--border);
+  border-radius:var(--r-card);padding:.6rem;
+  box-shadow:0 18px 44px color-mix(in oklab,var(--ink) 18%,transparent);
+  display:grid;gap:.1rem;
+}
+.menu__panel a{
+  text-decoration:none;font-weight:600;font-size:1rem;
+  padding:.62rem .7rem;border-radius:var(--r-mark);color:var(--ink);
+}
+.menu__panel a:hover{background:var(--sunk)}
+.menu__panel .btn{margin-top:.5rem;width:100%}
+
+/* ===========================================================================
+   8. HERO, asymmetric split with a plate that bleeds off the right edge
+   =========================================================================== */
+.hero{padding-top:clamp(2.5rem,5vw,4rem);padding-bottom:0;overflow:visible}
+.hero__grid{align-items:end}
+.hero__copy{grid-column:1/-1}
+.hero__plate{grid-column:1/-1;margin-top:2.5rem}
+@media (min-width:900px){
+  .hero__copy{grid-column:1/8;padding-bottom:clamp(3rem,6vw,5.5rem)}
+  .hero__plate{
+    grid-column:8/13;margin-top:0;
+    /* the plate is sized to the viewport, not to its own ratio, so the hero
+       and its actions always fit above the fold */
+    /* bleed past the container into the right gutter */
+    margin-right:calc(-1 * var(--gutter));
+    margin-bottom:-4.5rem;
+  }
+}
+.hero__plate .plate{aspect-ratio:auto;height:clamp(300px,46vh,560px)}
+@media (min-width:900px){ .hero__plate .plate{height:clamp(340px,56vh,560px)} }
+@media (min-width:1441px){ .hero__plate{margin-right:calc((1440px - 100vw)/2 - var(--gutter))} }
+.hero__sub{font-size:clamp(1.06rem,1.6vw,1.24rem);max-width:34ch;color:var(--ink-muted);margin-top:1.6rem}
+.hero .actions{margin-top:2.1rem}
+.hero__rule{
+  width:56px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:1.9rem;
+}
+
+/* ===========================================================================
+   9. PEOPLE, offset prose then a staggered portrait band
+   =========================================================================== */
+.offset-prose{grid-column:1/-1}
+@media (min-width:900px){ .offset-prose{grid-column:4/12} }
+.portband{
+  display:grid;grid-template-columns:1fr;gap:clamp(1rem,2.4vw,2rem);
+  margin-top:clamp(2.5rem,5vw,4rem);
+}
+@media (min-width:640px){ .portband{grid-template-columns:repeat(3,1fr);align-items:start} }
+@media (min-width:900px){
+  .portband>*:nth-child(1){margin-top:3.5rem}
+  .portband>*:nth-child(3){margin-top:1.75rem}
+}
+.person__name{
+  font-family:var(--disp);
+  font-variation-settings:'opsz' 24,'wght' 560,'SOFT' 0,'WONK' 0;
+  font-size:1.1rem;margin:.85rem 0 .15rem;letter-spacing:-.008em;
+}
+.person__role{font-size:.9rem;color:var(--ink-muted);margin:0}
+
+/* ===========================================================================
+   10. CHALLENGE, a figure ledger. No cards, uneven spans, hairlines only.
+   =========================================================================== */
+.ledger{margin-top:clamp(2.5rem,5vw,4rem);row-gap:clamp(2.25rem,4vw,3.25rem)}
+.measure{grid-column:1/-1;border-top:2px solid var(--ink);padding-top:1.15rem}
+@media (min-width:860px){
+  .measure--a{grid-column:1/6}
+  .measure--b{grid-column:6/10;margin-top:3.25rem}
+  .measure--c{grid-column:10/13;margin-top:6.5rem}
+}
+.fig{
+  display:block;
+  font-size:clamp(3.2rem,7.5vw,5.1rem);
+  line-height:.92;
+  letter-spacing:-.03em;
+  font-variation-settings:'opsz' 144,'wght' 290,'SOFT' 0,'WONK' 0;
+  font-variant-numeric:lining-nums tabular-nums;
+  color:var(--accent-quiet);
+  margin-bottom:.55rem;
+}
+.fig--word{font-size:clamp(1.9rem,3.6vw,2.6rem);line-height:1.05;letter-spacing:-.02em}
+:where(.measure) p{font-size:1rem;color:var(--ink-muted);max-width:34ch}
+:where(.measure) p strong{color:var(--ink);font-weight:600}
+
+/* ===========================================================================
+   11. WORK, interlocking grid. Text block overlaps down into the second row.
+   =========================================================================== */
+.work{row-gap:0}
+.work__lead{grid-column:1/-1;order:2}
+.work__wide{grid-column:1/-1;order:1}
+.work__narrow{grid-column:1/-1;order:3;margin-top:clamp(1.25rem,2.5vw,2rem)}
+@media (min-width:900px){
+  .work{align-items:start}
+  .work__wide{
+    grid-column:1/7;order:1;
+    /* true full bleed to the viewport's left edge, the one section that does
+       not respect the container at all. body has overflow-x:clip. */
+    margin-left:calc(-1 * (var(--gutter) + max(0px, (100vw - var(--content))/2)));
+  }
+  .work__wide .plate{border-radius:0 var(--r-plate) var(--r-plate) 0}
+  .work__lead{
+    grid-column:7/13;order:2;
+    padding-top:clamp(2rem,5vw,4.5rem);
+    /* the overlap: copy hangs below the plate beside it, into row two */
+    margin-bottom:clamp(-7rem,-6vw,-3rem);
+  }
+  .work__narrow{grid-column:1/4;order:3;margin-top:clamp(1.5rem,3vw,2.5rem)}
+}
+.work__lead .h2{font-size:clamp(1.5rem,2.7vw,2.15rem)}
+.work__note{
+  grid-column:1/-1;order:4;
+  margin-top:clamp(1.5rem,3vw,2.5rem);
+}
+@media (min-width:900px){ .work__note{grid-column:7/12;order:4;margin-top:clamp(1.5rem,3vw,2.5rem)} }
+
+/* ===========================================================================
+   12. DARK CHAPTER
+   Entered on a clean full-width edge, left on an overlap: the lead school card
+   below is pulled up across this field's lower boundary.
+   =========================================================================== */
+.stats{align-items:end;row-gap:clamp(2.5rem,5vw,3.5rem)}
+.stat--big{grid-column:1/-1}
+.stat--pair{grid-column:1/-1;display:grid;gap:clamp(1.5rem,3vw,2.25rem)}
+@media (min-width:860px){
+  .stat--big{grid-column:1/7}
+  .stat--pair{grid-column:8/13;grid-template-columns:1fr;border-left:1px solid var(--on-inverse-rule);padding-left:clamp(1.5rem,3vw,2.5rem)}
+}
+.stat__fig{
+  display:block;font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 144,'wght' 280,'SOFT' 0,'WONK' 0;
+  font-variant-numeric:lining-nums tabular-nums;
+  line-height:.84;letter-spacing:-.035em;
+  color:var(--on-inverse);
+}
+.stat--big .stat__fig{font-size:clamp(6rem,17vw,12.5rem)}
+.stat--pair .stat__fig{font-size:clamp(3.4rem,7vw,5.2rem)}
+.stat__label{
+  display:block;font-size:1rem;font-weight:600;margin-top:1.1rem;max-width:26ch;
+  color:var(--on-inverse);
+}
+.stat--big .stat__label{font-size:1.2rem;max-width:22ch}
+.stat__asof{
+  display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;
+  font-weight:700;color:var(--on-inverse-muted);margin-top:.5rem;
+}
+
+/* evidence, an offset pair on a shared timeline */
+.evid{margin-top:clamp(2.5rem,5vw,4rem);align-items:start;row-gap:2rem}
+.evid__a{grid-column:1/-1}
+.evid__b{grid-column:1/-1}
+@media (min-width:820px){
+  .evid__a{grid-column:1/7;margin-top:clamp(2rem,5vw,4.5rem)}
+  .evid__b{grid-column:7/13}
+}
+.evid figcaption{
+  display:flex;gap:.7rem;align-items:baseline;
+  margin-top:.9rem;font-size:.92rem;color:var(--on-inverse-muted);
+}
+.evid figcaption b{
+  font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 18,'wght' 620,'SOFT' 0,'WONK' 0;
+  color:var(--on-inverse-accent);white-space:nowrap;font-weight:400;
+}
+
+/* the voice. The quote runs wider than the prose column on purpose. */
+.voice{margin-top:clamp(3.5rem,8vw,7rem);border-top:1px solid var(--on-inverse-rule);padding-top:clamp(2.5rem,5vw,4rem)}
+.quote{
+  margin:0;
+  font-size:clamp(1.7rem,4.6vw,3.3rem);
+  line-height:1.24;
+  letter-spacing:-.014em;
+  font-style:italic;
+  font-variation-settings:'opsz' 72,'wght' 320,'SOFT' 60,'WONK' 1;
+  max-width:26ch;
+  /* hanging open quote, set outside the measure */
+  text-indent:-.44em;
+  padding-bottom:.08em;
+}
+@media (min-width:900px){ .quote{max-width:30ch;margin-left:clamp(0rem,4vw,5rem)} }
+.quote__by{
+  display:block;margin-top:2rem;font-family:var(--sans);font-style:normal;
+  font-size:.95rem;font-weight:700;letter-spacing:.01em;color:var(--on-inverse);
+}
+.quote__by span{display:block;font-weight:500;color:var(--on-inverse-muted)}
+@media (min-width:900px){ .quote__by{margin-left:clamp(0rem,4vw,5rem)} }
+
+/* ===========================================================================
+   13. THE LEVEL MARK
+   TK / SMP / SMA is real, scannable information a foreign donor does not know.
+   So the mark shows the whole ladder every time and lights the rung this
+   school is on. Repetition becomes a running index: the lit rung moves down
+   the rail as you scan the list, and you can find every SMA by looking for the
+   mark at the bottom. Differentiation is optical size, weight and an accent
+   rule. Never contrast alone: the unlit rungs stay at ink-muted, 6.85:1.
+   =========================================================================== */
+.lvl{
+  display:flex;flex-direction:row;align-items:baseline;gap:.75rem;
+  margin:0 0 1rem;padding:0;
+  list-style:none;
+}
+.lvl__i{
+  font-family:var(--sans);
+  font-size:.74rem;font-weight:700;letter-spacing:.11em;
+  color:var(--ink-muted);
+}
+.lvl__i.is-on{
+  font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 14,'wght' 700,'SOFT' 0,'WONK' 0;
+  font-size:1.45rem;letter-spacing:.01em;
+  color:var(--ink);
+  position:relative;
+}
+.lvl__age{
+  font-size:.74rem;font-weight:600;letter-spacing:.04em;
+  color:var(--ink-muted);margin-left:auto;white-space:nowrap;
+}
+@media (min-width:760px){
+  /* vertical rail beside the card at desktop */
+  .lvl{
+    flex-direction:column;align-items:flex-start;gap:.3rem;
+    margin:0;padding-left:.85rem;
+    border-left:1px solid var(--rule);
+  }
+  .lvl__i.is-on{font-size:1.7rem;line-height:1.06;margin-block:.12rem}
+  .lvl__i.is-on::before{
+    content:"";position:absolute;left:-.85rem;top:.34em;
+    width:3px;height:1.1em;background:var(--accent);border-radius:2px;
+    transform:translateX(-1px);
+    transition:height .18s cubic-bezier(.16,1,.3,1);
+  }
+  .lvl__age{margin-left:0;margin-top:.35rem}
+}
+.schoolrow:hover .lvl__i.is-on::before{height:1.6em}
+.lvl--inv .lvl__i{color:var(--on-inverse-muted)}
+.lvl--inv .lvl__i.is-on{color:var(--on-inverse)}
+.lvl--inv .lvl__age{color:var(--on-inverse-muted)}
+@media (min-width:760px){
+  .lvl--inv{border-left-color:var(--on-inverse-rule)}
+  .lvl--inv .lvl__i.is-on::before{background:var(--on-inverse-accent)}
+}
+
+/* ===========================================================================
+   14. SCHOOLS, one lead treatment then an alternating rail list. Not a 3-up.
+   =========================================================================== */
+.schools{padding-top:0}
+.lead-school{
+  background:var(--raised);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  padding:clamp(1.25rem,2.5vw,2rem);
+  /* overlaps the bottom edge of the dark chapter */
+  margin-top:clamp(-6rem,-9vw,-3rem);
+  position:relative;z-index:2;
+  box-shadow:0 26px 60px color-mix(in oklab,var(--ink) 16%,transparent);
+  display:grid;gap:clamp(1.25rem,3vw,2.25rem);
+}
+@media (min-width:900px){ .lead-school{grid-template-columns:1.15fr .85fr;align-items:center} }
+.lead-school__body{display:flex;flex-direction:column;gap:clamp(.9rem,2vw,1.6rem)}
+/* the rail only sits beside the text once it is a vertical rail */
+@media (min-width:760px){ .lead-school__body{flex-direction:row} }
+.lead-school__text{min-width:0}
+.need{
+  font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 30,'wght' 460,'SOFT' 0,'WONK' 1;
+  font-size:clamp(1.3rem,2.6vw,1.85rem);line-height:1.2;letter-spacing:-.012em;
+  margin:.2rem 0 .7rem;
+}
+.where{font-size:.9rem;font-weight:600;letter-spacing:.03em;color:var(--ink-muted);margin:0 0 .2rem}
+/* funding state is a sentence an editor writes. No numbers, no bars, ever. */
+.state{
+  display:inline-block;margin-top:1rem;
+  font-size:.86rem;font-weight:700;letter-spacing:.02em;
+  color:var(--tint-accent);
+  background:var(--tint);
+  border-radius:var(--r-mark);
+  padding:.4rem .7rem;
+}
+
+.schoollist{margin-top:clamp(2.5rem,5vw,4rem);display:grid;gap:0}
+.schoolrow{
+  display:grid;gap:clamp(1rem,2.5vw,2rem);
+  padding-block:clamp(1.75rem,3.5vw,2.75rem);
+  border-top:1px solid var(--rule);
+  align-items:center;
+}
+.schoolrow:last-child{border-bottom:1px solid var(--rule)}
+@media (min-width:760px){
+  .schoolrow{grid-template-columns:auto minmax(0,1fr) minmax(0,.62fr)}
+  .schoolrow--flip{grid-template-columns:minmax(0,.62fr) auto minmax(0,1fr)}
+  .schoolrow--flip .schoolrow__plate{order:-1}
+}
+.schoolrow__plate{max-width:100%}
+.schoolrow h3{margin-bottom:.3rem}
+.schoolrow .need{
+  font-size:clamp(1.1rem,1.9vw,1.3rem);
+  font-variation-settings:'opsz' 24,'wght' 450,'SOFT' 0,'WONK' 1;
+  margin:.35rem 0 .5rem;
+}
+.schoolrow .plate{transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.schoolrow:hover .plate{transform:scale(1.015)}
+.schoolmore{margin-top:clamp(1.75rem,3vw,2.5rem)}
+
+/* ===========================================================================
+   15. STORIES, staggered, three different aspect ratios
+   =========================================================================== */
+.stories{margin-top:clamp(2.5rem,5vw,4rem);row-gap:clamp(2rem,4vw,3rem)}
+.story{grid-column:1/-1}
+@media (min-width:760px){
+  .story--1{grid-column:1/6}
+  .story--2{grid-column:6/10;margin-top:clamp(2rem,5vw,4.5rem)}
+  .story--3{grid-column:10/13;margin-top:clamp(1rem,2vw,1.5rem)}
+}
+.story h3{margin:1rem 0 .4rem}
+:where(.story) p{font-size:.98rem;color:var(--ink-muted)}
+.story__kind{
+  font-size:.74rem;text-transform:uppercase;letter-spacing:.11em;font-weight:700;
+  color:var(--accent-quiet);
+}
+
+/* ===========================================================================
+   16. PARTNERS, short band, hairline top. Monogram marks, no external files.
+   =========================================================================== */
+.partners{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.partners__in{display:grid;gap:clamp(1.5rem,4vw,3rem);align-items:center}
+@media (min-width:900px){ .partners__in{grid-template-columns:.8fr 1.2fr} }
+.marks{display:flex;flex-wrap:wrap;gap:clamp(.75rem,2vw,1.5rem)}
+.mark{
+  display:grid;place-items:center;
+  width:clamp(4rem,9vw,5.25rem);aspect-ratio:1;
+  border:1px solid var(--border);border-radius:var(--r-card);
+  background:var(--raised);
+  font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 20,'wght' 640,'SOFT' 0,'WONK' 1;
+  font-size:1.16rem;letter-spacing:.01em;
+  color:var(--ink-muted);
+}
+
+/* ===========================================================================
+   17. NEXT STEP, a large tinted field. Asymmetric, not three equal columns.
+   =========================================================================== */
+.next{align-items:start;row-gap:clamp(2.25rem,4vw,3rem)}
+.next__head{grid-column:1/-1}
+.next__ways{grid-column:1/-1}
+@media (min-width:900px){
+  .next__head{grid-column:1/6}
+  .next__ways{grid-column:7/13}
+}
+.next .actions{margin-top:2rem}
+.way{padding-block:1.35rem;border-top:1px solid color-mix(in oklab,var(--tint-accent) 28%,transparent)}
+.way:first-child{border-top:0;padding-top:0}
+.way h3{font-variation-settings:'opsz' 24,'wght' 560,'SOFT' 0,'WONK' 0;font-size:1.12rem;margin-bottom:.3rem}
+:where(.way) p{font-size:.98rem;color:var(--ink-muted);max-width:52ch}
+
+/* ===========================================================================
+   18. FOOTER
+   =========================================================================== */
+.foot{background:var(--sunk);border-top:1px solid var(--rule)}
+.foot__in{display:grid;gap:clamp(2rem,4vw,3rem)}
+@media (min-width:760px){ .foot__in{grid-template-columns:1.4fr 1fr 1fr} }
+.foot h2{
+  font-family:var(--disp);font-optical-sizing:none;
+  font-variation-settings:'opsz' 24,'wght' 600,'SOFT' 0,'WONK' 1;
+  font-size:1.2rem;margin:0 0 .6rem;letter-spacing:-.015em;
+}
+:where(.foot) p{font-size:.95rem;color:var(--ink-muted);max-width:34ch}
+.foot h3{
+  font-family:var(--sans);font-size:.76rem;text-transform:uppercase;
+  letter-spacing:.11em;font-weight:700;color:var(--ink);margin:0 0 .85rem;
+}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.foot ul a{font-size:.97rem;text-decoration:none;color:var(--ink-muted)}
+.foot ul a:hover{color:var(--ink);text-decoration:underline}
+.foot__legal{
+  border-top:1px solid var(--rule);margin-top:clamp(2rem,4vw,3rem);padding-top:1.5rem;
+  font-size:.84rem;color:var(--ink-muted);
+}
+
+/* ===========================================================================
+   19. MOTION. Motivated only: hierarchy on load, sequence on scroll, feedback
+   on hover. Everything collapses under prefers-reduced-motion.
+   =========================================================================== */
+@media (prefers-reduced-motion:no-preference){
+  .hero__rule,.hero .masthead,.hero__sub,.hero .actions,.hero__plate{
+    animation:enter .8s cubic-bezier(.16,1,.3,1) both;
+  }
+  .hero__rule{animation-delay:.02s}
+  .hero .masthead{animation-delay:.08s}
+  .hero__sub{animation-delay:.18s}
+  .hero .actions{animation-delay:.26s}
+  .hero__plate{animation-delay:.14s}
+
+  @supports (animation-timeline:view()){
+    .rise{
+      animation:rise linear both;
+      animation-timeline:view();
+      animation-range:entry 4% entry 46%;
+    }
+  }
+}
+@keyframes enter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:.001;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#utama">Langsung ke konten utama</a>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav">
+  <div class="nav__in">
+    <a class="brand" href="#">Harapan <span>Sumba</span></a>
+
+    <nav class="nav__links" aria-label="Navigasi utama">
+      <a href="#">Tentang Kami</a>
+      <a href="#sekolah">Sekolah</a>
+      <a href="#">Rumah Anak</a>
+      <a href="#cerita">Cerita</a>
+      <a href="#mitra">Mitra</a>
+    </nav>
+
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Bahasa">
+        <a href="#" aria-current="true" hreflang="id">ID</a>
+        <a href="#" hreflang="en">EN</a>
+      </div>
+      <button class="themebtn" type="button" id="themebtn" aria-label="Ubah tampilan"><span class="themebtn__k">Tampilan: </span><span id="themestate">Sistem</span></button>
+      <a class="btn btn--primary" href="#langkah">Bermitra dengan Kami</a>
+
+      <details class="menu">
+        <summary aria-label="Buka menu navigasi">Menu</summary>
+        <div class="menu__panel">
+          <a href="#">Tentang Kami</a>
+          <a href="#sekolah">Sekolah</a>
+          <a href="#">Rumah Anak</a>
+          <a href="#cerita">Cerita</a>
+          <a href="#mitra">Mitra</a>
+          <a href="#">Perlindungan Anak</a>
+          <a class="btn btn--primary" href="#langkah">Bermitra dengan Kami</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="utama">
+
+  <!-- ====================== 1. HERO ======================
+       Asymmetric split. Three text elements: headline, subtext, actions. -->
+  <section class="hero on-surface">
+    <div class="wrap wrap--wide">
+      <div class="g12 hero__grid">
+        <div class="hero__copy">
+          <div class="hero__rule" aria-hidden="true"></div>
+          <h1 class="masthead">
+            Setiap anak berhak atas masa depan yang <em>bercahaya</em>.
+          </h1>
+          <p class="hero__sub">
+            Sekolah gratis dan rumah anak di Sumba, dibangun bersama warga desa
+            dan mitra jangka panjang.
+          </p>
+          <div class="actions">
+            <a class="btn btn--primary" href="#langkah">Bermitra dengan Kami</a>
+            <a class="btn btn--secondary" href="#sekolah">Dukung Sebuah Sekolah</a>
+          </div>
+        </div>
+
+        <div class="hero__plate">
+          <div class="plate plate--grass ar-45">
+            <p class="plate__slug">Foto: anak-anak berjalan di jalan setapak menuju sekolah, cahaya pagi, dataran tinggi Sumba</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 2. SIAPA MEREKA ======================
+       Offset prose, then a staggered portrait band. Adults named in full with
+       their role. Children elsewhere on the page carry a first name only. -->
+  <section class="pad-xl on-surface">
+    <div class="wrap">
+      <div class="g12">
+        <div class="offset-prose">
+          <h2 class="h2">
+            Pekerjaan ini dijalankan oleh orang-orang dari pulau ini sendiri.
+            <span class="en" lang="en">The people who run this work are from this island.</span>
+          </h2>
+          <p class="lead prose" style="margin-top:1.75rem">
+            Sumba adalah pulau savana dengan desa-desa yang tersebar jauh. Sejak
+            2007 kami bekerja bersama tetua desa, gereja setempat dan pemerintah
+            daerah untuk membuka sekolah gratis, lalu menjaganya tetap berjalan.
+          </p>
+          <p class="muted prose">
+            Setiap sekolah dimulai dengan cara yang sama: permintaan dari desanya
+            sendiri, tanah yang diberikan warga, dan guru yang memang tinggal di
+            sana. Beberapa lulusan pertama kami kini mengajar di kelas tempat
+            mereka dulu belajar.
+          </p>
+        </div>
+      </div>
+
+      <div class="portband">
+        <figure class="rise" style="margin:0">
+          <div class="plate plate--field ar-45">
+            <p class="plate__slug">Foto: potret lingkungan Reynold di halaman sekolah pertama, Karuni</p>
+          </div>
+          <figcaption>
+            <p class="person__name">Reynold</p>
+            <p class="person__role">Pendiri</p>
+          </figcaption>
+        </figure>
+        <figure class="rise" style="margin:0">
+          <div class="plate plate--grass ar-45">
+            <p class="plate__slug">Foto: potret lingkungan Maria Bulu di ruang kelasnya, Anakalang</p>
+          </div>
+          <figcaption>
+            <p class="person__name">Maria Bulu</p>
+            <p class="person__role">Kepala Sekolah, SMP Harapan Anakalang</p>
+          </figcaption>
+        </figure>
+        <figure class="rise" style="margin:0">
+          <div class="plate plate--dusk ar-45">
+            <p class="plate__slug">Foto: potret lingkungan Yohanis Rangga saat mengerjakan rangka ruang kelas</p>
+          </div>
+          <figcaption>
+            <p class="person__name">Yohanis Rangga</p>
+            <p class="person__role">Tukang bangunan</p>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 3. TANTANGAN ======================
+       A figure ledger, not prose plus photo. Every measure is a circumstance
+       or a gap in the system. None of them is an attribute of a child. -->
+  <section class="pad-xl on-sunk">
+    <div class="wrap">
+      <p class="label label--quiet">Keadaan yang kami hadapi</p>
+      <h2 class="h2 prose">
+        Bukan kemampuan anak yang kurang. Yang kurang adalah jarak, guru dan listrik.
+        <span class="en" lang="en">It is not the children's ability that is lacking. It is distance, teachers and electricity.</span>
+      </h2>
+
+      <div class="g12 ledger">
+        <div class="measure measure--a rise">
+          <span class="fig">3 jam</span>
+          <p>
+            <strong>Berjalan kaki ke sekolah terdekat</strong>, sebelum ruang
+            kelas pertama dibuka di Karuni pada 2007. Tujuh anak berkumpul di
+            bawah atap seng karena tidak ada pilihan lain yang lebih dekat.
+          </p>
+        </div>
+        <div class="measure measure--b rise">
+          <span class="fig">0</span>
+          <p>
+            <strong>Guru IPA tetap di SMP Harapan Anakalang</strong> sejak awal
+            tahun ini. Seratus sepuluh murid belajar sains dari buku teks saja,
+            dan kepala sekolah menutup kelasnya di antara jam pelajarannya sendiri.
+          </p>
+        </div>
+        <div class="measure measure--c rise">
+          <span class="fig fig--word">Setelah&nbsp;gelap</span>
+          <p>
+            <strong>Belum ada aliran listrik</strong> di sebagian besar rumah di
+            Karuni, dan desa ini belum punya perpustakaan. Buku sekolah disimpan
+            di lemari ruang guru dan hanya bisa dipakai saat jam pelajaran.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 4. YANG KAMI KERJAKAN ======================
+       Interlocking grid: wide plate, copy hanging down beside it into row two,
+       narrow plate under. Nothing symmetric, nothing card shaped. -->
+  <section class="pad-xl on-surface">
+    <div class="wrap">
+      <div class="g12 work">
+        <div class="work__wide rise">
+          <div class="plate plate--field ar-32">
+            <p class="plate__slug">Foto: rangka atap dan rak pertama perpustakaan Karuni, terpasang</p>
+          </div>
+        </div>
+
+        <div class="work__lead">
+          <h2 class="h2">
+            Kami membangun sekolah di tempat yang belum punya sekolah.
+            <span class="en" lang="en">We build schools where there is no school yet.</span>
+          </h2>
+          <p class="lead" style="margin-top:1.5rem">
+            Empat belas sekolah dan dua rumah anak berjalan di seluruh Sumba,
+            semuanya bebas biaya bagi keluarga.
+          </p>
+        </div>
+
+        <div class="work__narrow rise">
+          <div class="plate plate--dusk ar-11">
+            <p class="plate__slug">Foto: ruang kelas SMP Harapan Lewa, murid sedang mengerjakan latihan</p>
+          </div>
+        </div>
+
+        <div class="work__note">
+          <p class="muted">
+            Guru direkrut dari desa tempat sekolah itu berdiri, bukan
+            didatangkan untuk satu tahun ajaran. Pekerjaan ini didanai oleh
+            yayasan, gereja dan perusahaan yang berkomitmen bertahun-tahun.
+          </p>
+          <p style="margin-top:1rem"><a class="txtlink" href="#">Baca cara kami bekerja</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 5, 6, 7. THE DARK CHAPTER ======================
+       Scale, evidence and the human voice are one continuous inverse field,
+       lifted over the section above. The reader passes through one dark
+       chapter rather than alternating light and dark section by section. -->
+  <section class="chapter-dark pad-xl">
+    <div class="wrap">
+
+      <!-- 5. SKALA -->
+      <div class="g12 stats">
+        <div class="stat--big rise">
+          <span class="stat__fig">612</span>
+          <span class="stat__label">Anak bersekolah tahun ini, tanpa biaya apa pun bagi keluarganya</span>
+          <span class="stat__asof">Per Agustus 2026</span>
+        </div>
+        <div class="stat--pair">
+          <div class="rise">
+            <span class="stat__fig">14</span>
+            <span class="stat__label">Sekolah dan rumah anak yang aktif</span>
+            <span class="stat__asof">Per Agustus 2026</span>
+          </div>
+          <div class="rise">
+            <span class="stat__fig">19</span>
+            <span class="stat__label">Tahun bekerja di Sumba, satu desa demi satu desa</span>
+            <span class="stat__asof">Sejak 2007</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. BUKTI -->
+      <div style="margin-top:clamp(3.5rem,8vw,7rem)">
+        <p class="label label--inv">Bukti perubahan</p>
+        <h2 class="h2" style="max-width:24ch">
+          Ruang yang sama, lima bulan kemudian.
+          <span class="en en--inv" lang="en">The same room, five months later.</span>
+        </h2>
+
+        <div class="g12 evid">
+          <figure class="evid__a rise" style="margin:0">
+            <div class="plate plate--dusk ar-32">
+              <p class="plate__slug">Foto: ruang ketiga TK Harapan Karuni sebelum dikerjakan</p>
+            </div>
+            <figcaption><b>Maret 2026</b> Ruang ketiga, belum terpakai.</figcaption>
+          </figure>
+          <figure class="evid__b rise" style="margin:0">
+            <div class="plate plate--grass ar-32">
+              <p class="plate__slug">Foto: rangka atap dan rak pertama terpasang di ruang ketiga</p>
+            </div>
+            <figcaption><b>Agustus 2026</b> Rangka atap dan rak pertama terpasang.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- 7. SATU SUARA -->
+      <div class="voice">
+        <blockquote class="quote">
+          &ldquo;Anak-anak di sini sama cerdasnya dengan anak-anak di kota. Yang
+          belum ada bukan kemampuan mereka, tetapi gurunya.&rdquo;
+          <cite class="quote__by">
+            Maria Bulu
+            <span>Kepala Sekolah, SMP Harapan Anakalang</span>
+          </cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 8. SEKOLAH ======================
+       Lead school overlaps the dark chapter's lower edge. The other five sit
+       in an alternating rail list. The level mark carries the ladder. -->
+  <section class="pad-xl on-surface schools" id="sekolah">
+    <div class="wrap">
+
+      <article class="lead-school">
+        <div class="lead-school__body">
+          <ul class="lvl" aria-label="Jenjang sekolah">
+            <li class="lvl__i" aria-hidden="true">TK</li>
+            <li class="lvl__i is-on">SMP<span class="sr">, jenjang sekolah ini</span></li>
+            <li class="lvl__i" aria-hidden="true">SMA</li>
+            <li class="lvl__age">12-15 tahun</li>
+          </ul>
+          <div class="lead-school__text">
+            <p class="where">Anakalang, Sumba Tengah</p>
+            <h2 class="h3">SMP Harapan Anakalang</h2>
+            <p class="need">Guru IPA untuk tahun ajaran baru.</p>
+            <p class="muted" style="font-size:1rem">
+              Anakalang berada di luar rute yang biasa dipilih guru sains
+              bersertifikat. Kepala sekolah menutup kelas IPA di antara jam
+              pelajarannya sendiri, dan itu bukan penyelesaian yang bisa bertahan.
+            </p>
+            <p class="state">Sedang mencari mitra pendidik</p>
+            <p style="margin-top:1.25rem"><a class="txtlink" href="#">Lihat profil sekolah ini</a></p>
+          </div>
+        </div>
+        <div class="plate plate--field ar-34">
+          <p class="plate__slug">Foto: murid SMP Harapan Anakalang mengerjakan latihan sains dari buku teks</p>
+        </div>
+      </article>
+
+      <div style="margin-top:clamp(3.5rem,7vw,6rem)">
+        <p class="label">Sekolah pilihan</p>
+        <h2 class="h2" style="max-width:26ch">
+          Empat belas sekolah, satu pulau, kebutuhan yang berbeda-beda.
+          <span class="en" lang="en">Fourteen schools on one island, each with a different need.</span>
+        </h2>
+
+        <div class="schoollist">
+
+          <article class="schoolrow">
+            <ul class="lvl" aria-label="Jenjang sekolah">
+              <li class="lvl__i is-on">TK<span class="sr">, jenjang sekolah ini</span></li>
+              <li class="lvl__i" aria-hidden="true">SMP</li>
+              <li class="lvl__i" aria-hidden="true">SMA</li>
+              <li class="lvl__age">4-6 tahun</li>
+            </ul>
+            <div>
+              <p class="where">Karuni, Sumba Barat Daya</p>
+              <h3 class="h3">TK Harapan Karuni</h3>
+              <p class="need">Ruang baca baru untuk 60 anak.</p>
+              <p class="state">Butuh 4 mitra lagi</p>
+            </div>
+            <div class="schoolrow__plate">
+              <div class="plate plate--grass ar-169">
+                <p class="plate__slug">Foto: murid TK Harapan Karuni sedang belajar</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="schoolrow schoolrow--flip">
+            <div class="schoolrow__plate">
+              <div class="plate plate--field ar-169">
+                <p class="plate__slug">Foto: murid SMP Harapan Lewa di ruang kelas</p>
+              </div>
+            </div>
+            <ul class="lvl" aria-label="Jenjang sekolah">
+              <li class="lvl__i" aria-hidden="true">TK</li>
+              <li class="lvl__i is-on">SMP<span class="sr">, jenjang sekolah ini</span></li>
+              <li class="lvl__i" aria-hidden="true">SMA</li>
+              <li class="lvl__age">12-15 tahun</li>
+            </ul>
+            <div>
+              <p class="where">Lewa, Sumba Timur</p>
+              <h3 class="h3">SMP Harapan Lewa</h3>
+              <p class="need">Asrama putri untuk murid dari desa jauh.</p>
+              <p class="state">Pembangunan sedang berjalan</p>
+            </div>
+          </article>
+
+          <article class="schoolrow">
+            <ul class="lvl" aria-label="Jenjang sekolah">
+              <li class="lvl__i" aria-hidden="true">TK</li>
+              <li class="lvl__i" aria-hidden="true">SMP</li>
+              <li class="lvl__i is-on">SMA<span class="sr">, jenjang sekolah ini</span></li>
+              <li class="lvl__age">15-18 tahun</li>
+            </ul>
+            <div>
+              <p class="where">Kambera, Sumba Timur</p>
+              <h3 class="h3">SMA Harapan Kambera</h3>
+              <p class="need">Pembaruan laboratorium komputer.</p>
+              <p class="state">Perlu 2 mitra korporasi</p>
+            </div>
+            <div class="schoolrow__plate">
+              <div class="plate plate--dusk ar-169">
+                <p class="plate__slug">Foto: murid SMA Harapan Kambera di laboratorium komputer</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="schoolrow schoolrow--flip">
+            <div class="schoolrow__plate">
+              <div class="plate plate--grass ar-169">
+                <p class="plate__slug">Foto: murid TK Harapan Melolo sedang bermain</p>
+              </div>
+            </div>
+            <ul class="lvl" aria-label="Jenjang sekolah">
+              <li class="lvl__i is-on">TK<span class="sr">, jenjang sekolah ini</span></li>
+              <li class="lvl__i" aria-hidden="true">SMP</li>
+              <li class="lvl__i" aria-hidden="true">SMA</li>
+              <li class="lvl__age">4-6 tahun</li>
+            </ul>
+            <div>
+              <p class="where">Melolo, Sumba Timur</p>
+              <h3 class="h3">TK Harapan Melolo</h3>
+              <p class="need">Perlengkapan bermain dan belajar.</p>
+              <p class="state">Didanai penuh tahun ini</p>
+            </div>
+          </article>
+
+          <article class="schoolrow">
+            <ul class="lvl" aria-label="Jenjang sekolah">
+              <li class="lvl__i" aria-hidden="true">TK</li>
+              <li class="lvl__i" aria-hidden="true">SMP</li>
+              <li class="lvl__i is-on">SMA<span class="sr">, jenjang sekolah ini</span></li>
+              <li class="lvl__age">15-18 tahun</li>
+            </ul>
+            <div>
+              <p class="where">Waikabubak, Sumba Barat</p>
+              <h3 class="h3">SMA Harapan Waikabubak</h3>
+              <p class="need">Beasiswa kelas akhir untuk 12 murid.</p>
+              <p class="state">Butuh 5 mitra lagi</p>
+            </div>
+            <div class="schoolrow__plate">
+              <div class="plate plate--field ar-169">
+                <p class="plate__slug">Foto: murid kelas akhir SMA Harapan Waikabubak belajar bersama menjelang ujian</p>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="schoolmore"><a class="txtlink" href="#">Lihat keempat belas sekolah dan dua rumah anak</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 9. CERITA ======================
+       Staggered, three aspect ratios, typographic. Children first name only. -->
+  <section class="pad-xl on-raised" id="cerita">
+    <div class="wrap">
+      <h2 class="h2" style="max-width:24ch">
+        Orang-orang di balik angka.
+        <span class="en" lang="en">The people behind the numbers.</span>
+      </h2>
+
+      <div class="g12 stories">
+        <article class="story story--1 rise">
+          <div class="plate plate--grass ar-34">
+            <p class="plate__slug">Foto: Rambu di jalan setapak menuju sekolah, cahaya pagi</p>
+          </div>
+          <p class="story__kind" style="margin-top:1rem">Profil murid</p>
+          <h3 class="h3">Rambu berjalan sembilan kilometer setiap pagi.</h3>
+          <p>
+            Jalannya menurun melewati padang, menyeberangi sungai kecil yang
+            banjir di musim hujan, lalu menanjak kembali ke jalan beraspal
+            tempat sekolahnya berdiri. Kini ia mengajar membaca untuk murid
+            kelas satu, dua kali seminggu.
+          </p>
+          <p style="margin-top:.85rem"><a class="txtlink" href="#">Baca cerita Rambu</a></p>
+        </article>
+
+        <article class="story story--2 rise">
+          <div class="plate plate--field ar-11">
+            <p class="plate__slug">Foto: Umbu membongkar radio di bengkel sekolah</p>
+          </div>
+          <p class="story__kind" style="margin-top:1rem">Profil murid</p>
+          <h3 class="h3">Umbu belajar elektronika dari radio yang rusak.</h3>
+          <p>
+            Tidak ada pelajaran elektronika di sekolahnya waktu itu. Di tahun
+            terakhirnya ia satu dari dua belas murid yang memenuhi syarat masuk
+            universitas, dan ia ingin belajar teknik.
+          </p>
+          <p style="margin-top:.85rem"><a class="txtlink" href="#">Baca cerita Umbu</a></p>
+        </article>
+
+        <article class="story story--3 rise">
+          <div class="plate plate--dusk ar-45">
+            <p class="plate__slug">Foto: orang tua dan guru menggarap tanah kebun sekolah bersama</p>
+          </div>
+          <p class="story__kind" style="margin-top:1rem">Kabar sekolah</p>
+          <h3 class="h3">Kebun sekolah digarap bersama orang tua murid.</h3>
+          <p>
+            Hasilnya masuk ke dapur sekolah, dan sisanya dibawa pulang.
+          </p>
+          <p style="margin-top:.85rem"><a class="txtlink" href="#">Baca kabar ini</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 10. MITRA ======================
+       Short band, tight padding, deliberately the fastest section on the page.
+       Marks are typographic monograms: no external files, both themes. -->
+  <section class="partners pad-m on-surface" id="mitra">
+    <div class="wrap partners__in">
+      <div>
+        <h2 class="h3">Setiap mitra terhubung ke satu sekolah, bukan ke dana umum.</h2>
+        <p class="muted" style="font-size:.95rem;margin-top:.75rem;max-width:40ch">
+          Tanda di samping masih placeholder. Nama dan logo asli menunggu izin
+          tertulis sebelum ditampilkan.
+        </p>
+      </div>
+      <div class="marks" role="list" aria-label="Mitra (placeholder)">
+        <div class="mark" role="listitem">MA</div>
+        <div class="mark" role="listitem">TN</div>
+        <div class="mark" role="listitem">GK</div>
+        <div class="mark" role="listitem">SR</div>
+        <div class="mark" role="listitem">PW</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 11. LANGKAH BERIKUTNYA ======================
+       Large tinted field. Partner with us leads; supporting a school follows.
+       Giving is information plus redirect, so no payment language here. -->
+  <section class="pad-xl on-tint" id="langkah">
+    <div class="wrap">
+      <div class="g12 next">
+        <div class="next__head">
+          <h2 class="h2">
+            Mari mulai kemitraan.
+            <span class="en en--tint" lang="en">Let us start a partnership.</span>
+          </h2>
+          <p class="lead" style="margin-top:1.5rem;max-width:36ch">
+            Kami mengirimkan proposal, anggaran terperinci dan laporan berkala.
+            Biasanya kami membalas dalam dua hari kerja.
+          </p>
+          <div class="actions">
+            <a class="btn btn--primary" href="#">Bermitra dengan Kami</a>
+            <a class="btn btn--secondary" href="#sekolah">Dukung Sebuah Sekolah</a>
+          </div>
+        </div>
+
+        <div class="next__ways">
+          <div class="way">
+            <h3 class="h3">Perusahaan</h3>
+            <p>
+              Program CSR jangka panjang dengan anggaran terperinci, kunjungan
+              lapangan dan laporan tahunan yang dapat diaudit.
+            </p>
+          </div>
+          <div class="way">
+            <h3 class="h3">Gereja</h3>
+            <p>
+              Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar
+              berkala dan kunjungan bersama.
+            </p>
+          </div>
+          <div class="way">
+            <h3 class="h3">Relawan</h3>
+            <p>
+              Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua
+              relawan menjalani proses penyaringan perlindungan anak.
+            </p>
+          </div>
+          <div class="way">
+            <h3 class="h3">Cara memberi</h3>
+            <p>
+              Transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas
+              nama Yayasan Harapan Sumba.
+              <a class="txtlink txtlink--quiet" href="#">Lihat keterangannya</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot pad-l">
+  <div class="wrap">
+    <div class="foot__in">
+      <div>
+        <h2>Harapan Sumba</h2>
+        <p>Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.</p>
+      </div>
+      <div>
+        <h3>Jelajahi</h3>
+        <ul>
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#sekolah">Sekolah</a></li>
+          <li><a href="#">Rumah Anak</a></li>
+          <li><a href="#cerita">Cerita</a></li>
+          <li><a href="#mitra">Mitra</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hubungi</h3>
+        <ul>
+          <li><a href="#">Kirim pertanyaan kemitraan</a></li>
+          <li><a href="#">Perlindungan Anak</a></li>
+          <li><a href="#">Galeri</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot__legal">
+      Yayasan Harapan Sumba, Waingapu, Sumba Timur. Nomor registrasi yayasan:
+      belum diisi.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* Theme: three states, matching the spec. "Sistem" stamps nothing, so the bare
+   :root light palette plus the guarded dark media query resolve it. */
+(function(){
+  var order = ['system','light','dark'];
+  var text  = {system:'Sistem', light:'Terang', dark:'Gelap'};
+  var root  = document.documentElement;
+  var btn   = document.getElementById('themebtn');
+  var out   = document.getElementById('themestate');
+  var state = localStorage.getItem('hfs-theme') || 'system';
+
+  function apply(){
+    if (state === 'system') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', state);
+    out.textContent = text[state];
+    btn.setAttribute('aria-label', 'Tampilan: ' + text[state] + '. Ubah tampilan.');
+  }
+  apply();
+  btn.addEventListener('click', function(){
+    state = order[(order.indexOf(state) + 1) % order.length];
+    localStorage.setItem('hfs-theme', state);
+    apply();
+  });
+})();
+</script>
+</body>
+</html>

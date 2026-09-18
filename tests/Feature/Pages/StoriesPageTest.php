@@ -13,10 +13,12 @@ it('lists every story, not just the three the home page shows', function () {
         ->assertSee('Umbu');
 });
 
-// Story detail pages are deferred (spec §10), so every card points back at
-// this index. The one thing that must not happen is a card linking to a
-// route that doesn't exist — assert the href is the real, locale-correct URL.
-it('gives every card a live, locale-correct href', function () {
-    $this->get('/id/cerita')->assertSee('href="'.route('id.stories.index').'"', escape: false);
-    $this->get('/en/stories')->assertSee('href="'.route('en.stories.index').'"', escape: false);
+// Pass 4: story detail pages now exist (stories.show), so each card's href
+// points at its own page rather than back at the index — assert the real,
+// locale-correct per-post URL, and that visiting it actually renders.
+it('gives every card a live, locale-correct href to its own detail page', function () {
+    $this->get('/id/cerita')->assertSee('href="'.route('id.stories.show', 'rambu-sembilan-kilometer').'"', escape: false);
+    $this->get('/en/stories')->assertSee('href="'.route('en.stories.show', 'rambu-sembilan-kilometer').'"', escape: false);
+
+    $this->get(route('id.stories.show', 'rambu-sembilan-kilometer'))->assertOk()->assertSee('Sembilan kilometer');
 });

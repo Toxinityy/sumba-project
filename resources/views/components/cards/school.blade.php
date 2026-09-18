@@ -1,12 +1,9 @@
 {{-- resources/views/components/cards/school.blade.php --}}
-@props(['href', 'level', 'name', 'location', 'need', 'status', 'image'])
+@props(['href', 'level', 'name', 'location', 'need', 'status', 'image', 'ageRange' => null])
 
 <a href="{{ $href }}"
    class="flex flex-col overflow-hidden rounded-lg border border-line bg-raised transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
   <div class="relative">
-    <span class="absolute left-4 top-4 z-10 rounded-pill bg-badge px-3 py-1.5 text-[12px] font-bold tracking-[0.04em] text-badge-ink">
-      {{ $level }}
-    </span>
     <div class="aspect-[4/5] overflow-hidden">
       <x-picture
         :sources="$image['sources']"
@@ -19,6 +16,13 @@
   </div>
 
   <div class="flex flex-1 flex-col gap-2 p-6">
+    {{-- The level ladder replaces the single "SMP" pill this card used to
+         carry. A lone pill tells an overseas reader nothing; the ladder shows
+         all three rungs and lights this school's, which turns the repetition
+         down a directory into a scannable index. See
+         resources/views/components/level-ladder.blade.php. --}}
+    <x-level-ladder :level="$level" :ageRange="$ageRange" class="mb-2" />
+
     <p class="text-[14px] font-semibold text-ink-muted">{{ $location }}</p>
     <p class="font-display text-[22px] leading-tight text-ink">{{ $name }}</p>
     <p class="text-[15px] leading-relaxed text-ink-muted">{{ $need }}</p>
