@@ -45,8 +45,26 @@ class SchoolData
     private static function toDirectoryShape(array $school): array
     {
         return array_intersect_key($school, array_flip([
-            'slug', 'href', 'level', 'name', 'location', 'need', 'status', 'image',
+            'slug', 'href', 'level', 'age_range', 'name', 'location', 'need', 'status', 'image',
         ]));
+    }
+
+    /**
+     * The age range the lit rung of the level ladder carries beneath it.
+     *
+     * Derived from `level` rather than stored per school so the two can never
+     * disagree: a school whose level says SMP and whose age range says 4-6 is
+     * a data bug a reader would spot before the team did. See
+     * docs/landing-redesign-report.md — docs/data-contract.md's School shape
+     * needs an `age_range` key so the data layer produces this for real.
+     */
+    private static function ageRange(string $level): string
+    {
+        return match ($level) {
+            'TK' => self::pick('4-6 tahun', 'ages 4-6'),
+            'SMP' => self::pick('12-15 tahun', 'ages 12-15'),
+            'SMA' => self::pick('15-18 tahun', 'ages 15-18'),
+        };
     }
 
     private static function href(string $slug): string
@@ -62,6 +80,7 @@ class SchoolData
                 'slug' => 'karuni',
                 'href' => self::href('karuni'),
                 'level' => 'TK',
+                'age_range' => self::ageRange('TK'),
                 'name' => 'TK Harapan Karuni',
                 'location' => 'Karuni, Sumba Barat Daya',
                 'need' => self::pick('Ruang baca baru untuk 60 anak.', 'A new reading room for 60 children.'),
@@ -132,6 +151,7 @@ class SchoolData
                 'slug' => 'anakalang',
                 'href' => self::href('anakalang'),
                 'level' => 'SMP',
+                'age_range' => self::ageRange('SMP'),
                 'name' => 'SMP Harapan Anakalang',
                 'location' => 'Anakalang, Sumba Tengah',
                 'need' => self::pick('Guru IPA untuk tahun ajaran baru.', 'A science teacher for the new school year.'),
@@ -200,6 +220,7 @@ class SchoolData
                 'slug' => 'kambera',
                 'href' => self::href('kambera'),
                 'level' => 'SMA',
+                'age_range' => self::ageRange('SMA'),
                 'name' => 'SMA Harapan Kambera',
                 'location' => 'Kambera, Sumba Timur',
                 'need' => self::pick('Pembaruan laboratorium komputer.', 'Computer laboratory refurbishment.'),
@@ -268,6 +289,7 @@ class SchoolData
                 'slug' => 'melolo',
                 'href' => self::href('melolo'),
                 'level' => 'TK',
+                'age_range' => self::ageRange('TK'),
                 'name' => 'TK Harapan Melolo',
                 'location' => 'Melolo, Sumba Timur',
                 'need' => self::pick('Perlengkapan bermain dan belajar.', 'Play and learning equipment.'),
@@ -336,6 +358,7 @@ class SchoolData
                 'slug' => 'lewa',
                 'href' => self::href('lewa'),
                 'level' => 'SMP',
+                'age_range' => self::ageRange('SMP'),
                 'name' => 'SMP Harapan Lewa',
                 'location' => 'Lewa, Sumba Timur',
                 'need' => self::pick('Asrama putri untuk murid dari desa jauh.', "A girls' dormitory for pupils from distant villages."),
@@ -404,6 +427,7 @@ class SchoolData
                 'slug' => 'waikabubak',
                 'href' => self::href('waikabubak'),
                 'level' => 'SMA',
+                'age_range' => self::ageRange('SMA'),
                 'name' => 'SMA Harapan Waikabubak',
                 'location' => 'Waikabubak, Sumba Barat',
                 'need' => self::pick('Beasiswa kelas akhir untuk 12 murid.', 'Final-year scholarships for 12 pupils.'),

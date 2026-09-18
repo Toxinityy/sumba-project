@@ -12,15 +12,18 @@
   "nav.partners": "Mitra",
   "nav.impact": "Dampak",
   "nav.projects": "Proyek",
+
   "footer.tagline": "Sekolah gratis dan rumah anak di Pulau Sumba, Nusa Tenggara Timur.",
   "footer.explore": "Jelajahi",
   "footer.contact": "Hubungi",
   "footer.address": "Yayasan Harapan Sumba",
   "footer.registration": "Nomor registrasi yayasan: belum diisi.",
+
   "theme.label": "Tampilan",
   "theme.light": "Terang",
   "theme.dark": "Gelap",
   "theme.system": "Sistem",
+
   "cta.partner": "Bermitra dengan Kami",
   "cta.give": "Dukung Sebuah Sekolah",
 
@@ -32,10 +35,13 @@
   "home.hero.heading": "Setiap anak berhak atas masa depan yang cerah.",
   "home.hero.subhead": "Sekolah gratis dan rumah anak di Sumba, dibangun bersama warga dan mitra jangka panjang.",
   "home.hero.image_alt": "Foto: anak-anak berjalan di jalan setapak menuju sekolah, cahaya pagi, dataran tinggi Sumba",
+
   "home.lede.label": "Siapa kami",
   "home.lede.heading": "Kami membangun sekolah di tempat yang belum punya sekolah.",
   "home.lede.body": "Sumba adalah pulau savana dengan desa-desa yang tersebar jauh. Bagi banyak keluarga, sekolah terdekat berjarak beberapa jam berjalan kaki, dan guru sulit didatangkan. Sejak 2007 kami bekerja bersama tetua desa, gereja setempat dan pemerintah daerah untuk membuka sekolah gratis — dan menjaganya tetap berjalan.",
+
   "home.featured.label": "Sekolah pilihan",
+
   "home.stories.label": "Cerita",
   "home.stories.heading": "Orang-orang di balik angka.",
 
@@ -46,12 +52,16 @@
   "give.hero.label": "Dukung kami",
   "give.hero.heading": "Pilih sesuatu yang nyata.",
   "give.hero.body": "Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.",
+
   "give.corporate.heading": "Perusahaan",
   "give.corporate.body": "Program CSR jangka panjang dengan anggaran terperinci, kunjungan lapangan dan laporan tahunan yang dapat diaudit.",
+
   "give.church.heading": "Gereja",
   "give.church.body": "Kemitraan jemaat dengan satu sekolah tertentu, termasuk kabar berkala dan kunjungan bersama.",
+
   "give.volunteer.heading": "Relawan",
   "give.volunteer.body": "Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua relawan menjalani proses penyaringan perlindungan anak.",
+
   "give.how.label": "Cara memberi",
   "give.how.heading": "Transfer langsung ke rekening yayasan.",
   "give.how.body1": "Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
@@ -63,10 +73,12 @@
   "give.how.acknowledgement_key": "Tanda terima",
   "give.how.placeholder": "CONTOH — belum diisi",
   "give.how.acknowledgement_value": "3 hari kerja",
+
   "give.tiers.heading": "Enam cara memberi, terhubung langsung ke satu kebutuhan.",
+
   "give.ways.heading": "Cara yang sesuai dengan Anda.",
-  "give.how.status": "Informasi dan pengalihan — bukan gerbang pembayaran."
-,
+
+  "give.how.status": "Informasi dan pengalihan — bukan gerbang pembayaran.",
 
   "about.hero.label": "Tentang kami",
   "about.hero.heading": "Dimulai dari satu ruang kelas beratap seng.",
@@ -89,7 +101,7 @@
   "about.people.heading": "Pekerjaan ini dijalankan oleh orang-orang dari pulau ini sendiri.",
   "about.people.reynold": "Reynold — Pendiri",
   "about.people.reynold_alt": "Foto: potret lingkungan Reynold di depan kantor yayasan",
-  "about.people.maria": "Maria Bulu — Kepala Sekolah, SMP Harapan Anakalang",
+  "about.people.maria": "Maria Bulu — Kepala Sekolah, TK Harapan Karuni",
   "about.people.maria_alt": "Foto: potret lingkungan Maria Bulu di ruang kelasnya",
   "about.people.yohanis": "Yohanis Rangga — Tukang bangunan",
   "about.people.yohanis_alt": "Foto: potret lingkungan Yohanis Rangga saat mengerjakan rangka ruang kelas",
@@ -222,5 +234,63 @@
   "projects.detail.timeline_key": "Perkiraan selesai",
   "projects.detail.timeline_value": "Akhir tahun ajaran ini",
   "projects.detail.partner_key": "Jenis mitra dicari",
-  "projects.detail.partner_value": "Koleksi buku dan panel surya"
+  "projects.detail.partner_value": "Koleksi buku dan panel surya",
+
+  "school.level_label": "Jenjang sekolah",
+  "school.level_current": "jenjang sekolah ini",
+  "school.view_profile": "Lihat profil sekolah ini",
+
+  "story.kind.profile": "Profil murid",
+  "story.kind.update": "Kabar sekolah",
+  "story.kind.news": "Kabar",
+  "story.kind.photo-essay": "Esai foto",
+
+  "partners.marks_label": "Mitra (tanda placeholder)",
+
+  "meta.other_locale": "en",
+
+  "home.hero.accent": "cerah.",
+
+  "home.people.heading": "Pekerjaan ini dijalankan oleh orang-orang dari pulau ini sendiri.",
+  "home.people.gloss": "The people who run this work are from this island.",
+  "home.people.body1": "Sumba adalah pulau savana dengan desa-desa yang tersebar jauh. Sejak 2007 kami bekerja bersama tetua desa, gereja setempat dan pemerintah daerah untuk membuka sekolah gratis, lalu menjaganya tetap berjalan.",
+  "home.people.body2": "Setiap sekolah dimulai dengan cara yang sama: permintaan dari desanya sendiri, tanah yang diberikan warga, dan guru yang memang tinggal di sana. Beberapa lulusan pertama kami kini mengajar di kelas tempat mereka dulu belajar.",
+  "home.people.link": "Selengkapnya tentang kami",
+
+  "home.challenge.label": "Keadaan yang kami hadapi",
+  "home.challenge.heading": "Bukan kemampuan anak yang kurang. Yang kurang adalah jarak, guru dan listrik.",
+  "home.challenge.gloss": "It is not the children's ability that is lacking. It is distance, teachers and electricity.",
+
+  "home.work.gloss": "We build schools where there is no school yet.",
+  "home.work.lead": "Empat belas sekolah dan dua rumah anak berjalan di seluruh Sumba, semuanya bebas biaya bagi keluarga.",
+  "home.work.note": "Guru direkrut dari desa tempat sekolah itu berdiri, bukan didatangkan untuk satu tahun ajaran. Pekerjaan ini didanai oleh yayasan, gereja dan perusahaan yang berkomitmen bertahun-tahun.",
+  "home.work.link": "Baca cara kami bekerja",
+  "home.work.homes_link": "Lihat rumah anak kami",
+  "home.work.image_alt": "Foto: rangka atap dan rak pertama perpustakaan Karuni, terpasang",
+  "home.work.image_alt_narrow": "Foto: ruang kelas SMP Harapan Lewa, murid sedang mengerjakan latihan",
+
+  "home.evidence.label": "Bukti perubahan",
+  "home.evidence.heading": "Ruang yang sama, lima bulan kemudian.",
+  "home.evidence.gloss": "The same room, five months later.",
+  "home.evidence.before_alt": "Foto: ruang ketiga TK Harapan Karuni sebelum dikerjakan",
+  "home.evidence.before_caption": "Maret 2026 — ruang ketiga, belum terpakai.",
+  "home.evidence.after_alt": "Foto: rangka atap dan rak pertama terpasang di ruang ketiga",
+  "home.evidence.after_caption": "Agustus 2026 — rangka atap dan rak pertama terpasang.",
+  "home.evidence.link": "Lihat catatan dampak kami",
+
+  "home.schools.heading": "Empat belas sekolah, satu pulau, kebutuhan yang berbeda-beda.",
+  "home.schools.gloss": "Fourteen schools on one island, each with a different need.",
+  "home.schools.more": "Lihat keempat belas sekolah dan dua rumah anak",
+
+  "home.stories.gloss": "The people behind the numbers.",
+  "home.stories.more": "Baca semua cerita",
+  "home.stories.gallery_link": "Lihat galeri foto",
+
+  "home.partners.heading": "Setiap mitra terhubung ke satu sekolah, bukan ke dana umum.",
+  "home.partners.note": "Tanda di samping masih placeholder. Nama dan logo asli menunggu izin tertulis sebelum ditampilkan.",
+  "home.partners.link": "Tentang kemitraan kami",
+
+  "home.next.gloss": "Let us start a partnership.",
+  "home.next.how_body": "Transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
+  "home.next.how_link": "Lihat keterangannya"
 }

@@ -12,11 +12,9 @@
      audience is institutional donors doing due diligence, and a fake
      partner logo is worse than an empty page. --}}
 @php($heroImage = \App\ViewModels\PlaceholderImage::make(1600, 900, __('partners.hero.image_alt')))
-@php($partners = [
-    ['name' => __('partners.partner1'), 'logo' => 'https://placehold.co/160x60?text=Mitra+1', 'type' => 'corporate'],
-    ['name' => __('partners.partner2'), 'logo' => 'https://placehold.co/160x60?text=Mitra+2', 'type' => 'church'],
-    ['name' => __('partners.partner3'), 'logo' => 'https://placehold.co/160x60?text=Mitra+3', 'type' => 'foundation'],
-])
+{{-- Moved into App\ViewModels\PartnerData: the landing page's partner band
+     needs the same list, and two copies of one placeholder array drift. --}}
+@php($partners = \App\ViewModels\PartnerData::all())
 
 <x-layouts.site :title="__('partners.hero.heading').' — Hope for Sumba'">
   <x-sections.hero

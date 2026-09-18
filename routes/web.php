@@ -1,5 +1,6 @@
 <?php
 
+use App\ViewModels\PartnerData;
 use App\ViewModels\PostData;
 use App\ViewModels\SchoolData;
 use App\ViewModels\StatData;
@@ -39,10 +40,23 @@ foreach (config('locales.supported') as $locale) {
             // argument is evaluated once at route registration and can't
             // see app()->getLocale(). Pages whose content is entirely in the
             // translation files stay on Route::view().
+            // The landing page carries the whole narrative (see
+            // resources/views/pages/home.blade.php), so it pulls from every
+            // fixture rather than three. 'anakalang' is the lead school and is
+            // removed from the rail list below it so it appears once, not
+            // twice; the voice is Ibu Maria Bulu's own quote from her profile,
+            // rather than a fourth copy of the same words in a lang file.
             Route::get('/', fn () => view('pages.home', [
-                'stats' => StatData::all(),
-                'featuredSchool' => SchoolData::find('karuni'),
+                'stats' => StatData::scale(),
+                'challenge' => StatData::challenge(),
+                'featuredSchool' => SchoolData::find('anakalang'),
+                'schools' => array_values(array_filter(
+                    SchoolData::all(),
+                    fn (array $school) => $school['slug'] !== 'anakalang',
+                )),
                 'stories' => PostData::recent(3),
+                'voice' => PostData::find('ibu-maria-bulu')['quote'],
+                'partners' => PartnerData::all(),
             ]))->name('home')->defaults('locale', $locale);
 
             // About and Children's Homes moved off Route::view() (I5): both
