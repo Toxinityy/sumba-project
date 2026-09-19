@@ -64,7 +64,14 @@ it('never renders accent text on a sunk or tinted ground', function () {
 
     $violations = [];
     foreach ($urls as $url) {
-        foreach (accentOnForbiddenGround($this->get($url)->assertOk()->getContent()) as $v) {
+        $response = $this->get($url);
+        // The old contact URL is now a redirect to the landing page's form,
+        // which this loop already renders at /id and /en.
+        if ($response->isRedirect()) {
+            continue;
+        }
+
+        foreach (accentOnForbiddenGround($response->assertOk()->getContent()) as $v) {
             $violations[] = "{$url}: {$v}";
         }
     }

@@ -59,7 +59,7 @@
     :image="['alt' => __('home.hero.image_alt')]">
     <x-slot:actions>
       {{-- Partner first, give second. A CSR department cannot click Donate. --}}
-      <x-button :href="route(app()->getLocale().'.contact')" variant="primary">{{ __('cta.partner') }}</x-button>
+      <x-button :href="\App\Support\LocalizedUrl::contact()" variant="primary">{{ __('cta.partner') }}</x-button>
       <x-button :href="route(app()->getLocale().'.give')" variant="secondary">{{ __('cta.give') }}</x-button>
     </x-slot:actions>
   </x-sections.hero>
@@ -206,7 +206,7 @@
     :heading="__('nextstep.heading')"
     :en="__('home.next.gloss')"
     :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
+    :partnerHref="\App\Support\LocalizedUrl::contact()"
     :giveHref="route(app()->getLocale().'.give')"
     :ways="[
       ['heading' => __('give.corporate.heading'), 'body' => __('give.corporate.body')],
@@ -216,4 +216,59 @@
         'href' => route(app()->getLocale().'.give'), 'label' => __('home.next.how_link'),
       ]],
     ]" />
+
+  {{-- 12. CONTACT ------------------------------------------------------- --}}
+  {{-- Contact is not a page of its own: the enquiry form closes the landing
+       page, so "Partner with us" anywhere on the site lands here
+       (LocalizedUrl::contact(), /id#kontak). The old /id/kontak redirects to
+       this anchor. scroll-mt clears the sticky nav when the anchor is hit.
+
+       The form posts to the real route in routes/web.php (Mail::raw,
+       honeypot, throttle:5,1) and comes back to this anchor with either the
+       sent notice or the field errors. --}}
+  @php($findUs = [
+      ['key' => __('contact.find.email_key'), 'value' => config('mail.contact_to')],
+      ['key' => __('contact.find.phone_key'), 'value' => __('contact.find.placeholder')],
+      ['key' => __('contact.find.office_key'), 'value' => 'Waingapu, Sumba Timur'],
+  ])
+  <div id="{{ config('locales.segments.contact')[app()->getLocale()] }}" class="scroll-mt-24">
+    <x-sections.form
+      method="POST"
+      :action="route(app()->getLocale().'.contact.send')"
+      :label="__('contact.hero.label')"
+      :heading="__('contact.hero.heading')"
+      :fields="[
+          ['name' => 'name', 'label' => __('contact.form.name'), 'type' => 'text', 'autocomplete' => 'name', 'required' => true],
+          ['name' => 'organisation', 'label' => __('contact.form.organisation').' ('.__('contact.form.optional').')', 'type' => 'text', 'autocomplete' => 'organization'],
+          ['name' => 'email', 'label' => __('contact.form.email'), 'type' => 'email', 'autocomplete' => 'email', 'required' => true],
+          ['name' => 'message', 'label' => __('contact.form.message'), 'type' => 'textarea', 'rows' => 6, 'required' => true],
+      ]"
+      :submitLabel="__('contact.form.submit')">
+
+      @if (session('contact.sent'))
+        {{-- role=status announces the result without stealing focus. --}}
+        <p role="status" class="rounded border border-accent bg-surface p-4 text-body text-ink">
+          {{ __('contact.form.sent') }}
+        </p>
+      @endif
+
+      {{-- Honeypot: no human sees it and no screen reader reaches it, so
+           anything filled in came from a bot and the route rejects it. The
+           `hidden` attribute, not the class, so it stays hidden even when the
+           stylesheet fails to load on a slow connection.
+           ponytail: honeypot + throttle only; add a captcha if spam gets
+           through. --}}
+      <div hidden aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+    </x-sections.form>
+
+    <x-sections.current-need
+      :heading="__('contact.find.heading')"
+      :status="__('contact.find.status')"
+      :facts="$findUs">
+      <p>{{ __('contact.hero.body') }}</p>
+    </x-sections.current-need>
+  </div>
 </x-layouts.site>

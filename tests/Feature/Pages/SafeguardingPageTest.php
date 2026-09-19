@@ -13,5 +13,5 @@ it('states consent, EXIF stripping, withdrawal and a route to removal', function
         ->assertSee('requires written consent')
         ->assertSee('Location data is stripped')
         ->assertSee('withdrawn at any time')
-        ->assertSee('/en/contact', escape: false);
+        ->assertSee(url('/en').'#contact', escape: false);
 });

@@ -1,6 +1,7 @@
 {
   "nav.label": "Navigasi utama",
   "nav.skip_to_content": "Langsung ke konten utama",
+  "nav.home": "Beranda",
   "nav.about": "Tentang Kami",
   "nav.schools.index": "Sekolah",
   "nav.homes.index": "Rumah Anak",
@@ -149,7 +150,6 @@
   "contact.hero.label": "Kontak",
   "contact.hero.heading": "Mari bicara.",
   "contact.hero.body": "Untuk pertanyaan kemitraan, permintaan proposal, atau kunjungan ke Sumba. Kami biasanya membalas dalam dua hari kerja.",
-  "contact.hero.image_alt": "Foto: kantor yayasan di Waingapu, staf sedang bekerja",
   "contact.form.heading": "Pertanyaan kemitraan",
   "contact.form.name": "Nama",
   "contact.form.organisation": "Organisasi",

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\School;
+use App\Support\LocalizedUrl;
 use App\ViewModels\PartnerData;
 use App\ViewModels\PostData;
 use App\ViewModels\SchoolData;
@@ -9,6 +10,7 @@ use App\ViewModels\TierData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
  | The root redirects rather than serving content, so there is exactly one
@@ -108,7 +110,11 @@ foreach (config('locales.supported') as $locale) {
                 'tiers' => TierData::all(),
             ]))->name('give')->defaults('locale', $locale);
 
-            Route::view($segments['contact'], 'pages.contact')->name('contact')->defaults('locale', $locale);
+            // Contact is no longer a page: the form closes the landing page.
+            // The old URL stays alive as a permanent redirect to that anchor,
+            // so bookmarks and links already out in the world still land.
+            Route::get($segments['contact'], fn () => redirect(LocalizedUrl::contact($locale), 301))
+                ->name('contact')->defaults('locale', $locale);
 
             // The enquiry this site's primary CTA ("Partner with us") leads
             // to. Spam protection is a honeypot plus a throttle, both of
@@ -121,12 +127,21 @@ foreach (config('locales.supported') as $locale) {
                 // than a redirect: nothing here should look like success.
                 abort_if(filled($request->input('website')), 422);
 
-                $fields = $request->validate([
+                // Validated by hand rather than $request->validate(), whose
+                // failure redirect goes back() to the top of the landing page;
+                // the reader must land on the form, next to their errors.
+                $validator = Validator::make($request->all(), [
                     'name' => ['required', 'string', 'max:120'],
                     'organisation' => ['nullable', 'string', 'max:120'],
                     'email' => ['required', 'email', 'max:254'],
                     'message' => ['required', 'string', 'max:5000'],
                 ]);
+
+                if ($validator->fails()) {
+                    return redirect(LocalizedUrl::contact())->withErrors($validator)->withInput();
+                }
+
+                $fields = $validator->validated();
 
                 // Mail::raw, not a Mailable and a Blade template: this is an
                 // internal notification with four fields, read by one person.
@@ -149,7 +164,7 @@ foreach (config('locales.supported') as $locale) {
                         ->subject(__('contact.form.heading').' — '.$fields['name'])
                 );
 
-                return back()->with('contact.sent', true);
+                return redirect(LocalizedUrl::contact())->with('contact.sent', true);
             })->middleware('throttle:5,1')->name('contact.send')->defaults('locale', $locale);
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
 

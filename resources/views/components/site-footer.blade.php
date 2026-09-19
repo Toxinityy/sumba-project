@@ -23,7 +23,7 @@
       <div class="flex flex-col gap-2">
         <p class="text-caption uppercase tracking-[0.08em] text-inverse-ink-muted">{{ __('footer.contact') }}</p>
         <a href="{{ route("{$locale}.give") }}" class="flex min-h-11 items-center hover:underline">{{ __('nav.give') }}</a>
-        <a href="{{ route("{$locale}.contact") }}" class="flex min-h-11 items-center hover:underline">{{ __('nav.contact') }}</a>
+        <a href="{{ \App\Support\LocalizedUrl::contact() }}" class="flex min-h-11 items-center hover:underline">{{ __('nav.contact') }}</a>
         <a href="{{ route("{$locale}.safeguarding") }}" class="flex min-h-11 items-center hover:underline">{{ __('nav.safeguarding') }}</a>
       </div>
     </div>

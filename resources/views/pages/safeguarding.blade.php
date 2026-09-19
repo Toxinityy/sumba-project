@@ -34,7 +34,7 @@
   <x-sections.lede :heading="__('safeguarding.removal.heading')" surface="raised">
     <p>{{ __('safeguarding.removal.body') }}</p>
     <p class="mt-6">
-      <a href="{{ route(app()->getLocale().'.contact') }}"
+      <a href="{{ \App\Support\LocalizedUrl::contact() }}"
          class="font-semibold text-accent underline underline-offset-4 hover:no-underline">
         {{ __('safeguarding.removal.cta') }} &rarr;
       </a>

@@ -98,6 +98,18 @@ class LocalizedUrl
         );
     }
 
+    /**
+     * The contact form lives at the end of the landing page, not on a page of
+     * its own: /id#kontak, /en#contact. The fragment is the locale's contact
+     * segment, so the old /id/kontak and /en/contact read the same.
+     */
+    public static function contact(?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+
+        return route("{$locale}.home").'#'.config('locales.segments.contact')[$locale];
+    }
+
     /** @return array<string, string> locale => absolute URL, for hreflang. */
     public static function alternates(): array
     {

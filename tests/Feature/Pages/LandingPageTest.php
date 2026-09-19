@@ -40,11 +40,13 @@ it('offers exactly four navigation items', function () {
     expect(substr_count($nav, '<a href='))->toBe(4);
 });
 
+// Contact left the nav on 2026-09-20: its form closes the landing page, and
+// Home ("Beranda") took its place.
 it('names the four items the brief specifies and none of the folded six', function () {
     $nav = $this->get('/id')->getContent();
     $nav = substr($nav, strpos($nav, '<nav'), strpos($nav, '</nav>') - strpos($nav, '<nav'));
 
-    foreach (['Sekolah', 'Cerita', 'Dukung Kami', 'Kontak'] as $item) {
+    foreach (['Beranda', 'Sekolah', 'Cerita', 'Dukung Kami'] as $item) {
         expect($nav)->toContain($item);
     }
 

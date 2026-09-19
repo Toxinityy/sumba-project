@@ -21,21 +21,48 @@ function enquiryMails(): \Illuminate\Support\Collection
     return Mail::mailer()->getSymfonyTransport()->messages();
 }
 
-it('renders the contact page in both locales', function () {
-    $this->get('/id/kontak')->assertOk()->assertSee('Mari bicara.');
-    $this->get('/en/contact')->assertOk()->assertSee("Let's talk.");
+// Contact is no longer a page: the form closes the landing page, under an
+// anchor named after the locale's old contact segment.
+it('renders the contact form at the end of the landing page in both locales', function () {
+    $id = $this->get('/id')->assertOk()->getContent();
+    $en = $this->get('/en')->assertOk()->getContent();
+
+    expect($id)->toContain('id="kontak"')->toContain('Mari bicara.')
+        ->and($en)->toContain('id="contact"')->toContain('Let&#039;s talk.')
+        // Last on the page: after the Next step section that links to it.
+        ->and(strpos($id, 'id="kontak"'))->toBeGreaterThan(strpos($id, __('nextstep.heading', [], 'id')));
+});
+
+it('permanently redirects the old contact URLs to the landing-page anchor', function () {
+    $this->get('/id/kontak')->assertStatus(301)->assertRedirect(url('/id').'#kontak');
+    $this->get('/en/contact')->assertStatus(301)->assertRedirect(url('/en').'#contact');
+});
+
+it('replaces Contact with Home in the nav, and points Partner at the anchor', function () {
+    preg_match('#<nav[^>]*>(.*?)</nav>#s', $this->get('/id/sekolah')->getContent(), $nav);
+
+    expect($nav[1])->toContain('href="'.url('/id').'"')->toContain('Beranda')
+        ->not->toContain('Kontak')
+        ->and(strpos($nav[1], 'Beranda'))->toBeLessThan(strpos($nav[1], 'Sekolah'));
+
+    $en = $this->get('/en/schools')->getContent();
+    preg_match('#<nav[^>]*>(.*?)</nav>#s', $en, $nav);
+
+    expect($nav[1])->toMatch('#href="'.preg_quote(url('/en'), '#').'"[^>]*>\s*Home\s*</a>#')
+        ->not->toContain('Contact')
+        ->and($en)->toContain('href="'.url('/en').'#contact"');
 });
 
 it('posts to the enquiry route in the same locale', function () {
-    $this->get('/id/kontak')->assertSee('action="'.route('id.contact.send').'"', escape: false);
-    $this->get('/en/contact')->assertSee('action="'.route('en.contact.send').'"', escape: false);
+    $this->get('/id')->assertSee('action="'.route('id.contact.send').'"', escape: false);
+    $this->get('/en')->assertSee('action="'.route('en.contact.send').'"', escape: false);
 });
 
 // The submit button is the whole point of the page: a component that hard-codes
 // type="button" silently turns this form into a no-op, because HTML keeps the
 // FIRST of two duplicate attributes.
 it('gives the form a real submit button', function () {
-    $this->get('/en/contact')->assertSee('type="submit"', escape: false);
+    $this->get('/en')->assertSee('type="submit"', escape: false);
 });
 
 it('delivers a valid enquiry and replies to the sender, not the server', function () {
@@ -44,7 +71,7 @@ it('delivers a valid enquiry and replies to the sender, not the server', functio
         'organisation' => 'Nusantara Foundation',
         'email' => 'dina@example.org',
         'message' => 'We would like a proposal for a three-year school partnership.',
-    ])->assertRedirect()->assertSessionHas('contact.sent');
+    ])->assertRedirect(url('/en').'#contact')->assertSessionHas('contact.sent');
 
     expect(enquiryMails())->toHaveCount(1);
 
@@ -68,9 +95,10 @@ it('rejects a submission that fills the honeypot', function () {
 });
 
 it('requires a name, a valid email and a message', function () {
-    $this->from('/en/contact')
+    // Back to the form's anchor, not the top of the landing page.
+    $this->from('/en')
         ->post('/en/contact', ['name' => '', 'email' => 'not-an-email', 'message' => ''])
-        ->assertRedirect('/en/contact')
+        ->assertRedirect(url('/en').'#contact')
         ->assertSessionHasErrors(['name', 'email', 'message']);
 
     expect(enquiryMails())->toHaveCount(0);

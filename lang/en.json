@@ -1,6 +1,7 @@
 {
   "nav.label": "Main navigation",
   "nav.skip_to_content": "Skip to main content",
+  "nav.home": "Home",
   "nav.about": "About",
   "nav.schools.index": "Schools",
   "nav.homes.index": "Children's Homes",
@@ -149,7 +150,6 @@
   "contact.hero.label": "Contact",
   "contact.hero.heading": "Let's talk.",
   "contact.hero.body": "For partnership enquiries, proposal requests, or visits to Sumba. We normally reply within two working days.",
-  "contact.hero.image_alt": "Photograph: the foundation office in Waingapu, staff at work",
   "contact.form.heading": "Partnership enquiry",
   "contact.form.name": "Name",
   "contact.form.organisation": "Organisation",

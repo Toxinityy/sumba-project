@@ -184,7 +184,7 @@ Every name below is a section from the table above. Where a section serves a spe
 
 | Page | Sequence |
 |---|---|
-| Home | Hero → Lede → Stat band → Work (featured school) → Stories → Next step |
+| Home | Hero → Lede → Stat band → Work (featured school) → Stories → Next step → Form (partnership enquiry) → Detail panel (where to find us) |
 | School detail | Hero → Lede → People → Context → Work → Evidence → Detail panel (current need) → Next step |
 | Children's home | Same shape, stricter media rules |
 | Project | Hero → Work → Evidence → Detail panel (status) → Next step |
@@ -196,7 +196,7 @@ Every name below is a section from the table above. Where a section serves a spe
 | Story detail | Hero → Lede → Quote → Next step |
 | Gallery | Hero → Stories (photo essays) → Next step |
 | Partners | Hero → Lede → Partners → Next step |
-| Contact | Hero → Form (partnership enquiry) → Detail panel (where to find us) → Next step |
+| Contact | **No page of its own (changed 2026-09-20).** The form and the detail panel close Home, under the anchor `/id#kontak` / `/en#contact`, and "Partner with us" everywhere points there. The old `/id/kontak` and `/en/contact` redirect (301) to that anchor. The nav shows Home ("Beranda") in Contact's place. |
 | Safeguarding | Hero → Lede → Lede → Lede (policy page — exempt from rule 1, see below) |
 
 The Project and Impact spines are recorded here for completeness; both pages are deferred past launch (§10).
