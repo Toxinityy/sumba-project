@@ -374,7 +374,7 @@ Not chasing coverage on Blade templates. Feature tests on what fails silently an
 | Dhani briefed on the export spec and tall crops | Dev/Reynold | Before the shoot finishes |
 | Deferred pages scheduled post-launch | Team | Gallery, Partners, Impact, Projects |
 | `spatie/laravel-medialibrary` adopted, or not | Dev | `MediaAsset` is currently a plain table whose columns map onto it; the decision belongs with whoever builds the upload pipeline |
-| EXIF stripping on upload, GPS included (§9) | Dev | No owner. Highest-severity safeguarding gap still open — the schema cannot enforce it, only the upload path can |
+| EXIF stripping on upload, GPS included (§9) | Dev | **Done 2026-09-19** in `MediaAsset`'s `saving` hook, for files on the public disk. Verified under GD only; the Imagick path relies on `strip: true` and needs one check on a host that has Imagick |
 | Revision history and the signed preview route | Dev | No owner. Listed under "Editor experience to build" and not yet built |
 | Consent withdrawal reaching rich-text body images | Dev | `Consent::withdraw()` unpublishes attached assets now; images embedded in body HTML are only reachable once the §8 rewrite pass exists |
 
