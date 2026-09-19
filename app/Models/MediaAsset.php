@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Services\Images\ImageCapabilities;
 use App\ViewModels\PlaceholderImage;
 use Database\Factories\MediaAssetFactory;
 use DomainException;
@@ -12,6 +13,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Encoders\AutoEncoder;
+use Intervention\Image\ImageManager;
 
 /*
  | Every upload is wrapped by one of these: the file, its translated alt text
@@ -48,6 +52,14 @@ class MediaAsset extends Model
 
     protected static function booted(): void
     {
+        // Registered first, so it runs before the guards below: a save they
+        // refuse must not leave a geotagged file sitting on the public disk.
+        static::saving(function (self $asset) {
+            if ($asset->isDirty('path')) {
+                $asset->stripMetadata();
+            }
+        });
+
         static::saving(function (self $asset) {
             if (! $asset->depicts_minor) {
                 return;
@@ -79,6 +91,33 @@ class MediaAsset extends Model
     public function toImageArray(): array
     {
         return PlaceholderImage::make((int) $this->width, (int) $this->height, (string) $this->trans('alt'));
+    }
+
+    /**
+     * EXIF is stripped unconditionally, GPS included (§9): a geotagged photo
+     * of a child outside their home is a published location. Re-encoding
+     * drops every metadata block; orientation is applied on decode first, so
+     * a phone photo does not come out sideways once its rotation tag is gone.
+     * `strip` is explicit because Imagick, unlike GD, keeps EXIF by default.
+     *
+     * Paths are relative to the public disk, which is what the world can
+     * fetch. A path with no file behind it — the seeded placeholders — has
+     * nothing to strip.
+     */
+    private function stripMetadata(): void
+    {
+        $disk = Storage::disk('public');
+
+        if (! $disk->exists($this->path)) {
+            return;
+        }
+
+        $file = $disk->path($this->path);
+
+        (new ImageManager(app(ImageCapabilities::class)->driver(), strip: true))
+            ->decode($file)
+            ->encode(new AutoEncoder(quality: 92))
+            ->save($file);
     }
 
     public function consent(): BelongsTo
