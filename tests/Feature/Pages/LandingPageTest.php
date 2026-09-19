@@ -302,20 +302,32 @@ it('differentiates the lit rung by optical size and weight, never by contrast al
 });
 
 // ---------------------------------------------------------------------------
-// 5. Fraunces' axes.
+// 5. Newsreader's axes and the self-hosted font files.
 // ---------------------------------------------------------------------------
 
-it('sets Fraunces axes rather than pinning one weight', function () {
+it('sets Newsreader axes rather than pinning one weight', function () {
     $css = file_get_contents(resource_path('css/landing.css'));
 
     // The key move: low weight at large size against a heavy small mark.
-    expect($css)->toContain("font-variation-settings: 'opsz' 144, 'wght' 330")  // masthead
-        ->and($css)->toContain("font-variation-settings: 'opsz' 144, 'wght' 280")  // statistics
+    expect($css)->toContain("font-variation-settings: 'opsz' 72, 'wght' 330")  // masthead
+        ->and($css)->toContain("font-variation-settings: 'opsz' 72, 'wght' 280")  // statistics
         ->and($css)->toContain("font-variation-settings: 'opsz' 14, 'wght' 700");  // level mark
 
     // font-optical-sizing must be off wherever opsz is set by hand, or the
     // browser overrides it from the font size and nothing is redrawn.
     expect(substr_count($css, 'font-optical-sizing: none'))->toBeGreaterThanOrEqual(2);
+});
+
+// A missing font file does not break the page, it silently falls back to
+// Georgia or the system sans, so nothing else in the suite would notice.
+it('serves every font file that fonts.css and the preload tags name', function () {
+    preg_match_all("#/fonts/[\w.-]+\.woff2#", file_get_contents(resource_path('css/fonts.css')), $faces);
+    preg_match_all('#href="(/fonts/[^"]+)"#', $this->get('/id')->getContent(), $preloads);
+
+    expect($faces[0])->toHaveCount(8)->and($preloads[1])->toHaveCount(2);
+    foreach ([...$faces[0], ...$preloads[1]] as $path) {
+        expect(public_path($path))->toBeFile();
+    }
 });
 
 // ---------------------------------------------------------------------------

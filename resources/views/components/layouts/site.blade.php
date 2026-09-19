@@ -16,8 +16,8 @@
   @endforeach
   <link rel="alternate" hreflang="x-default" href="{{ $alternates[config('locales.default')] }}">
 
-  <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 

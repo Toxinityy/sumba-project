@@ -26,14 +26,12 @@
 }
 
 /* ===========================================================================
-   1. TYPE — Fraunces' axes
-   The face carries opsz 9-144 and wght 100-900 (verified against
-   public/fonts/fraunces-latin.woff2). It does NOT carry SOFT or WONK: the
-   Google Fonts query in docs/fonts.md never requested them, so the design's
-   SOFT/WONK settings are omitted here rather than written down as no-ops.
-   `font-optical-sizing: none` is required because the file's opsz default is
-   9 — without it the browser picks opsz from the font size and the explicit
-   setting below is the only thing that redraws the letterforms.
+   1. TYPE — Newsreader's axes
+   Newsreader carries opsz 6-72 and wght 200-800 (roman; the italic file is
+   300-600), per the query in docs/fonts.md. opsz 72 is its display cut, the
+   high-contrast masthead drawing; opsz 14-24 is its sturdier text cut.
+   `font-optical-sizing: none` keeps the explicit opsz below authoritative
+   instead of letting the browser derive it from the font size.
    =========================================================================== */
 .ed-masthead,
 .ed-h2,
@@ -45,7 +43,7 @@
 .ed-name,
 .ed-mono,
 .lvl__i.is-on {
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-family: 'Newsreader', ui-serif, Georgia, serif;
   font-optical-sizing: none;
 }
 
@@ -55,12 +53,12 @@
   font-size: clamp(2.15rem, 4.6vw, 3.5rem);
   line-height: 1.04;
   letter-spacing: -0.022em;
-  font-variation-settings: 'opsz' 144, 'wght' 330;
+  font-variation-settings: 'opsz' 72, 'wght' 330;
   text-wrap: balance;
 }
 .ed-masthead em {
   font-style: italic;
-  font-variation-settings: 'opsz' 144, 'wght' 360;
+  font-variation-settings: 'opsz' 72, 'wght' 360;
   color: var(--accent);
   /* italic descenders on a long Indonesian word need real clearance */
   line-height: 1.12;
@@ -180,7 +178,7 @@
    weight axis, so the bar reads as part of the publication rather than as
    chrome bolted on top of it. */
 .ed-brand {
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-family: 'Newsreader', ui-serif, Georgia, serif;
   font-optical-sizing: none;
   font-variation-settings: 'opsz' 24, 'wght' 600;
   font-size: clamp(1.02rem, 3.4vw, 1.16rem);
@@ -467,7 +465,7 @@
   font-size: clamp(3.2rem, 7.5vw, 5.1rem);
   line-height: 0.92;
   letter-spacing: -0.03em;
-  font-variation-settings: 'opsz' 144, 'wght' 290;
+  font-variation-settings: 'opsz' 72, 'wght' 290;
   font-variant-numeric: lining-nums tabular-nums;
   /* On sunk ground, accent text fails AA — badge-ink is the same hue family
      at 8.41:1 light / 11.60:1 dark. Spec §4. */
@@ -524,7 +522,7 @@
 }
 .ed-stat__fig {
   display: block;
-  font-variation-settings: 'opsz' 144, 'wght' 280;
+  font-variation-settings: 'opsz' 72, 'wght' 280;
   font-variant-numeric: lining-nums tabular-nums;
   line-height: 0.84;
   letter-spacing: -0.035em;
@@ -541,7 +539,7 @@
 }
 .ed-evid figcaption { display: flex; gap: 0.7rem; align-items: baseline; }
 .ed-evid figcaption b {
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-family: 'Newsreader', ui-serif, Georgia, serif;
   font-optical-sizing: none;
   font-variation-settings: 'opsz' 18, 'wght' 620;
   font-weight: 400;

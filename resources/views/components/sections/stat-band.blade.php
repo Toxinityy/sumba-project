@@ -61,7 +61,7 @@
 
     @elseif ($variant === 'scale')
       {{-- The dark chapter opens here. The first stat is the one the page is
-           about, so it is set at display scale (Fraunces wght 280 at up to
+           about, so it is set at display scale (Newsreader wght 280 at up to
            200px — low weight at large size, spec §4) and the rest sit in a
            rule-divided pair beside it. Nothing is a funding figure. --}}
       @php($lead = $stats[0] ?? null)

@@ -114,18 +114,20 @@ Nothing violates this today — no `bg-sunk` component uses `text-accent`, and t
 
 | Role | Font | Desktop / mobile |
 |---|---|---|
-| Display | Fraunces | 56 / 36 |
-| H1 | Fraunces | 44 / 32 |
-| H2 | Fraunces | 32 / 26 |
-| H3 | Plus Jakarta Sans semibold | 24 / 20 |
-| Body | Plus Jakarta Sans | 18 / 17, line-height 1.7 |
-| Caption/label | Plus Jakarta Sans | 14, uppercase, +0.08em |
+| Display | Newsreader | 56 / 36 |
+| H1 | Newsreader | 44 / 32 |
+| H2 | Newsreader | 32 / 26 |
+| H3 | Public Sans semibold | 24 / 20 |
+| Body | Public Sans | 18 / 17, line-height 1.7 |
+| Caption/label | Public Sans | 14, uppercase, +0.08em |
 
 Pull quotes: serif, italic, 28–32px, generous leading. Both faces self-hosted and subset; variable axes trimmed to the weights used; `font-display: swap`; two critical faces preloaded.
 
-**Fraunces' range is the editorial lever (added 2026-09-18).** The table above sets sizes; it says nothing about weight, and the first build pinned Fraunces at weight 500 everywhere. It is a five-axis variable face — `opsz 9–144`, `wght 100–900`, `SOFT`, `WONK`, and a true italic — and the unused range is where editorial character comes from without introducing a single new colour.
+**Faces changed 2026-09-19: Newsreader + Public Sans, replacing Fraunces + Plus Jakarta Sans.** The first pairing read as the stock AI-generated editorial look. Newsreader is a newspaper serif built for long reading; Public Sans is a plain, neutral text face designed for public-sector sites, which suits the institutional donors doing due diligence. Both are OFL, self-hosted, and have a true italic.
 
-The governing idea is **distance between extremes in one typeface**: low weight at large size (280–330 at 56–200px) gives the high stroke contrast of a magazine masthead rather than a bold web headline, and it costs nothing. Set against a small mark at `opsz 14 / wght 700`, the same face reads as two voices of one publication, because Fraunces' optical-size axis genuinely redraws the letterforms.
+**Newsreader's range is the editorial lever (added 2026-09-18, re-based 2026-09-19).** The table above sets sizes; it says nothing about weight. Newsreader is variable on `opsz 6–72` and `wght 200–800`, with a true italic, and that range is where editorial character comes from without introducing a single new colour.
+
+The governing idea is **distance between extremes in one typeface**: low weight at large size (280–330 at 56–200px, `opsz 72`) gives the high stroke contrast of a newspaper masthead rather than a bold web headline, and it costs nothing. Set against a small mark at `opsz 14 / wght 700`, the same face reads as two voices of one publication, because Newsreader's optical-size axis genuinely redraws the letterforms.
 
 **Landing-page exception to the type table:** on the single landing page that carries the whole narrative, section headings are set at the H1 size (44px desktop) rather than H2's 32px, because there they *are* the top-level moments and no page H1 competes with them. The masthead stays at Display. This exception applies to the landing page only.
 
