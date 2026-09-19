@@ -115,6 +115,23 @@ class School extends Model
         return app()->getLocale() === 'en' ? $en : $id;
     }
 
+    /**
+     * Slugs are per-locale, so /en/schools/{slug} must match the English slug
+     * and /id/sekolah/{slug} the Indonesian one — never either.
+     *
+     * The locale comes from the route, not app()->getLocale(): implicit
+     * binding runs in the `web` group, before the `setlocale` route
+     * middleware, so the app locale is still the default here and every
+     * English URL would silently resolve by its Indonesian slug. Drafts 404;
+     * previewing them is the signed preview route's job.
+     */
+    public function resolveRouteBinding($value, $field = null): ?self
+    {
+        $locale = request()->route()?->parameter('locale') ?? app()->getLocale();
+
+        return $this->whereSlug($value, $locale)->published()->first();
+    }
+
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
