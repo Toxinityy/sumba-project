@@ -2,7 +2,7 @@
 // tests/Feature/Pages/HomePageTest.php
 
 it('renders the home page in both locales', function () {
-    // The masthead now splits at the accented word, which is set in Fraunces
+    // The masthead now splits at the accented word, which is set in Newsreader
     // italic at the accent colour, so the sentence is no longer one contiguous
     // run of text in the markup. Both halves plus the <em> are asserted, which
     // is a stricter check than the single assertSee this replaced.

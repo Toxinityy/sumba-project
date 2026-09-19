@@ -9,7 +9,7 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Public Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* Tailwind colour names -> theme tokens (resolved from resources/css/tokens.css) */
@@ -43,8 +43,8 @@
     --radius-pill: 8px;
 
     /* Font families */
-    --font-display: 'Fraunces', ui-serif, Georgia, serif;
-    --font-body: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Newsreader', ui-serif, Georgia, serif;
+    --font-body: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Font sizes (with matching line-height / letter-spacing) */
     --text-display: 56px;
@@ -79,7 +79,7 @@
         /* Explicit background: a transparent body borrows the host's ground. */
         background-color: var(--surface);
         color: var(--ink);
-        font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
         font-size: 18px;
         line-height: 1.7;
         /* The landing page's full-bleed plate is pulled past the viewport's

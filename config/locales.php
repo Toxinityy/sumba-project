@@ -19,5 +19,9 @@ return [
         'give' => ['id' => 'dukung',            'en' => 'get-involved'],
         'contact' => ['id' => 'kontak',            'en' => 'contact'],
         'safeguarding' => ['id' => 'perlindungan-anak', 'en' => 'safeguarding'],
+        'gallery' => ['id' => 'galeri',            'en' => 'gallery'],
+        'partners' => ['id' => 'mitra',             'en' => 'partners'],
+        'impact' => ['id' => 'dampak',            'en' => 'impact'],
+        'projects' => ['id' => 'proyek',            'en' => 'projects'],
     ],
 ];

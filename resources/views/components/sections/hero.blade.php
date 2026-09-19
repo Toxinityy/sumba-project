@@ -12,7 +12,7 @@
     'tone' => null,
     // A tonal placeholder plate instead of a photograph: 'field'|'grass'|'dusk'.
     'plate' => null,
-    // One word of the headline set in Fraunces italic at the accent colour.
+    // One word of the headline set in Newsreader italic at the accent colour.
     // Kept as its own prop rather than parsed out of $heading: the word that
     // carries the emphasis differs per language and is an editorial choice.
     'accent' => null,

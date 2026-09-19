@@ -64,6 +64,7 @@ Consumed by `<x-cards.school>` (directory) and the school detail page.
     'slug'     => 'karuni',
     'href'     => '/id/sekolah/karuni',        // locale-aware, built by the page
     'level'    => 'TK',                        // TK | SMP | SMA
+    'age_range' => '4-6 tahun',                // localised, derived from level
     'name'     => 'TK Harapan Karuni',
     'location' => 'Karuni, Sumba Barat Daya',
     'need'     => 'Ruang baca baru untuk 60 anak.',   // ONE sentence, localised
@@ -71,6 +72,12 @@ Consumed by `<x-cards.school>` (directory) and the school detail page.
     'image'    => [ /* image shape */ ],
 ]
 ```
+
+**`age_range` is derived from `level`, never stored** — TK 4-6, SMP 12-15,
+SMA 15-18 (`'4-6 tahun'` / `'ages 4-6'`). A school whose level says SMP and
+whose age range says 4-6 is a data bug a reader would spot before the team
+did, so the two cannot be entered separately. The level ladder renders it.
+*(Amended 2026-09-19.)*
 
 **`status` is a qualitative string and never a number.** No goal, no amount
 raised, no percentage, no progress value. Spec decision 4: a progress bar
@@ -201,6 +208,14 @@ Consumed by `<x-sections.stat-band>`.
 
 ```php
 ['value' => '612', 'label' => 'Anak bersekolah tahun ini', 'asOf' => 'Per Agustus 2026']
+```
+
+The challenge ledger uses the same shape with an optional `body`: `label` is
+the bold opening clause and `body` is the sentence that finishes it.
+*(Amended 2026-09-19.)*
+
+```php
+['value' => '0', 'label' => 'Guru IPA tetap di SMP Harapan Anakalang', 'body' => 'sejak awal tahun ini. ...']
 ```
 
 `value` is a string. `asOf` exists to make a stale statistic visible to the

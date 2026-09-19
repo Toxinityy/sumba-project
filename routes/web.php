@@ -158,32 +158,20 @@ foreach (config('locales.supported') as $locale) {
 
             // Gallery, Partners, Impact and Projects are deferred past launch
             // (spec §10) — built in this pass so the whole site is clickable
-            // for review, not because launch scope changed. config/locales.php
-            // ('segments') is Agent B's file, not this workstream's, so these
-            // four use a literal translated-segment map inline rather than
-            // adding to it. Report note: whoever owns config/locales.php
-            // should fold this map into 'segments' once these pages are
-            // scheduled for real (docs/agent-a-pages-report.md, Pass 4).
-            $deferredSegments = [
-                'gallery' => ['id' => 'galeri', 'en' => 'gallery'],
-                'partners' => ['id' => 'mitra', 'en' => 'partners'],
-                'impact' => ['id' => 'dampak', 'en' => 'impact'],
-                'projects' => ['id' => 'proyek', 'en' => 'projects'],
-            ];
-
-            Route::get($deferredSegments['gallery'][$locale], fn () => view('pages.gallery', [
+            // for review, not because launch scope changed.
+            Route::get($segments['gallery'], fn () => view('pages.gallery', [
                 'essays' => PostData::photoEssays(),
             ]))->name('gallery.index')->defaults('locale', $locale);
 
-            Route::get($deferredSegments['partners'][$locale], fn () => view('pages.partners'))
+            Route::get($segments['partners'], fn () => view('pages.partners'))
                 ->name('partners')->defaults('locale', $locale);
 
-            Route::get($deferredSegments['impact'][$locale], fn () => view('pages.impact', [
+            Route::get($segments['impact'], fn () => view('pages.impact', [
                 'stats' => StatData::all(),
                 'stories' => PostData::recent(3),
             ]))->name('impact')->defaults('locale', $locale);
 
-            Route::get($deferredSegments['projects'][$locale], fn () => view('pages.projects'))
+            Route::get($segments['projects'], fn () => view('pages.projects'))
                 ->name('projects')->defaults('locale', $locale);
         });
 }

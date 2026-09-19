@@ -45,7 +45,7 @@ Laravel + Filament + Blade + Tailwind + Alpine. Server-rendered.
 
 **Hosting:** cPanel shared hosting, typical Indonesian profile — PHP 8.x, GD available, Imagick uncertain, no shell access, no long-running queue workers, cron available.
 
-Key packages: `spatie/laravel-translatable`, `spatie/laravel-medialibrary`, an activity-log package for revisions.
+Key packages: `spatie/laravel-medialibrary` and an activity-log package for revisions — neither installed yet (§12). Translation is **not** a package: `App\Models\Concerns\HasTranslations` stores each translated field as JSON keyed by locale. Two locales and nine models don't earn a dependency, and the trait is the one place the fallback rule (§7) lives. *(Corrected 2026-09-19 — this line named `spatie/laravel-translatable`, which the code never used.)*
 
 **Add Cloudflare's free tier in front of the domain.** It is the single largest performance win available, costs nothing, and partly compensates for shared hosting having no CDN — which matters a great deal for mobile users on Indonesian networks.
 
@@ -114,18 +114,20 @@ Nothing violates this today — no `bg-sunk` component uses `text-accent`, and t
 
 | Role | Font | Desktop / mobile |
 |---|---|---|
-| Display | Fraunces | 56 / 36 |
-| H1 | Fraunces | 44 / 32 |
-| H2 | Fraunces | 32 / 26 |
-| H3 | Plus Jakarta Sans semibold | 24 / 20 |
-| Body | Plus Jakarta Sans | 18 / 17, line-height 1.7 |
-| Caption/label | Plus Jakarta Sans | 14, uppercase, +0.08em |
+| Display | Newsreader | 56 / 36 |
+| H1 | Newsreader | 44 / 32 |
+| H2 | Newsreader | 32 / 26 |
+| H3 | Public Sans semibold | 24 / 20 |
+| Body | Public Sans | 18 / 17, line-height 1.7 |
+| Caption/label | Public Sans | 14, uppercase, +0.08em |
 
 Pull quotes: serif, italic, 28–32px, generous leading. Both faces self-hosted and subset; variable axes trimmed to the weights used; `font-display: swap`; two critical faces preloaded.
 
-**Fraunces' range is the editorial lever (added 2026-09-18).** The table above sets sizes; it says nothing about weight, and the first build pinned Fraunces at weight 500 everywhere. It is a five-axis variable face — `opsz 9–144`, `wght 100–900`, `SOFT`, `WONK`, and a true italic — and the unused range is where editorial character comes from without introducing a single new colour.
+**Faces changed 2026-09-19: Newsreader + Public Sans, replacing Fraunces + Plus Jakarta Sans.** The first pairing read as the stock AI-generated editorial look. Newsreader is a newspaper serif built for long reading; Public Sans is a plain, neutral text face designed for public-sector sites, which suits the institutional donors doing due diligence. Both are OFL, self-hosted, and have a true italic.
 
-The governing idea is **distance between extremes in one typeface**: low weight at large size (280–330 at 56–200px) gives the high stroke contrast of a magazine masthead rather than a bold web headline, and it costs nothing. Set against a small mark at `opsz 14 / wght 700`, the same face reads as two voices of one publication, because Fraunces' optical-size axis genuinely redraws the letterforms.
+**Newsreader's range is the editorial lever (added 2026-09-18, re-based 2026-09-19).** The table above sets sizes; it says nothing about weight. Newsreader is variable on `opsz 6–72` and `wght 200–800`, with a true italic, and that range is where editorial character comes from without introducing a single new colour.
+
+The governing idea is **distance between extremes in one typeface**: low weight at large size (280–330 at 56–200px, `opsz 72`) gives the high stroke contrast of a newspaper masthead rather than a bold web headline, and it costs nothing. Set against a small mark at `opsz 14 / wght 700`, the same face reads as two voices of one publication, because Newsreader's optical-size axis genuinely redraws the letterforms.
 
 **Landing-page exception to the type table:** on the single landing page that carries the whole narrative, section headings are set at the H1 size (44px desktop) rather than H2's 32px, because there they *are* the top-level moments and no page H1 competes with them. The masthead stays at Display. This exception applies to the landing page only.
 
@@ -374,7 +376,7 @@ Not chasing coverage on Blade templates. Feature tests on what fails silently an
 | Dhani briefed on the export spec and tall crops | Dev/Reynold | Before the shoot finishes |
 | Deferred pages scheduled post-launch | Team | Gallery, Partners, Impact, Projects |
 | `spatie/laravel-medialibrary` adopted, or not | Dev | `MediaAsset` is currently a plain table whose columns map onto it; the decision belongs with whoever builds the upload pipeline |
-| EXIF stripping on upload, GPS included (§9) | Dev | No owner. Highest-severity safeguarding gap still open — the schema cannot enforce it, only the upload path can |
+| EXIF stripping on upload, GPS included (§9) | Dev | **Done 2026-09-19** in `MediaAsset`'s `saving` hook, for files on the public disk. Verified under GD only; the Imagick path relies on `strip: true` and needs one check on a host that has Imagick |
 | Revision history and the signed preview route | Dev | No owner. Listed under "Editor experience to build" and not yet built |
 | Consent withdrawal reaching rich-text body images | Dev | `Consent::withdraw()` unpublishes attached assets now; images embedded in body HTML are only reachable once the §8 rewrite pass exists |
 

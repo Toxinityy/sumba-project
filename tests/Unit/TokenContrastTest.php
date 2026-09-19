@@ -132,3 +132,43 @@ it('records why sunk and tinted grounds may not use accent as text', function ()
     expect(contrastRatio('#5A3E0E', '#ECEEE3'))->toBeGreaterThanOrEqual(4.5)
         ->and(contrastRatio('#5A3E0E', '#EFE3C8'))->toBeGreaterThanOrEqual(4.5);
 });
+
+/*
+ | The dataset above is hand-copied hex, so it can drift from tokens.css and
+ | never learns about a surface added later. This reads the real file: every
+ | surface token in each theme must map to the accent-family text colour that
+ | is allowed on it, and that pair must clear AA. A new surface token with no
+ | entry here fails until someone decides which accent text it takes.
+ */
+function themeTokens(string $selector): array {
+    $css = file_get_contents(dirname(__DIR__, 2) . '/resources/css/tokens.css');
+    $block = $selector === ':root'
+        ? substr($css, 0, strpos($css, '@media'))
+        : substr($css, strpos($css, $selector));
+    $block = substr($block, 0, strpos($block, '}'));
+    preg_match_all('/(--[\w-]+):\s*(#[0-9a-fA-F]{6})\s*;/', $block, $m);
+
+    return array_combine($m[1], $m[2]);
+}
+
+it('clears AA for the allowed accent text on every surface parsed from tokens.css', function (string $selector) {
+    $allowed = [
+        '--surface' => '--accent',
+        '--surface-raised' => '--accent',
+        '--surface-sunk' => '--badge-ink',
+        '--badge-bg' => '--badge-ink',
+        '--inverse-surface' => '--inverse-accent',
+    ];
+    $tokens = themeTokens($selector);
+    $surfaces = array_filter(
+        array_keys($tokens),
+        fn (string $t) => preg_match('/^--(surface(-[\w]+)?|badge-bg|inverse-surface)$/', $t),
+    );
+
+    expect($surfaces)->not->toBeEmpty();
+    foreach ($surfaces as $surface) {
+        expect($allowed)->toHaveKey($surface);
+        $ratio = contrastRatio($tokens[$allowed[$surface]], $tokens[$surface]);
+        expect($ratio)->toBeGreaterThanOrEqual(4.5, "{$allowed[$surface]} on {$surface} ({$selector}): {$ratio}");
+    }
+})->with([':root', ':root[data-theme="dark"]']);

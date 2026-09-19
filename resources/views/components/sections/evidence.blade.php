@@ -54,7 +54,7 @@
           @endif
 
           @if ($variant === 'offset')
-            {{-- The date is set in Fraunces and given its own colour, so the
+            {{-- The date is set in Newsreader and given its own colour, so the
                  two captions read as marks on a shared timeline. Captions in
                  the fixtures are "<date> — <what changed>"; the split is on
                  that em dash and degrades to a plain caption without one. --}}

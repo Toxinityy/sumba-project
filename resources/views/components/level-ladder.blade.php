@@ -11,9 +11,9 @@
   rung moves down the rail as you scan the list, so every SMA is findable by
   looking for the mark at the bottom.
 
-  DIFFERENTIATION IS NEVER CONTRAST ALONE. The lit rung is Fraunces at
+  DIFFERENTIATION IS NEVER CONTRAST ALONE. The lit rung is Newsreader at
   `opsz 14 / wght 700`, 27px, in full --ink, with a 3px --accent rule in the
-  left gutter. The unlit rungs are Plus Jakarta Sans at --ink-muted, which is
+  left gutter. The unlit rungs are Public Sans at --ink-muted, which is
   6.85:1 on surface / 7.31:1 on raised / 6.24:1 on sunk — above AA, never
   greyed below the threshold to look "off". Optical size, weight and the rule
   do the work; see resources/css/landing.css §4 for the geometry.

@@ -53,6 +53,16 @@ it('never leaks a stray locale query string into the resolved url', function () 
 });
 
 /*
+ | The four folded pages used to define their segments inline in
+ | routes/web.php, so they escaped the config-driven check below. One source
+ | of truth: every translated segment lives in config/locales.php.
+ */
+it('keeps every translated segment in config, including the folded pages', function () {
+    expect(config('locales.segments'))
+        ->toHaveKeys(['gallery', 'partners', 'impact', 'projects']);
+});
+
+/*
  | Drive the check from config, not a hand-written list: every page defined
  | in locales.segments (plus the bare home route) must resolve to its
  | counterpart in every other locale, both directions. A switcher that works
@@ -61,7 +71,7 @@ it('never leaks a stray locale query string into the resolved url', function () 
  */
 it('resolves every named route to its counterpart in every other locale', function () {
     $names = array_merge(['home'], array_map(
-        fn (string $segment) => in_array($segment, ['schools', 'homes', 'stories'], true)
+        fn (string $segment) => in_array($segment, ['schools', 'homes', 'stories', 'gallery'], true)
             ? "{$segment}.index"
             : $segment,
         array_keys(config('locales.segments'))

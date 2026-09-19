@@ -6,6 +6,19 @@ it('renders the Karuni school detail page in both locales', function () {
     $this->get('/en/schools/karuni')->assertOk()->assertSee('TK Harapan Karuni');
 });
 
+/*
+ | The pages read the database, not a fixture. An edit to the record must reach
+ | both the directory and the detail page, or a leftover fixture path is still
+ | what the reader sees.
+ */
+it('renders the school from the database', function () {
+    $school = \App\Models\School::whereSlug('karuni', 'id')->firstOrFail();
+    $school->update(['name' => ['id' => 'TK Diubah dari Basis Data', 'en' => 'Edited in the Database']]);
+
+    $this->get('/id/sekolah/karuni')->assertOk()->assertSee('TK Diubah dari Basis Data');
+    $this->get('/en/schools')->assertOk()->assertSee('Edited in the Database');
+});
+
 it('renders every section of the spine, in order', function () {
     $html = $this->get('/id/sekolah/karuni')->getContent();
 

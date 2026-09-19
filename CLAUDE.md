@@ -11,16 +11,13 @@ working in Sumba, Indonesia.
 Both are authoritative. When code and either document disagree, treat the
 document as correct and flag the conflict rather than guessing.
 
-## Stack
+## Deployment
 
-Laravel 13 + Filament + Blade + Tailwind CSS 4 (CSS-first `@theme`, no
-`tailwind.config.js`) + Alpine.js. Server-rendered, deployed to cPanel shared
-hosting — no Node build step in production beyond compiling assets ahead of
-deploy.
+Server-rendered, deployed to cPanel shared hosting: no shell access and no
+Node in production, so assets are compiled locally before upload.
 
-## Tests
-
-Pest. Run with `php artisan test`.
+Tailwind 4 is configured CSS-first (`@theme` in `resources/css/app.css`).
+There is no `tailwind.config.js` — don't create one.
 
 ## Two rules that are easy to break by accident
 
