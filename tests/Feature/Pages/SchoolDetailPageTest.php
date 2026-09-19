@@ -73,3 +73,22 @@ it('never displays a numeric funding figure', function () {
 
     expect($html)->not->toMatch('/Rp\s?[\d.,]+/');
 });
+
+/*
+ | Slugs are per locale. The switcher and the hreflang alternates must carry a
+ | reader to the OTHER locale's slug for the same school, not re-use this
+ | locale's slug under the other prefix, which 404s the moment they differ.
+ */
+it('links the language switch to the other locale slug of the same school', function () {
+    \App\Models\School::whereSlug('karuni', 'id')->firstOrFail()
+        ->update(['slug' => ['id' => 'karuni', 'en' => 'karuni-hope']]);
+
+    $this->get('/id/sekolah/karuni')->assertOk()
+        ->assertSee('hreflang="en" href="'.url('/en/schools/karuni-hope').'"', escape: false)
+        ->assertSee('href="'.url('/en/schools/karuni-hope').'"', escape: false)
+        ->assertDontSee(url('/en/schools/karuni').'"', escape: false);
+
+    $this->get('/en/schools/karuni-hope')->assertOk()
+        ->assertSee('hreflang="id" href="'.url('/id/sekolah/karuni').'"', escape: false);
+    $this->get('/en/schools/karuni')->assertNotFound();
+});

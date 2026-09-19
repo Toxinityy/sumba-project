@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\School;
 use App\ViewModels\PartnerData;
 use App\ViewModels\PostData;
 use App\ViewModels\SchoolData;
@@ -71,17 +72,13 @@ foreach (config('locales.supported') as $locale) {
                 'schools' => SchoolData::all(),
             ]))->name('schools.index')->defaults('locale', $locale);
 
-            // {slug} is a real URI parameter, so LocalizedUrl's route-parameter
-            // forwarding (App\Support\LocalizedUrl::parametersFor) carries it
-            // across the language switch without extra wiring here.
-            Route::get($segments['schools'].'/{slug}', function (string $slug) {
-                $school = SchoolData::find($slug);
-
-                // A school with only the directory shape (no 'lede') has no
-                // detail page yet — 404 rather than render a half-built page.
-                abort_unless($school !== null && isset($school['lede']), 404);
-
-                return view('pages.school', ['school' => $school]);
+            // {school} binds by the slug of this route's own locale
+            // (School::resolveRouteBinding), so the other locale's slug and
+            // drafts 404. Binding the model rather than a string is also what
+            // lets LocalizedUrl send the language switch to the other
+            // locale's slug for the same school.
+            Route::get($segments['schools'].'/{school}', function (School $school) {
+                return view('pages.school', ['school' => SchoolData::detail($school)]);
             })->name('schools.show')->defaults('locale', $locale);
 
             Route::get($segments['homes'], fn () => view('pages.homes', [

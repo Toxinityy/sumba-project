@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 
 class LocalizedUrl
@@ -37,7 +38,7 @@ class LocalizedUrl
             $target = "{$locale}.{$base}";
 
             if (Route::has($target)) {
-                return route($target, self::parametersFor($target));
+                return route($target, self::parametersFor($target, $locale));
             }
 
             // A popped segment is a SECTION, not a page — "schools", not
@@ -50,7 +51,7 @@ class LocalizedUrl
                 $indexTarget = "{$target}.index";
 
                 if (Route::has($indexTarget)) {
-                    return route($indexTarget, self::parametersFor($indexTarget));
+                    return route($indexTarget, self::parametersFor($indexTarget, $locale));
                 }
             }
 
@@ -76,7 +77,7 @@ class LocalizedUrl
      * itself become a stray query string. So intersect the current route's
      * genuine placeholders with the ones the target route actually declares.
      */
-    private static function parametersFor(string $target): array
+    private static function parametersFor(string $target, string $locale): array
     {
         $currentParameters = array_intersect_key(
             Route::current()->parameters(),
@@ -85,7 +86,16 @@ class LocalizedUrl
 
         $targetParameterNames = Route::getRoutes()->getByName($target)->parameterNames();
 
-        return array_intersect_key($currentParameters, array_flip($targetParameterNames));
+        // A bound model carries its slug per locale (spec §7), so it is
+        // forwarded as the TARGET locale's slug for the same record. Passing
+        // the model itself would put its id in the URL; passing this
+        // locale's slug 404s the moment the two locales' slugs differ.
+        return array_map(
+            fn ($value) => $value instanceof Model && method_exists($value, 'trans')
+                ? $value->trans('slug', $locale)
+                : $value,
+            array_intersect_key($currentParameters, array_flip($targetParameterNames)),
+        );
     }
 
     /** @return array<string, string> locale => absolute URL, for hreflang. */

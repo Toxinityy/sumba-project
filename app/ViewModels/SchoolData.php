@@ -31,7 +31,13 @@ class SchoolData
     {
         $school = School::whereSlug($slug)->published()->first();
 
-        return $school === null ? null : self::withHref($school->toDetailArray());
+        return $school === null ? null : self::detail($school);
+    }
+
+    /** Full shape for a school the route has already bound. */
+    public static function detail(School $school): array
+    {
+        return self::withHref($school->toDetailArray());
     }
 
     private static function withHref(array $school): array
