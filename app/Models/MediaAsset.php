@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\ViewModels\PlaceholderImage;
 use Database\Factories\MediaAssetFactory;
 use DomainException;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -68,6 +69,16 @@ class MediaAsset extends Model
                 throw new DomainException('An asset depicting a minor requires a consent record (spec §9).');
             }
         });
+    }
+
+    /**
+     * The contract's image shape. The source is still a labelled placeholder
+     * — real variants arrive with the upload pipeline (spec §8) — but the
+     * dimensions and the localised alt text are this asset's own.
+     */
+    public function toImageArray(): array
+    {
+        return PlaceholderImage::make((int) $this->width, (int) $this->height, (string) $this->trans('alt'));
     }
 
     public function consent(): BelongsTo
