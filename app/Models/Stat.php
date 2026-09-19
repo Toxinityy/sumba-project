@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['label', 'value', 'as_of', 'position'])]
+#[Fillable(['label', 'body', 'value', 'as_of', 'position'])]
 class Stat extends Model
 {
     /** @use HasFactory<StatFactory> */
     use HasFactory, HasTranslations;
 
-    protected array $translatable = ['label'];
+    protected array $translatable = ['label', 'body'];
 
     protected function casts(): array
     {

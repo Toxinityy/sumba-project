@@ -45,7 +45,7 @@ Laravel + Filament + Blade + Tailwind + Alpine. Server-rendered.
 
 **Hosting:** cPanel shared hosting, typical Indonesian profile — PHP 8.x, GD available, Imagick uncertain, no shell access, no long-running queue workers, cron available.
 
-Key packages: `spatie/laravel-translatable`, `spatie/laravel-medialibrary`, an activity-log package for revisions.
+Key packages: `spatie/laravel-medialibrary` and an activity-log package for revisions — neither installed yet (§12). Translation is **not** a package: `App\Models\Concerns\HasTranslations` stores each translated field as JSON keyed by locale. Two locales and nine models don't earn a dependency, and the trait is the one place the fallback rule (§7) lives. *(Corrected 2026-09-19 — this line named `spatie/laravel-translatable`, which the code never used.)*
 
 **Add Cloudflare's free tier in front of the domain.** It is the single largest performance win available, costs nothing, and partly compensates for shared hosting having no CDN — which matters a great deal for mobile users on Indonesian networks.
 
