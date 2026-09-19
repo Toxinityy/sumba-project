@@ -45,7 +45,7 @@ Laravel + Filament + Blade + Tailwind + Alpine. Server-rendered.
 
 **Hosting:** cPanel shared hosting, typical Indonesian profile — PHP 8.x, GD available, Imagick uncertain, no shell access, no long-running queue workers, cron available.
 
-Key packages: `spatie/laravel-translatable`, `spatie/laravel-medialibrary`, an activity-log package for revisions.
+Key packages: `spatie/laravel-medialibrary` and an activity-log package for revisions — neither installed yet (§12). Translation is **not** a package: `App\Models\Concerns\HasTranslations` stores each translated field as JSON keyed by locale. Two locales and nine models don't earn a dependency, and the trait is the one place the fallback rule (§7) lives. *(Corrected 2026-09-19 — this line named `spatie/laravel-translatable`, which the code never used.)*
 
 **Add Cloudflare's free tier in front of the domain.** It is the single largest performance win available, costs nothing, and partly compensates for shared hosting having no CDN — which matters a great deal for mobile users on Indonesian networks.
 
@@ -376,7 +376,7 @@ Not chasing coverage on Blade templates. Feature tests on what fails silently an
 | Dhani briefed on the export spec and tall crops | Dev/Reynold | Before the shoot finishes |
 | Deferred pages scheduled post-launch | Team | Gallery, Partners, Impact, Projects |
 | `spatie/laravel-medialibrary` adopted, or not | Dev | `MediaAsset` is currently a plain table whose columns map onto it; the decision belongs with whoever builds the upload pipeline |
-| EXIF stripping on upload, GPS included (§9) | Dev | No owner. Highest-severity safeguarding gap still open — the schema cannot enforce it, only the upload path can |
+| EXIF stripping on upload, GPS included (§9) | Dev | **Done 2026-09-19** in `MediaAsset`'s `saving` hook, for files on the public disk. Verified under GD only; the Imagick path relies on `strip: true` and needs one check on a host that has Imagick |
 | Revision history and the signed preview route | Dev | No owner. Listed under "Editor experience to build" and not yet built |
 | Consent withdrawal reaching rich-text body images | Dev | `Consent::withdraw()` unpublishes attached assets now; images embedded in body HTML are only reachable once the §8 rewrite pass exists |
 

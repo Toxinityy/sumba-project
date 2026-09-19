@@ -3,6 +3,7 @@
 // tests/Feature/Models/TranslationTest.php
 
 use App\Models\School;
+use App\Models\Stat;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -77,4 +78,15 @@ it('defaults slug matching to the current locale', function () {
     app()->setLocale('en');
 
     expect(School::whereSlug('karuni-school')->exists())->toBeTrue();
+});
+
+it('gives a stat an optional translated body that finishes its label', function () {
+    $stat = Stat::factory()->create([
+        'body' => ['id' => 'sejak awal tahun ini.', 'en' => 'since the start of this year.'],
+    ]);
+
+    app()->setLocale('en');
+    expect($stat->fresh()->trans('body'))->toBe('since the start of this year.');
+
+    expect(Stat::factory()->create()->trans('body'))->toBeNull();
 });
