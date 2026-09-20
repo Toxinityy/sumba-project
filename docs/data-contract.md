@@ -163,6 +163,27 @@ Consumed by `<x-cards.story>` and the story detail page.
 ]
 ```
 
+**Amended 2026-09-20.** Four things the pages have always needed and this
+section never said:
+
+- **`title`** — the story's own headline ("Sembilan kilometer, setiap pagi."),
+  distinct from `hook`, which is the one-sentence teaser under it. Translated.
+- **`quote`** — `['text' => ..., 'attribution' => ..., 'role' => ...]`.
+  **Required on a detail page:** the story route 404s a post without one, and
+  the landing page's voice section reads
+  `PostData::find('ibu-maria-bulu')['quote']`. Only `text` is stored (a
+  translated column); `attribution` is `subjectName()` and `role` is
+  `subject_role`, so a quote can never name a child differently from the post
+  that carries it.
+- **`photo-essay` is a kind.** `PostKind` is now
+  `profile | update | news | photo-essay`. Essays are posts whose body is
+  mostly images (spec §6: "Gallery needs no model").
+- **`name` and `href` mean different things per kind, on purpose.** For a
+  profile, `name` is the subject's name and `href` is the story's own page.
+  For a photo essay, `name` is the essay's title and `href` is the gallery
+  index, because an essay has no page of its own. A page reading `name`
+  therefore never has to know which kind it holds.
+
 **Safeguarding — structural, not advisory.** Children are referred to by
 **first name only**. Adults (teachers, community members, the founder) may be
 named in full with their role.
