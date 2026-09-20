@@ -12,7 +12,9 @@ class DatabaseSeeder extends Seeder
     // exist to refuse.
     public function run(): void
     {
-        $this->call(SchoolSeeder::class);
+        // SchoolSeeder first: it creates the People-section profile posts,
+        // one of which PostSeeder then fills out as a full story.
+        $this->call([SchoolSeeder::class, PostSeeder::class]);
 
         // User::factory(10)->create();
 
