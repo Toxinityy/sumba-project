@@ -37,3 +37,47 @@ it('404s for a photo-essay slug and for an unknown slug', function () {
     $this->get('/id/cerita/panen-raya-karuni')->assertNotFound();
     $this->get('/id/cerita/does-not-exist')->assertNotFound();
 });
+
+/*
+ | The stories pages read the database, not a fixture (2026-09-20). Same three
+ | guarantees the schools got: an edit shows up, the language switch carries a
+ | reader to the other locale's slug of the same story, and what has no story
+ | page 404s rather than half-rendering.
+ */
+it('renders the story from the database', function () {
+    $post = \App\Models\Post::whereSlug('ibu-maria-bulu', 'id')->firstOrFail();
+    $post->update([
+        'title' => ['id' => 'Judul Diubah dari Basis Data', 'en' => 'Edited in the Database'],
+        // The index renders each story's hook, the detail page its title.
+        'hook' => ['id' => 'Kail diubah dari basis data.', 'en' => 'Hook edited in the database.'],
+    ]);
+
+    $this->get('/id/cerita/ibu-maria-bulu')->assertOk()->assertSee('Judul Diubah dari Basis Data');
+    $this->get('/en/stories')->assertOk()->assertSee('Hook edited in the database.');
+});
+
+it('links the language switch to the other locale slug of the same story', function () {
+    \App\Models\Post::whereSlug('ibu-maria-bulu', 'id')->firstOrFail()
+        ->update(['slug' => ['id' => 'ibu-maria-bulu', 'en' => 'maria-bulu-head-teacher']]);
+
+    $this->get('/id/cerita/ibu-maria-bulu')->assertOk()
+        ->assertSee('hreflang="en" href="'.url('/en/stories/maria-bulu-head-teacher').'"', escape: false);
+
+    $this->get('/en/stories/maria-bulu-head-teacher')->assertOk();
+    $this->get('/en/stories/ibu-maria-bulu')->assertNotFound();
+});
+
+it('404s what has no story page of its own', function () {
+    // A photo essay lives in the Gallery, and the profile posts behind a
+    // school's People section have no story to tell yet: neither has a quote.
+    $this->get('/id/cerita/panen-raya-karuni')->assertNotFound();
+    $this->get('/id/cerita/yuliana-ndapa')->assertNotFound();
+    $this->get('/id/cerita/tidak-ada')->assertNotFound();
+});
+
+it('keeps a draft story off the index and its own page', function () {
+    \App\Models\Post::whereSlug('umbu-elektronika', 'id')->firstOrFail()->unpublish();
+
+    $this->get('/id/cerita/umbu-elektronika')->assertNotFound();
+    $this->get('/id/cerita')->assertOk()->assertDontSee('membongkar radio rusak');
+});

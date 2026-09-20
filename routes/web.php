@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use App\Models\School;
 use App\Support\LocalizedUrl;
 use App\ViewModels\PartnerData;
@@ -98,12 +99,18 @@ foreach (config('locales.supported') as $locale) {
             // above. Only PostData::recent()'s three profiles have full
             // detail content; a photo-essay slug (or an unknown one) 404s
             // rather than rendering a page with no lede/quote to show.
-            Route::get($segments['stories'].'/{slug}', function (string $slug) {
-                $post = PostData::find($slug);
+            // {post} binds by the slug of this route's own locale
+            // (Post::resolveRouteBinding), like schools, which is also what
+            // sends the language switch to the other locale's slug.
+            Route::get($segments['stories'].'/{post}', function (Post $post) {
+                $story = PostData::detail($post);
 
-                abort_unless($post !== null && isset($post['quote']), 404);
+                // A photo essay has no page of its own, and the profile posts
+                // behind a school's People section have no story to tell yet:
+                // both 404 rather than render half a page.
+                abort_unless(($story['quote'] ?? null) !== null, 404);
 
-                return view('pages.story', ['post' => $post]);
+                return view('pages.story', ['post' => $story]);
             })->name('stories.show')->defaults('locale', $locale);
 
             Route::get($segments['give'], fn () => view('pages.give', [

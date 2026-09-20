@@ -78,6 +78,20 @@ class Post extends Model
         ];
     }
 
+    /**
+     * Slugs are per-locale, so /en/stories/{slug} must resolve the English
+     * slug and /id/cerita/{slug} the Indonesian one. The locale comes from
+     * the route, not app()->getLocale(): implicit binding runs before the
+     * `setlocale` middleware, so the app locale is still the default here.
+     * Same reasoning as School::resolveRouteBinding().
+     */
+    public function resolveRouteBinding($value, $field = null): ?self
+    {
+        $locale = request()->route()?->parameter('locale') ?? app()->getLocale();
+
+        return $this->whereSlug($value, $locale)->published()->first();
+    }
+
     public function about(): MorphTo
     {
         return $this->morphTo();
