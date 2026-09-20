@@ -11,4 +11,4 @@ uses(TestCase::class)->in('Feature');
 // exactly the records they assert on.
 uses(RefreshDatabase::class)
     ->beforeEach(fn () => $this->seed(SchoolSeeder::class))
-    ->in('Feature/*.php', 'Feature/Cards', 'Feature/Pages', 'Feature/Sections');
+    ->in('Feature/*.php', 'Feature/Admin', 'Feature/Cards', 'Feature/Pages', 'Feature/Sections');
