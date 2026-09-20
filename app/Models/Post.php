@@ -15,15 +15,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
-    'slug', 'title', 'kind', 'hook', 'body', 'subject_given_name',
-    'subject_family_name', 'subject_is_minor', 'subject_role', 'published_at',
+    'slug', 'title', 'kind', 'hook', 'body', 'quote', 'subject_given_name',
+    'subject_family_name', 'subject_honorific', 'subject_is_minor',
+    'subject_role', 'published_at',
 ])]
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
     use HasFactory, HasMediaAssets, HasTranslations, Publishable;
 
-    protected array $translatable = ['slug', 'title', 'hook', 'body', 'subject_role'];
+    protected array $translatable = ['slug', 'title', 'hook', 'body', 'quote', 'subject_role'];
 
     protected function casts(): array
     {
@@ -45,6 +46,38 @@ class Post extends Model
         });
     }
 
+    /**
+     * The card shape (docs/data-contract.md § Post), resolved for the current
+     * locale. No `href`: the page builds that, as it does for School.
+     */
+    public function toCardArray(): array
+    {
+        return [
+            'slug' => $this->trans('slug'),
+            'kind' => $this->kind->value,
+            // A profile is named by its subject; an essay has none, so it is
+            // named by its own title. Contract § Post, amended 2026-09-20.
+            'name' => $this->subjectName() ?? $this->trans('title'),
+            'title' => $this->trans('title'),
+            'hook' => $this->trans('hook'),
+            'image' => $this->media()->oldest('id')->first()?->toImageArray(),
+            'published_at' => $this->published_at?->format('Y-m-d'),
+        ];
+    }
+
+    /** The card shape plus what a story detail page renders. */
+    public function toDetailArray(): array
+    {
+        return $this->toCardArray() + [
+            'body' => $this->trans('body'),
+            'quote' => $this->trans('quote') === null ? null : [
+                'text' => $this->trans('quote'),
+                'attribution' => $this->subjectName(),
+                'role' => $this->trans('subject_role'),
+            ],
+        ];
+    }
+
     public function about(): MorphTo
     {
         return $this->morphTo();
@@ -61,7 +94,16 @@ class Post extends Model
      */
     public function subjectName(): ?string
     {
+        // An honorific is not a name on its own: a photo essay has no subject
+        // at all, and must not come back named "Ibu".
+        if (blank($this->subject_given_name)) {
+            return null;
+        }
+
         return trim(implode(' ', array_filter([
+            // "Ibu" / "Bapak" — never shown for a minor, who is a given name
+            // alone (§9), even if one was somehow stored.
+            $this->subject_is_minor ? null : $this->subject_honorific,
             $this->subject_given_name,
             $this->subject_is_minor ? null : $this->subject_family_name,
         ]))) ?: null;
