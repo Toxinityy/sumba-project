@@ -1,5 +1,7 @@
 # Hope for Sumba — Foundations and Design System Implementation Plan
 
+> **Approved UX correction (2026-09-20):** AGENTS.md and the user-approved review prohibit public numeric funding displays, including sponsorship costs and currency conversions. This supersedes the IDR/USD display instructions and tier-card examples below; internal cost fields may remain. Giving is enquiry-led until verified payment details are supplied. Fixture statistics, placeholder evidence/partners and the four deferred pages are preview-only outside production. Contact failures must preserve input and provide localized recovery. See `docs/superpowers/plans/2026-09-20-high-priority-ux.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Stand up a deployed, two-locale Laravel site on shared hosting that serves budget-enforced responsive images, and build every section component of the design system so pages can be assembled in the next plan.

@@ -14,18 +14,18 @@ it('renders a school card with its level badge and qualitative status', function
     $this->blade(
         '<x-cards.school href="/id/sekolah/karuni" level="TK" name="TK Harapan Karuni"
             location="Karuni, Sumba Barat Daya" need="A new reading room."
-            status="Needs 4 more partners" :image="$image" />',
+            status="Seeking partners for a reading room" :image="$image" />',
         ['image' => cardImage()]
     )->assertSee('TK')
      ->assertSee('TK Harapan Karuni')
      ->assertSee('Karuni, Sumba Barat Daya')
-     ->assertSee('Needs 4 more partners');
+     ->assertSee('Seeking partners for a reading room');
 });
 
 it('never renders a progress bar or percentage on a school card', function () {
     $html = $this->blade(
         '<x-cards.school href="/x" level="SMP" name="N" location="L" need="Need."
-            status="Needs 4 more partners" :image="$image" />',
+            status="Seeking partners for a reading room" :image="$image" />',
         ['image' => cardImage()]
     )->__toString();
 
@@ -56,12 +56,13 @@ it('renders a story card with a portrait and a hook', function () {
      ->assertSee('aspect-[4/5]', escape: false);
 });
 
-it('shows an approximate conversion beside the rupiah cost on a tier', function () {
+it('does not expose monetary amounts even when a legacy caller supplies costs', function () {
     $this->blade(
         '<x-cards.tier title="A classroom" cost="Rp 180.000.000"
             costApprox="approx. USD 11,000" description="One complete classroom."
             :image="$image" />',
         ['image' => cardImage()]
-    )->assertSee('Rp 180.000.000')
-     ->assertSee('approx. USD 11,000');
+    )->assertSee('One complete classroom.')
+     ->assertDontSee('Rp 180.000.000')
+     ->assertDontSee('approx. USD 11,000');
 });

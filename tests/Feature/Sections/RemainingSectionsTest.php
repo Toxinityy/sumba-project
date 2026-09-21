@@ -20,11 +20,11 @@ it('offers both a partner and a give action', function () {
 
 it('renders a facts list on the current need section', function () {
     $this->blade(
-        '<x-sections.current-need heading="H" status="Needs 4 more partners" :facts="$facts">Body</x-sections.current-need>',
+        '<x-sections.current-need heading="H" status="Seeking partners for a reading room" :facts="$facts">Body</x-sections.current-need>',
         ['facts' => [['key' => 'Opened', 'value' => '2009'], ['key' => 'Pupils', 'value' => '60']]]
     )->assertSee('Opened')
      ->assertSee('2009')
-     ->assertSee('Needs 4 more partners');
+     ->assertSee('Seeking partners for a reading room');
 });
 
 it('lets buttons wrap rather than sizing them to English', function () {
@@ -39,7 +39,7 @@ it('renders a directory grid of school cards', function () {
         '<x-sections.directory :schools="$schools" />',
         ['schools' => [[
             'href' => '/id/sekolah/karuni', 'level' => 'TK', 'name' => 'TK Harapan Karuni',
-            'location' => 'Karuni', 'need' => 'A reading room.', 'status' => 'Needs 4 more partners',
+            'location' => 'Karuni', 'need' => 'A reading room.', 'status' => 'Seeking partners for a reading room',
             'image' => ['sources' => ['jpeg' => ['/i.jpg 800w']], 'width' => 800, 'height' => 1000, 'alt' => 'Pupils'],
         ]]]
     )->assertSee('TK Harapan Karuni');
@@ -58,7 +58,8 @@ it('renders a directory grid of sponsorship tier cards when cards is "tier"', fu
             'image' => ['sources' => ['jpeg' => ['/i.jpg 800w']], 'width' => 800, 'height' => 600, 'alt' => 'Ruang kelas'],
         ]]]
     )->assertSee('Ruang kelas')
-     ->assertSee('Rp 180.000.000');
+     ->assertSee('Satu ruang kelas lengkap.')
+     ->assertDontSee('Rp 180.000.000');
 });
 
 it('still renders school cards by default when cards is omitted', function () {
@@ -66,7 +67,7 @@ it('still renders school cards by default when cards is omitted', function () {
         '<x-sections.directory :schools="$schools" />',
         ['schools' => [[
             'href' => '/id/sekolah/karuni', 'level' => 'TK', 'name' => 'TK Harapan Karuni',
-            'location' => 'Karuni', 'need' => 'A reading room.', 'status' => 'Needs 4 more partners',
+            'location' => 'Karuni', 'need' => 'A reading room.', 'status' => 'Seeking partners for a reading room',
             'image' => ['sources' => ['jpeg' => ['/i.jpg 800w']], 'width' => 800, 'height' => 1000, 'alt' => 'Pupils'],
         ]]]
     )->assertSee('TK Harapan Karuni')

@@ -18,7 +18,7 @@
   "footer.explore": "Jelajahi",
   "footer.contact": "Hubungi",
   "footer.address": "Yayasan Harapan Sumba",
-  "footer.registration": "Nomor registrasi yayasan: belum diisi.",
+  "footer.registration": "Hubungi kami untuk rincian registrasi yayasan.",
 
   "theme.toggle": "Mode gelap",
 
@@ -44,12 +44,12 @@
   "home.stories.heading": "Orang-orang di balik angka.",
 
   "schools.hero.label": "Sekolah",
-  "schools.hero.heading": "Empat belas sekolah, satu pulau.",
-  "schools.hero.body": "Setiap sekolah dibuka atas permintaan desanya sendiri, dan setiap sekolah punya kebutuhan yang berbeda. Berikut enam di antaranya.",
+  "schools.hero.heading": "Sekolah-sekolah di Sumba.",
+  "schools.hero.body": "Kenali sekolah-sekolah kami, masyarakat di sekitarnya, dan kebutuhan masing-masing.",
 
   "give.hero.label": "Dukung kami",
-  "give.hero.heading": "Pilih sesuatu yang nyata.",
-  "give.hero.body": "Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.",
+  "give.hero.heading": "Dukung sesuatu yang nyata.",
+  "give.hero.body": "Jelajahi berbagai cara mendukung pendidikan di Sumba. Ceritakan minat Anda, dan tim kami akan membantu menemukan kebutuhan sekolah atau kemitraan yang sesuai.",
 
   "give.corporate.heading": "Perusahaan",
   "give.corporate.body": "Program CSR jangka panjang dengan anggaran terperinci, kunjungan lapangan dan laporan tahunan yang dapat diaudit.",
@@ -61,9 +61,9 @@
   "give.volunteer.body": "Kami menerima relawan untuk pelatihan guru dan pembangunan. Semua relawan menjalani proses penyaringan perlindungan anak.",
 
   "give.how.label": "Cara memberi",
-  "give.how.heading": "Transfer langsung ke rekening yayasan.",
-  "give.how.body1": "Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
-  "give.how.body2": "Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda.",
+  "give.how.heading": "Mulai dengan percakapan.",
+  "give.how.body1": "Ceritakan sekolah atau bentuk dukungan yang Anda minati. Tim kami akan membahas kebutuhan saat ini dan cara yang sesuai untuk membantu.",
+  "give.how.body2": "Rincian pembayaran belum ditampilkan di sini. Hubungi tim kami untuk memastikan langkah berikutnya sebelum melakukan transfer.",
   "give.how.account_name_key": "Nama rekening",
   "give.how.bank_key": "Bank",
   "give.how.account_number_key": "Nomor rekening",
@@ -72,20 +72,20 @@
   "give.how.placeholder": "CONTOH — belum diisi",
   "give.how.acknowledgement_value": "3 hari kerja",
 
-  "give.tiers.heading": "Enam cara memberi, terhubung langsung ke satu kebutuhan.",
+  "give.tiers.heading": "Enam cara mendukung pendidikan.",
 
   "give.ways.heading": "Cara yang sesuai dengan Anda.",
 
-  "give.how.status": "Informasi dan pengalihan — bukan gerbang pembayaran.",
+  "give.how.status": "Tim kami akan mengonfirmasi langkah berikutnya bersama Anda.",
 
   "about.hero.label": "Tentang kami",
   "about.hero.heading": "Dimulai dari satu ruang kelas beratap seng.",
-  "about.hero.body": "Pada 2007, tujuh anak berkumpul di bawah atap seng di Karuni karena sekolah terdekat berjarak tiga jam berjalan kaki. Hari ini empat belas sekolah dan rumah anak berjalan di seluruh pulau.",
+  "about.hero.body": "Pada 2007, tujuh anak berkumpul di bawah atap seng di Karuni karena sekolah terdekat berjarak tiga jam berjalan kaki. Pekerjaan ini terus berjalan di berbagai tempat di Sumba bersama masyarakat setempat.",
   "about.hero.image_alt": "Foto: ruang kelas pertama di Karuni, beratap seng dan berdinding terbuka, murid-murid di bangkunya",
   "about.story.label": "Perjalanan kami",
   "about.story.heading": "Sembilan belas tahun, satu desa demi satu desa.",
   "about.story.body1": "Sekolah kedua berdiri tiga tahun kemudian di lembah sebelah, karena seorang tetua desa berjalan kaki ke Karuni untuk memintanya. Sejak itu setiap sekolah dimulai dengan cara yang sama: permintaan dari desanya sendiri, tanah yang diberikan warga, dan guru yang memang tinggal di sana.",
-  "about.story.body2": "Sembilan belas tahun berselang, empat belas sekolah dan dua rumah anak berjalan di seluruh Sumba, semuanya bebas biaya. Pekerjaan ini didanai oleh yayasan, gereja, dan perusahaan yang berkomitmen bertahun-tahun, bukan berbulan-bulan.",
+  "about.story.body2": "Pekerjaan ini terus berjalan di berbagai tempat di Sumba, dengan sekolah dan rumah anak yang bebas biaya bagi keluarga. Yayasan, gereja, dan perusahaan memberi dukungan untuk bertahun-tahun, bukan berbulan-bulan.",
   "about.founder.label": "Pendiri",
   "about.founder.heading": "Reynold",
   "about.founder.body": "Reynold lahir dan besar di Sumba. Ia kembali setelah menyelesaikan studinya, membawa satu keyakinan sederhana: anak-anak di kampungnya sama cerdasnya dengan anak-anak di mana pun, dan yang mereka butuhkan hanyalah pintu yang terbuka.",
@@ -259,7 +259,7 @@
   "home.challenge.gloss": "It is not the children's ability that is lacking. It is distance, teachers and electricity.",
 
   "home.work.gloss": "We build schools where there is no school yet.",
-  "home.work.lead": "Empat belas sekolah dan dua rumah anak berjalan di seluruh Sumba, semuanya bebas biaya bagi keluarga.",
+  "home.work.lead": "Sekolah dan rumah anak kami di berbagai tempat di Sumba bebas biaya bagi keluarga.",
   "home.work.note": "Guru direkrut dari desa tempat sekolah itu berdiri, bukan didatangkan untuk satu tahun ajaran. Pekerjaan ini didanai oleh yayasan, gereja dan perusahaan yang berkomitmen bertahun-tahun.",
   "home.work.link": "Baca cara kami bekerja",
   "home.work.homes_link": "Lihat rumah anak kami",
@@ -275,9 +275,9 @@
   "home.evidence.after_caption": "Agustus 2026 — rangka atap dan rak pertama terpasang.",
   "home.evidence.link": "Lihat catatan dampak kami",
 
-  "home.schools.heading": "Empat belas sekolah, satu pulau, kebutuhan yang berbeda-beda.",
-  "home.schools.gloss": "Fourteen schools on one island, each with a different need.",
-  "home.schools.more": "Lihat keempat belas sekolah dan dua rumah anak",
+  "home.schools.heading": "Sekolah-sekolah di Sumba, dengan kebutuhan yang berbeda-beda.",
+  "home.schools.gloss": "Schools across Sumba, each with a different need.",
+  "home.schools.more": "Jelajahi sekolah dan rumah anak kami",
 
   "home.stories.gloss": "The people behind the numbers.",
   "home.stories.more": "Baca semua cerita",
@@ -288,6 +288,22 @@
   "home.partners.link": "Tentang kemitraan kami",
 
   "home.next.gloss": "Let us start a partnership.",
-  "home.next.how_body": "Transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
-  "home.next.how_link": "Lihat keterangannya"
+  "home.next.how_body": "Ceritakan dukungan yang ingin Anda berikan. Tim kami akan membahas kebutuhan saat ini dan mengonfirmasi langkah berikutnya.",
+  "home.next.how_link": "Lihat keterangannya",
+  "give.enquiry.heading": "Temukan kebutuhan sekolah yang dapat Anda dukung.",
+  "give.enquiry.body": "Ceritakan pilihan yang Anda minati atau mintalah bantuan untuk memilih. Kami biasanya membalas dalam dua hari kerja.",
+  "give.enquiry.cta": "Tanyakan cara mendukung sekolah",
+  "give.how.interest_key": "Minat Anda",
+  "give.how.interest_value": "Sekolah atau bentuk dukungan",
+  "give.how.discuss_key": "Percakapan",
+  "give.how.discuss_value": "Kebutuhan saat ini dan cara membantu",
+  "give.how.next_key": "Langkah berikutnya",
+  "give.how.next_value": "Dikonfirmasi langsung bersama tim kami",
+  "contact.form.failed": "Kami belum dapat memastikan pesan Anda terkirim. Teks Anda tetap tersimpan di sini. Coba lagi atau kirim surel langsung. Jika Anda mencoba lagi, kami mungkin menerima pesan yang sama dua kali.",
+  "contact.form.throttled": "Tunggu :seconds detik sebelum mengirim lagi. Teks Anda tetap tersimpan di sini. Anda juga dapat mengirim surel langsung.",
+  "contact.form.email_instead": "Kirim surel langsung",
+  "contact.validation.required": ":attribute wajib diisi.",
+  "contact.validation.email": "Masukkan alamat surel yang valid.",
+  "contact.validation.max": ":attribute tidak boleh lebih dari :max karakter.",
+  "contact.validation.string": ":attribute harus berupa teks."
 }

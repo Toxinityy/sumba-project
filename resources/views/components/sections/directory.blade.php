@@ -133,8 +133,6 @@
           @foreach ($schools as $tier)
             <x-cards.tier
               :title="$tier['title']"
-              :cost="$tier['cost']"
-              :costApprox="$tier['costApprox']"
               :description="$tier['description']"
               :image="$tier['image']" />
           @endforeach

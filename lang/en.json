@@ -18,7 +18,7 @@
   "footer.explore": "Explore",
   "footer.contact": "Contact",
   "footer.address": "Yayasan Harapan Sumba",
-  "footer.registration": "Foundation registration number: not yet supplied.",
+  "footer.registration": "Ask us for foundation registration details.",
 
   "theme.toggle": "Dark mode",
 
@@ -44,12 +44,12 @@
   "home.stories.heading": "The people behind the numbers.",
 
   "schools.hero.label": "Schools",
-  "schools.hero.heading": "Fourteen schools, one island.",
-  "schools.hero.body": "Each school was opened at the request of its own village, and each has different needs. Six of them are shown here.",
+  "schools.hero.heading": "Schools across Sumba.",
+  "schools.hero.body": "Explore our schools and learn about the community and needs of each one.",
 
   "give.hero.label": "Get involved",
-  "give.hero.heading": "Fund something specific.",
-  "give.hero.body": "Every option below is tied to one school and one need whose progress you can follow. We send photographic and financial reporting on each.",
+  "give.hero.heading": "Support something specific.",
+  "give.hero.body": "Explore ways to support education in Sumba. Tell us what interests you, and our team will help you find a school need or partnership that fits.",
 
   "give.corporate.heading": "Companies",
   "give.corporate.body": "Long-term CSR programmes with itemised budgets, site visits and auditable annual reporting.",
@@ -61,9 +61,9 @@
   "give.volunteer.body": "We host volunteers for teacher training and construction. All volunteers complete a child safeguarding screening process.",
 
   "give.how.label": "How giving works",
-  "give.how.heading": "A direct transfer to the foundation.",
-  "give.how.body1": "We do not yet use an online payment gateway. Giving is by bank transfer, QRIS, Wise or PayPal, straight into an account held in the name of Yayasan Harapan Sumba.",
-  "give.how.body2": "After transferring, send us the receipt and you will have a formal acknowledgement within three working days, along with the name of the school your gift went to.",
+  "give.how.heading": "Start with a conversation.",
+  "give.how.body1": "Tell us which school or type of support interests you. Our team will discuss the current need and suitable ways to help.",
+  "give.how.body2": "Payment details are not published here yet. Contact the team to confirm the next steps before making a transfer.",
   "give.how.account_name_key": "Account name",
   "give.how.bank_key": "Bank",
   "give.how.account_number_key": "Account number",
@@ -72,20 +72,20 @@
   "give.how.placeholder": "PLACEHOLDER — not yet supplied",
   "give.how.acknowledgement_value": "3 working days",
 
-  "give.tiers.heading": "Six ways to give, each tied to one need.",
+  "give.tiers.heading": "Six ways to support education.",
 
   "give.ways.heading": "Whichever fits how you work.",
 
-  "give.how.status": "Information and redirect — not a payment gateway.",
+  "give.how.status": "Our team will confirm the next steps with you.",
 
   "about.hero.label": "About us",
   "about.hero.heading": "It started with one classroom under a tin roof.",
-  "about.hero.body": "In 2007, seven children gathered under a tin roof in Karuni because the nearest school was a three-hour walk away. Today fourteen schools and children's homes run across the island.",
+  "about.hero.body": "In 2007, seven children gathered under a tin roof in Karuni because the nearest school was a three-hour walk away. The work has continued across Sumba with local communities.",
   "about.hero.image_alt": "Photograph: the first classroom at Karuni, tin roof and open walls, pupils at their desks",
   "about.story.label": "Our story",
   "about.story.heading": "Nineteen years, one village at a time.",
   "about.story.body1": "The second school came three years later, in the next valley, because an elder walked to Karuni to ask for one. Every school since has started the same way: a request from the village itself, land given by the community, and a teacher who already lives there.",
-  "about.story.body2": "Nineteen years on, fourteen schools and two children's homes run across Sumba, all of them free to attend. The work is funded by foundations, churches and companies who commit for years rather than months.",
+  "about.story.body2": "The work continues across Sumba, with schools and children's homes free to families. Foundations, churches and companies commit for years rather than months.",
   "about.founder.label": "Founder",
   "about.founder.heading": "Reynold",
   "about.founder.body": "Reynold was born and raised in Sumba. He came back after finishing his studies with one simple conviction: the children in his village are as capable as children anywhere, and what they need is an open door.",
@@ -259,7 +259,7 @@
   "home.challenge.gloss": "Bukan kemampuan anak yang kurang. Yang kurang adalah jarak, guru dan listrik.",
 
   "home.work.gloss": "Kami membangun sekolah di tempat yang belum punya sekolah.",
-  "home.work.lead": "Fourteen schools and two children's homes are running across Sumba, all of them free to families.",
+  "home.work.lead": "Our schools and children's homes across Sumba are free to families.",
   "home.work.note": "Teachers are recruited from the village the school stands in, not brought in for a single school year. The work is funded by foundations, churches and companies that commit for years at a time.",
   "home.work.link": "Read how we work",
   "home.work.homes_link": "See our children's homes",
@@ -275,9 +275,9 @@
   "home.evidence.after_caption": "August 2026 — roof frame and first shelving in place.",
   "home.evidence.link": "See our impact record",
 
-  "home.schools.heading": "Fourteen schools, one island, a different need at each.",
-  "home.schools.gloss": "Empat belas sekolah, satu pulau, kebutuhan yang berbeda-beda.",
-  "home.schools.more": "See all fourteen schools and two children's homes",
+  "home.schools.heading": "Schools across Sumba, each with a different need.",
+  "home.schools.gloss": "Sekolah-sekolah di Sumba, dengan kebutuhan yang berbeda-beda.",
+  "home.schools.more": "Explore the schools and children's homes",
 
   "home.stories.gloss": "Orang-orang di balik angka.",
   "home.stories.more": "Read every story",
@@ -288,6 +288,22 @@
   "home.partners.link": "About our partnerships",
 
   "home.next.gloss": "Mari mulai kemitraan.",
-  "home.next.how_body": "Bank transfer, QRIS, Wise or PayPal, straight to an account in the name of Yayasan Harapan Sumba.",
-  "home.next.how_link": "See the details"
+  "home.next.how_body": "Tell us what you would like to support. Our team will discuss the current need and confirm the next steps.",
+  "home.next.how_link": "See the details",
+  "give.enquiry.heading": "Find a school need you can support.",
+  "give.enquiry.body": "Tell us which option interests you or ask for help choosing. We normally reply within two working days.",
+  "give.enquiry.cta": "Ask about supporting a school",
+  "give.how.interest_key": "Your interest",
+  "give.how.interest_value": "A school or type of support",
+  "give.how.discuss_key": "The conversation",
+  "give.how.discuss_value": "Current needs and ways to help",
+  "give.how.next_key": "Next steps",
+  "give.how.next_value": "Confirmed directly with our team",
+  "contact.form.failed": "We could not confirm that your message was sent. Your text is still here. Try again, or email us directly. If you retry, we may receive a duplicate.",
+  "contact.form.throttled": "Please wait :seconds seconds before sending again. Your text is still here. You can also email us directly.",
+  "contact.form.email_instead": "Email us directly",
+  "contact.validation.required": ":attribute is required.",
+  "contact.validation.email": "Enter a valid email address.",
+  "contact.validation.max": ":attribute must be :max characters or fewer.",
+  "contact.validation.string": ":attribute must be text."
 }
