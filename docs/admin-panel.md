@@ -23,13 +23,15 @@ made by hand for a member of staff. There are no roles yet: spec §6 has
 Vera publishing without a reviewer. The day the site grows public accounts,
 that method is the one line to change.
 
-The seeded `test@example.com` account in `DatabaseSeeder` is for development.
-**Do not seed it on the live site.**
+The bundled `DatabaseSeeder` contains review fixtures and a known-password
+`test@example.com` account. It does nothing in production; create real staff
+accounts by hand after deploying.
 
 ## What is in it
 
-**Sekolah (schools).** The only content type wired up so far, because schools
-are the only one the public pages already read from the database.
+**Sekolah (schools).** The only content type wired into the panel so far.
+The public schools and stories pages both read from the database, but posts
+do not yet have an editing screen.
 
 - A list showing the Indonesian name and location, the level, the pupil
   count, whether it is live, and whether English exists yet ("ID saja" means
