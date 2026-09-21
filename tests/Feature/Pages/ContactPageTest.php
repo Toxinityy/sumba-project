@@ -9,6 +9,11 @@
 namespace Tests\Feature\Pages\ContactPageTest;
 
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\RawMessage;
 
 /*
  | Mail::fake() is deliberately NOT used here: MailFake::raw() is a no-op, so
@@ -102,4 +107,110 @@ it('requires a name, a valid email and a message', function () {
         ->assertSessionHasErrors(['name', 'email', 'message']);
 
     expect(enquiryMails())->toHaveCount(0);
+});
+
+it('returns Indonesian validation feedback at the first invalid field', function () {
+    $this->post('/id/kontak', [
+        'name' => '',
+        'organisation' => 'Yayasan Pendidikan',
+        'email' => 'bukan-surel',
+        'message' => '',
+    ])->assertRedirect(url('/id').'#kontak')
+        ->assertSessionHasErrors(['name', 'email', 'message'])
+        ->assertSessionHasInput('organisation', 'Yayasan Pendidikan');
+
+    $html = $this->withCookie(config('session.cookie'), session()->getId())
+        ->get('/id')->assertOk()->getContent();
+
+    expect($html)->toContain('Nama wajib diisi.', 'Masukkan alamat surel yang valid.')
+        ->toMatch('/<input[^>]*id="name"[^>]*autofocus[^>]*>/s')
+        ->toContain('aria-invalid="true" aria-describedby="name-error"');
+});
+
+it('explains an overlong English enquiry and focuses its message field', function () {
+    $this->post('/en/contact', [
+        'name' => 'Dina',
+        'email' => 'dina@example.org',
+        'message' => str_repeat('x', 5001),
+    ])->assertRedirect(url('/en').'#contact')->assertSessionHasErrors('message');
+
+    $html = $this->withCookie(config('session.cookie'), session()->getId())
+        ->get('/en')->assertOk()->getContent();
+
+    expect($html)->toContain('Message must be 5000 characters or fewer.')
+        ->toMatch('/<textarea[^>]*id="message"[^>]*autofocus[^>]*>/s');
+});
+
+it('preserves the enquiry and offers localized recovery when delivery fails', function (string $locale, string $path, string $anchor) {
+    Mail::mailer()->setSymfonyTransport(new class implements TransportInterface
+    {
+        public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+        {
+            throw new TransportException('Simulated SMTP outage');
+        }
+
+        public function __toString(): string
+        {
+            return 'failing-test-transport';
+        }
+    });
+
+    $this->post($path, [
+        'name' => 'Dina', 'organisation' => 'School partners',
+        'email' => 'dina@example.org', 'message' => 'Please send a school proposal.',
+        'website' => '', 'unrelated' => 'do not retain',
+    ])->assertRedirect(url("/{$locale}").$anchor)
+        ->assertSessionHasErrors(['contact' => __('contact.form.failed', [], $locale)])
+        ->assertSessionHasInput('message', 'Please send a school proposal.')
+        ->assertSessionHasInput('name', 'Dina')
+        ->assertSessionHasInput('organisation', 'School partners')
+        ->assertSessionHasInput('email', 'dina@example.org')
+        ->assertSessionMissing('_old_input.unrelated')
+        ->assertSessionMissing('_old_input.website')
+        ->assertSessionMissing('contact.sent');
+
+    // Carry the redirect's session into the GET, as a browser does.
+    $this->withCookie(config('session.cookie'), session()->getId())->get("/{$locale}")->assertOk()
+        ->assertSee('role="alert"', false)
+        ->assertSee('mailto:'.config('mail.contact_to'), false)
+        ->assertSee(__('contact.form.failed', [], $locale))
+        ->assertSee('Please send a school proposal.');
+})->with([
+    ['id', '/id/kontak', '#kontak'],
+    ['en', '/en/contact', '#contact'],
+]);
+
+it('returns a throttled browser enquiry to its form without discarding text', function (string $locale, string $path, string $anchor) {
+    $fields = ['name' => 'Dina', 'email' => 'dina@example.org', 'message' => 'Please send a school proposal.'];
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $this->post($path, $fields)->assertRedirect();
+    }
+
+    $response = $this->post($path, $fields + ['unrelated' => 'do not retain']);
+    $response->assertRedirect(url("/{$locale}").$anchor)
+        ->assertHeader('Retry-After')
+        ->assertSessionHasErrors('contact')
+        ->assertSessionHasInput('message', $fields['message'])
+        ->assertSessionMissing('_old_input.unrelated')
+        ->assertSessionMissing('contact.sent');
+    $seconds = $response->headers->get('Retry-After');
+    expect((int) $seconds)->toBeGreaterThan(0)->toBeLessThanOrEqual(60);
+    expect(enquiryMails())->toHaveCount(5);
+    $this->withCookie(config('session.cookie'), session()->getId())->get("/{$locale}")->assertOk()
+        ->assertSee(__('contact.form.throttled', ['seconds' => $seconds], $locale))
+        ->assertSee('mailto:'.config('mail.contact_to'), false)
+        ->assertSee($fields['message']);
+})->with([
+    ['id', '/id/kontak', '#kontak'],
+    ['en', '/en/contact', '#contact'],
+]);
+
+it('keeps the JSON rate-limit status and retry header across locales', function () {
+    $fields = ['name' => 'Dina', 'email' => 'dina@example.org', 'message' => 'Please send a school proposal.'];
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $this->post('/en/contact', $fields)->assertRedirect();
+    }
+    $this->postJson('/id/kontak', $fields)->assertStatus(429)
+        ->assertHeader('Retry-After')->assertJsonStructure(['message']);
+    expect(enquiryMails())->toHaveCount(5);
 });

@@ -5,12 +5,8 @@
   → scale → evidence → a human voice → featured schools → stories → partners →
   next step.
 
-  That is why the nav dropped from ten items to four (Sekolah, Cerita, Dukung
-  Kami, Kontak) and why About, Children's Homes, Impact, Partners, Gallery and
-  Projects are folded into the sections below. Their routes are all still live
-  and every one of them is linked from the section it belongs to and from the
-  footer — nothing 404s and no existing link breaks. They simply stop
-  competing for attention in a menu.
+  The nav has four destinations. Unverified statistics, evidence, partners
+  and deferred pages remain preview-only outside production.
 
   GEOMETRY (spec §5, amended 2026-09-18). The first build gave all fifteen
   sections identical geometry and the result read as assembled rather than
@@ -86,6 +82,7 @@
   </x-sections.people>
 
   {{-- 3. THE CHALLENGE --------------------------------------------------- --}}
+  @unless (app()->environment('production'))
   <x-sections.stat-band
     variant="ledger"
     pad="xl"
@@ -94,6 +91,7 @@
     :heading="__('home.challenge.heading')"
     :en="__('home.challenge.gloss')"
     :stats="$challenge" />
+  @endunless
 
   {{-- 4. WHAT THE MINISTRY DOES (folds in Children's Homes and Projects) -- --}}
   <x-sections.work
@@ -110,7 +108,9 @@
     <x-slot:note>
       <p>{{ __('home.work.note') }}</p>
       <p class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-        <a class="ed-txtlink" href="{{ route(app()->getLocale().'.projects') }}">{{ __('home.work.link') }}</a>
+        @unless (app()->environment('production'))
+          <a class="ed-txtlink" href="{{ route(app()->getLocale().'.projects') }}">{{ __('home.work.link') }}</a>
+        @endunless
         <a class="ed-txtlink" href="{{ route(app()->getLocale().'.homes.index') }}">{{ __('home.work.homes_link') }}</a>
       </p>
     </x-slot:note>
@@ -122,6 +122,8 @@
        an extra floor so the card that overlaps up from section 8 can never
        reach the pull quote. The reader passes through one chapter rather than
        three alternating bands. --}}
+  {{-- Fixture counts and before/after claims are review content, not verified evidence. --}}
+  @unless (app()->environment('production'))
   <x-sections.stat-band variant="scale" pad="open" tone="chapter" :stats="$stats">
     <x-slot:more>
       <a class="ed-txtlink" href="{{ route(app()->getLocale().'.impact') }}">{{ __('home.evidence.link') }}</a>
@@ -138,7 +140,9 @@
     :en="__('home.evidence.gloss')"
     :before="['alt' => __('home.evidence.before_alt'), 'caption' => __('home.evidence.before_caption')]"
     :after="['alt' => __('home.evidence.after_alt'), 'caption' => __('home.evidence.after_caption')]" />
+  @endunless
 
+  @if ($voice)
   <x-sections.quote
     variant="voice"
     pad="close"
@@ -147,6 +151,7 @@
     :role="$voice['role']">
     {{ $voice['text'] }}
   </x-sections.quote>
+  @endif
 
   {{-- 8. FEATURED SCHOOLS ------------------------------------------------ --}}
   <x-sections.directory
@@ -177,12 +182,15 @@
     <x-slot:more>
       <span class="flex flex-wrap gap-x-6 gap-y-2">
         <a class="ed-txtlink" href="{{ route(app()->getLocale().'.stories.index') }}">{{ __('home.stories.more') }}</a>
-        <a class="ed-txtlink" href="{{ route(app()->getLocale().'.gallery.index') }}">{{ __('home.stories.gallery_link') }}</a>
+        @unless (app()->environment('production'))
+          <a class="ed-txtlink" href="{{ route(app()->getLocale().'.gallery.index') }}">{{ __('home.stories.gallery_link') }}</a>
+        @endunless
       </span>
     </x-slot:more>
   </x-sections.stories>
 
   {{-- 10. PARTNERS (folds in the Partners page) -------------------------- --}}
+  @unless (app()->environment('production'))
   <x-sections.partners
     variant="marks"
     pad="m"
@@ -194,6 +202,7 @@
       <a class="ed-txtlink" href="{{ route(app()->getLocale().'.partners') }}">{{ __('home.partners.link') }}</a>
     </p>
   </x-sections.partners>
+  @endunless
 
   {{-- 11. NEXT STEP ----------------------------------------------------- --}}
   {{-- A large tinted field, not a second dark band. Accent is never used as
@@ -224,11 +233,10 @@
        this anchor. scroll-mt clears the sticky nav when the anchor is hit.
 
        The form posts to the real route in routes/web.php (Mail::raw,
-       honeypot, throttle:5,1) and comes back to this anchor with either the
+       honeypot, throttle:contact) and comes back to this anchor with either the
        sent notice or the field errors. --}}
   @php($findUs = [
       ['key' => __('contact.find.email_key'), 'value' => config('mail.contact_to')],
-      ['key' => __('contact.find.phone_key'), 'value' => __('contact.find.placeholder')],
       ['key' => __('contact.find.office_key'), 'value' => 'Waingapu, Sumba Timur'],
   ])
   <div id="{{ config('locales.segments.contact')[app()->getLocale()] }}" class="scroll-mt-24">
@@ -244,6 +252,15 @@
           ['name' => 'message', 'label' => __('contact.form.message'), 'type' => 'textarea', 'rows' => 6, 'required' => true],
       ]"
       :submitLabel="__('contact.form.submit')">
+
+      @error('contact')
+        <div role="alert" tabindex="-1" autofocus class="rounded border border-line-strong bg-surface p-4 text-body text-ink">
+          <p>{{ $message }}</p>
+          <a href="mailto:{{ config('mail.contact_to') }}" class="mt-2 inline-block font-semibold underline underline-offset-4">
+            {{ __('contact.form.email_instead') }}
+          </a>
+        </div>
+      @enderror
 
       @if (session('contact.sent'))
         {{-- role=status announces the result without stealing focus. --}}

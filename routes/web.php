@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Http\Middleware\PreviewOnly;
 use App\Models\School;
 use App\Support\LocalizedUrl;
 use App\ViewModels\PartnerData;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 /*
  | The root redirects rather than serving content, so there is exactly one
@@ -59,7 +61,7 @@ foreach (config('locales.supported') as $locale) {
                     fn (array $school) => $school['slug'] !== 'anakalang',
                 )),
                 'stories' => PostData::recent(3),
-                'voice' => PostData::find('ibu-maria-bulu')['quote'],
+                'voice' => PostData::find('ibu-maria-bulu')['quote'] ?? null,
                 'partners' => PartnerData::all(),
             ]))->name('home')->defaults('locale', $locale);
 
@@ -142,6 +144,16 @@ foreach (config('locales.supported') as $locale) {
                     'organisation' => ['nullable', 'string', 'max:120'],
                     'email' => ['required', 'email', 'max:254'],
                     'message' => ['required', 'string', 'max:5000'],
+                ], [
+                    'required' => __('contact.validation.required'),
+                    'email' => __('contact.validation.email'),
+                    'max' => __('contact.validation.max'),
+                    'string' => __('contact.validation.string'),
+                ], [
+                    'name' => __('contact.form.name'),
+                    'organisation' => __('contact.form.organisation'),
+                    'email' => __('contact.form.email'),
+                    'message' => __('contact.form.message'),
                 ]);
 
                 if ($validator->fails()) {
@@ -154,49 +166,55 @@ foreach (config('locales.supported') as $locale) {
                 // internal notification with four fields, read by one person.
                 // replyTo makes the reply go to the enquirer rather than to
                 // the server's own from-address.
-                Mail::raw(
-                    __('contact.form.heading')."
+                try {
+                    Mail::raw(
+                        __('contact.form.heading')."
 
 ".
-                    __('contact.form.name').': '.$fields['name']."
+                        __('contact.form.name').': '.$fields['name']."
 ".
-                    __('contact.form.organisation').': '.($fields['organisation'] ?? '—')."
+                        __('contact.form.organisation').': '.($fields['organisation'] ?? '—')."
 ".
-                    __('contact.form.email').': '.$fields['email']."
+                        __('contact.form.email').': '.$fields['email']."
 
 ".
-                    $fields['message'],
-                    fn ($mail) => $mail->to(config('mail.contact_to'))
-                        ->replyTo($fields['email'], $fields['name'])
-                        ->subject(__('contact.form.heading').' — '.$fields['name'])
-                );
+                        $fields['message'],
+                        fn ($mail) => $mail->to(config('mail.contact_to'))
+                            ->replyTo($fields['email'], $fields['name'])
+                            ->subject(__('contact.form.heading').' — '.$fields['name'])
+                    );
+                } catch (TransportExceptionInterface $exception) {
+                    report($exception);
+
+                    return redirect(LocalizedUrl::contact())
+                        ->withErrors(['contact' => __('contact.form.failed')])
+                        ->withInput($fields);
+                }
 
                 return redirect(LocalizedUrl::contact())->with('contact.sent', true);
-            })->middleware('throttle:5,1')->name('contact.send')->defaults('locale', $locale);
+            })->middleware('throttle:contact')->name('contact.send')->defaults('locale', $locale);
             Route::view($segments['safeguarding'], 'pages.safeguarding')->name('safeguarding')->defaults('locale', $locale);
 
-            // Gallery, Partners, Impact and Projects are deferred past launch
-            // (spec §10) — built in this pass so the whole site is clickable
-            // for review, not because launch scope changed.
+            // Deferred pages remain clickable for review outside production.
             Route::get($segments['gallery'], fn () => view('pages.gallery', [
                 'essays' => PostData::photoEssays(),
-            ]))->name('gallery.index')->defaults('locale', $locale);
+            ]))->middleware(PreviewOnly::class)->name('gallery.index')->defaults('locale', $locale);
 
             Route::get($segments['partners'], fn () => view('pages.partners'))
-                ->name('partners')->defaults('locale', $locale);
+                ->middleware(PreviewOnly::class)->name('partners')->defaults('locale', $locale);
 
             Route::get($segments['impact'], fn () => view('pages.impact', [
                 'stats' => StatData::all(),
                 'stories' => PostData::recent(3),
-            ]))->name('impact')->defaults('locale', $locale);
+            ]))->middleware(PreviewOnly::class)->name('impact')->defaults('locale', $locale);
 
             Route::get($segments['projects'], fn () => view('pages.projects'))
-                ->name('projects')->defaults('locale', $locale);
+                ->middleware(PreviewOnly::class)->name('projects')->defaults('locale', $locale);
         });
 }
 
 // A component gallery, not a public page. Registered outside production so
 // the design system can be reviewed on staging without appearing on the site.
 if (! app()->environment('production')) {
-    Route::view('/gallery', 'gallery')->name('gallery');
+    Route::view('/gallery', 'gallery')->middleware(PreviewOnly::class)->name('gallery');
 }
