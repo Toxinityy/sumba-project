@@ -3,10 +3,11 @@
 namespace App\Filament\Resources\Schools\Schemas;
 
 use App\Models\Enums\SchoolLevel;
+use App\Models\School;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -23,6 +24,8 @@ use Filament\Schemas\Schema;
  */
 class SchoolForm
 {
+    private const NO_FUNDING_AMOUNT = 'not_regex:/(rp|idr|\$|usd)\s*[\d.,]/i';
+
     /** Translated fields, with their Indonesian label and field type. */
     private const TRANSLATED = [
         'name' => ['Nama sekolah', 'text'],
@@ -53,9 +56,9 @@ class SchoolForm
                         ->label('Jenjang')
                         ->options(SchoolLevel::class)
                         ->required(),
-                    TextInput::make('opened_year')->label('Tahun dibuka')->numeric(),
-                    TextInput::make('pupils')->label('Jumlah murid')->numeric(),
-                    TextInput::make('teachers')->label('Jumlah guru')->numeric(),
+                    TextInput::make('opened_year')->label('Tahun dibuka')->numeric()->minValue(1)->rules(['integer']),
+                    TextInput::make('pupils')->label('Jumlah murid')->numeric()->minValue(0)->rules(['integer']),
+                    TextInput::make('teachers')->label('Jumlah guru')->numeric()->minValue(0)->rules(['integer']),
                     DateTimePicker::make('published_at')
                         ->label('Tanggal terbit')
                         ->helperText('Kosongkan untuk menyimpan sebagai draf. Draf tidak tampil di situs.')
@@ -77,6 +80,7 @@ class SchoolForm
                 'slug' => TextInput::make($name)
                     ->label($label)
                     ->required($required)
+                    ->unique(table: School::class, column: "slug->{$locale}", ignoreRecord: true)
                     // Per-locale slugs (spec §7): /id/sekolah/karuni and
                     // /en/schools/karuni-hope are the same school.
                     ->helperText('Huruf kecil dan tanda hubung, misalnya: harapan-karuni.')
@@ -96,13 +100,13 @@ class SchoolForm
                     ->helperText('Satu kalimat. Jangan tulis jumlah dana atau persentase — situs ini tidak menampilkannya.')
                     ->rules([
                         'not_regex:/\d\s*(%|persen|percent)/i',          // 75%, 40 persen
-                        'not_regex:/(rp|idr|\$|usd)\s*[\d.,]/i',          // Rp 40.000.000
+                        self::NO_FUNDING_AMOUNT,                         // Rp 40.000.000
                         'not_regex:/^[\s\d.,%]+$/',                        // nothing but a figure
                     ]),
 
-                'line' => Textarea::make($name)->label($label)->required($required)->rows(2),
-                'prose' => Textarea::make($name)->label($label)->required($required)->rows(6),
-                default => TextInput::make($name)->label($label)->required($required)->maxLength(160),
+                'line' => Textarea::make($name)->label($label)->required($required)->rows(2)->rules([self::NO_FUNDING_AMOUNT]),
+                'prose' => Textarea::make($name)->label($label)->required($required)->rows(6)->rules([self::NO_FUNDING_AMOUNT]),
+                default => TextInput::make($name)->label($label)->required($required)->maxLength(160)->rules([self::NO_FUNDING_AMOUNT]),
             };
         }, self::TRANSLATED, array_keys(self::TRANSLATED));
     }

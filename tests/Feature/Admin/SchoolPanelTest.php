@@ -18,6 +18,8 @@ use Livewire\Livewire;
 it('keeps the panel behind a login', function () {
     $this->get('/admin')->assertRedirect('/admin/login');
     $this->get('/admin/schools')->assertRedirect('/admin/login');
+    $this->get('/admin/schools/create')->assertRedirect('/admin/login');
+    $this->get('/admin/schools/1/edit')->assertRedirect('/admin/login');
     $this->get('/admin/login')->assertOk();
 });
 
@@ -67,6 +69,16 @@ it('refuses a status that is a figure, in either locale', function () {
     expect($school->refresh()->status['id'])->not->toBe('75%');
 });
 
+it('refuses a funding amount in other public school copy', function () {
+    $this->actingAs(User::factory()->create());
+    $school = School::whereSlug('karuni', 'id')->firstOrFail();
+
+    Livewire::test(EditSchool::class, ['record' => $school->getRouteKey()])
+        ->fillForm(['current_need.id' => 'Butuh Rp 40.000.000 untuk ruang baca.'])
+        ->call('save')
+        ->assertHasFormErrors(['current_need.id']);
+});
+
 it('requires Indonesian but lets English wait', function () {
     $this->actingAs(User::factory()->create());
     $school = School::whereSlug('karuni', 'id')->firstOrFail();
@@ -95,4 +107,24 @@ it('keeps a draft off the public site', function () {
 
     $this->get('/id/sekolah/karuni')->assertNotFound();
     $this->get('/id/sekolah')->assertOk()->assertDontSee('TK Harapan Karuni');
+});
+
+it('refuses negative school counts', function () {
+    $this->actingAs(User::factory()->create());
+    $school = School::whereSlug('karuni', 'id')->firstOrFail();
+
+    Livewire::test(EditSchool::class, ['record' => $school->getRouteKey()])
+        ->fillForm(['pupils' => -1])
+        ->call('save')
+        ->assertHasFormErrors(['pupils']);
+});
+
+it('refuses a slug already used by another school in the same locale', function () {
+    $this->actingAs(User::factory()->create());
+    $school = School::whereSlug('karuni', 'id')->firstOrFail();
+
+    Livewire::test(EditSchool::class, ['record' => $school->getRouteKey()])
+        ->fillForm(['slug.id' => 'anakalang'])
+        ->call('save')
+        ->assertHasFormErrors(['slug.id']);
 });

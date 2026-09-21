@@ -42,3 +42,13 @@ it('404s a draft school', function () {
 
     $this->get('/id/probe/draf')->assertNotFound();
 });
+
+it('uses the source slug when English has not been translated', function () {
+    School::factory()->create([
+        'slug' => ['id' => 'belum-diterjemahkan'],
+        'name' => ['id' => 'Sekolah Belum Diterjemahkan'],
+    ]);
+
+    $this->get('/en/probe/belum-diterjemahkan')
+        ->assertOk()->assertSee('Sekolah Belum Diterjemahkan');
+});

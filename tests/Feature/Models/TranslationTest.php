@@ -2,6 +2,7 @@
 
 // tests/Feature/Models/TranslationTest.php
 
+use App\Models\Post;
 use App\Models\School;
 use App\Models\Stat;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,6 +79,15 @@ it('defaults slug matching to the current locale', function () {
     app()->setLocale('en');
 
     expect(School::whereSlug('karuni-school')->exists())->toBeTrue();
+});
+
+it('falls back for missing English post slugs without accepting a translated post’s Indonesian slug', function () {
+    Post::factory()->create(['slug' => ['id' => 'cerita-tanpa-terjemahan']]);
+    Post::factory()->create(['slug' => ['id' => 'cerita-lengkap', 'en' => 'complete-story']]);
+
+    expect(Post::whereSlug('cerita-tanpa-terjemahan', 'en')->exists())->toBeTrue()
+        ->and(Post::whereSlug('cerita-lengkap', 'en')->exists())->toBeFalse()
+        ->and(Post::whereSlug('complete-story', 'en')->exists())->toBeTrue();
 });
 
 it('gives a stat an optional translated body that finishes its label', function () {

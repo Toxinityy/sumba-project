@@ -52,6 +52,19 @@ trait HasTranslations
      */
     public function scopeWhereSlug(Builder $query, string $slug, ?string $locale = null): void
     {
-        $query->where('slug->'.($locale ?? app()->getLocale()), $slug);
+        $locale ??= app()->getLocale();
+
+        $query->where(function (Builder $query) use ($slug, $locale) {
+            $query->where('slug->'.$locale, $slug);
+
+            if ($locale !== config('locales.default')) {
+                $query->orWhere(function (Builder $fallback) use ($slug, $locale) {
+                    $fallback->where('slug->'.config('locales.default'), $slug)
+                        ->where(function (Builder $missing) use ($locale) {
+                            $missing->whereNull('slug->'.$locale)->orWhere('slug->'.$locale, '');
+                        });
+                });
+            }
+        });
     }
 }
