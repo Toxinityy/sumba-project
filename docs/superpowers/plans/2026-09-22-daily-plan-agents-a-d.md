@@ -156,7 +156,7 @@ Nine files are modified and unstaged. They are the finished, verified output of
 the 2026-09-21 plan; they are not scratch work, and three agents are about to
 branch from whatever HEAD is at that moment.
 
-- [ ] **Step 1: Read the diff before staging any of it.**
+- [x] **Step 1: Read the diff before staging any of it.**
 
 ```bash
 cd "D:/Projects/Orca IDE/sumba-project"
@@ -169,14 +169,14 @@ record, `resources/js/app.js` (+22, the contact-anchor language switch),
 `language-switcher.blade.php`, `sections/form.blade.php`, `routes/web.php`
 (+3, the null-safe featured lookup), and three test files.
 
-- [ ] **Step 2: Confirm the `.gitignore` additions are intentional.**
+- [x] **Step 2: Confirm the `.gitignore` additions are intentional.**
 
 Three new ignore lines arrived with a pass that was not about ignoring files.
 Check what they ignore. If any of them would hide build output another agent
 needs, or a `.env`-adjacent file, fix it now rather than discovering it when
 C's variant files vanish from a diff this afternoon.
 
-- [ ] **Step 3: Stage explicit paths. Never `git add -A`.**
+- [x] **Step 3: Stage explicit paths. Never `git add -A`.**
 
 ```bash
 git add .gitignore \
@@ -201,7 +201,7 @@ git add docs/superpowers/plans/2026-09-22-daily-plan-agents-a-d.md
 git commit -m "docs: plan the media and safeguarding pass across four agents"
 ```
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git commit -m "fix: keep the bilingual visitor journey usable when content or delivery fails
@@ -213,7 +213,7 @@ on the first invalid field. The language switch preserves the contact anchor.
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```
 
-- [ ] **Step 5: Announce the SHA.** B, C and D branch from it. Post it before
+- [x] **Step 5: Announce the SHA.** B, C and D branch from it. Post it before
       anyone runs `git worktree add`.
 
 **Done when:** `git status --short` is empty, and three agents have the same
@@ -256,7 +256,7 @@ rules out.
 This is the contract key C and D should expect if they ever build the panel's
 completeness badges off the same fact — tell D, since D's list view wants it.
 
-- [ ] **Step 1: Write the failing test.**
+- [x] **Step 1: Write the failing test.**
 
 ```php
 // tests/Feature/Pages/StoryDetailPageTest.php
@@ -302,7 +302,7 @@ it('shows the note in Indonesian when Indonesian is the missing locale', functio
 });
 ```
 
-- [ ] **Step 2: Run it and watch all three fail.**
+- [x] **Step 2: Run it and watch all three fail.**
 
 ```bash
 php artisan test tests/Feature/Pages/StoryDetailPageTest.php
@@ -312,7 +312,7 @@ Expected: the first and third fail on the missing note string. If the second
 one fails too, the fallback is broken in a way §7 did not anticipate — stop and
 read `translationLocale()` before writing any view code.
 
-- [ ] **Step 3: Add the strings to both locale files.**
+- [x] **Step 3: Add the strings to both locale files.**
 
 ```json
 // lang/en.json
@@ -329,7 +329,7 @@ read `translationLocale()` before writing any view code.
 The note is itself translated — that is the part of §7 that is easy to miss.
 A reader on `/id` seeing an English-only story gets the Indonesian sentence.
 
-- [ ] **Step 4: Build the component.**
+- [x] **Step 4: Build the component.**
 
 ```blade
 {{-- resources/views/components/translation-note.blade.php --}}
@@ -348,7 +348,7 @@ Quiet, per §7 — muted and italic, not a warning banner. **Do not give it a
 fixed width or a one-line height.** The Indonesian sentence is the longer one
 (rule 2), and it must be allowed to wrap to two lines at 360px.
 
-- [ ] **Step 5: Populate `translated_from` in the view models and render it.**
+- [x] **Step 5: Populate `translated_from` in the view models and render it.**
 
 In `PostData` and `SchoolData`, on the detail shape only — a card in a rail is
 not the place for a fallback note:
@@ -362,7 +362,7 @@ not the place for a fallback note:
 Then `<x-translation-note :from="$story['translated_from']" />` above the body
 in the story detail and school detail pages.
 
-- [ ] **Step 6: Run the tests until green, then break it on purpose.**
+- [x] **Step 6: Run the tests until green, then break it on purpose.**
 
 ```bash
 php artisan test tests/Feature/Pages/StoryDetailPageTest.php tests/Feature/Pages/SchoolDetailPageTest.php
@@ -373,7 +373,7 @@ Then delete the `@if ($from)` guard so the note always renders, and confirm the
 plan caught a counterfeit test with; the note is exactly the kind of assertion
 that passes against a string that is always present.
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
 git add resources/views/components/translation-note.blade.php \
@@ -392,7 +392,7 @@ translated page says nothing; and the note wraps rather than clips at 360px.
 
 Five minutes, and it stops D from computing the same thing a second way.
 
-- [ ] Write the `translated_from` key into `docs/data-contract.md` beside the
+- [x] Write the `translated_from` key into `docs/data-contract.md` beside the
       detail shapes, noting that it derives from
       `HasTranslations::translationLocale()` and that the panel's per-locale
       completeness badge (§7, D3) must read the same method rather than
@@ -408,7 +408,7 @@ blanket `SchoolSeeder` to get there. It has drifted back out. Four agents each
 running the suite on a red-green cycle turn that into the largest single cost
 of the day.
 
-- [ ] **Step 1: Find where the time goes before changing anything.**
+- [x] **Step 1: Find where the time goes before changing anything.**
 
 ```bash
 php artisan test --profile 2>&1 | tail -30
@@ -418,17 +418,17 @@ Expected: the ten slowest tests named. Do not guess — if the cost turns out to
 be one Livewire panel test or the variant encoder rather than seeding, the fix
 is somewhere else entirely and the rest of this task is wrong.
 
-- [ ] **Step 2: Check what `tests/Pest.php` currently seeds, and for whom.**
+- [x] **Step 2: Check what `tests/Pest.php` currently seeds, and for whom.**
 
 ```bash
 grep -n "seed\|RefreshDatabase\|uses(" tests/Pest.php
 ```
 
-- [ ] **Step 3: Narrow it.** Seed inside the files that read seeded content, or
+- [x] **Step 3: Narrow it.** Seed inside the files that read seeded content, or
       behind a Pest group the page tests opt into. `RefreshDatabase` on a test
       that never touches the database is pure cost.
 
-- [ ] **Step 4: Prove both halves.** The suite is faster **and** still green:
+- [x] **Step 4: Prove both halves.** The suite is faster **and** still green:
 
 ```bash
 php artisan test --compact
@@ -439,7 +439,7 @@ test only passed because something else seeded for it, it fails now — that is
 the task finding a real dependency, not a regression. Fix it by seeding in that
 file.
 
-- [ ] **Step 5: Commit, and post the new number** so B, C and D know what a
+- [x] **Step 5: Commit, and post the new number** so B, C and D know what a
       healthy run looks like today.
 
 **Done when:** the suite is green, faster, and no test depends on a seed it
@@ -450,6 +450,70 @@ does not ask for.
 Consuming real images in `<x-picture>` — the `sizes` audit and the LCP hero
 `fetchpriority` pass — waits until B and C have landed real variants. Starting
 it against `PlaceholderImage` means doing it twice.
+
+### Agent A verification record (completed 2026-09-22)
+
+**A0.** Committed at `d39571a`; today's plan committed separately at `242acda`,
+which is the SHA B, C and D branch from. The `.gitignore` addition was
+`/graphify-out` (skill output, safe); `storage/app/.gitignore` already has a
+`*` catch-all, so C's new media disk cannot be committed by accident.
+
+**A1.** Four story cases and two school cases written first; the two
+"shows note" cases failed against pages that rendered Indonesian prose on
+`/en` with no note. `<x-translation-note>` added, `_fallback_locale` emitted
+from `PostData::detail()` and `SchoolData::detail()`, strings in both locale
+files under `translation.fallback.id`. Break-on-purpose: removing the
+`@if ($from)` guard alone did **not** turn the negatives red — with `$from`
+null the component rendered a missing-key string, not the note. Forcing the
+real string as well turned all four negatives red, which is what proved them.
+The note wraps rather than clips by construction — `max-w-prose`, no fixed
+width or height, no `truncate` — but this was not checked in a browser.
+
+**A2.** The contract already named this key `_fallback_locale` in the I6
+carve-out of 2026-09-17; this plan invented `translated_from` without
+checking. Renamed to the contract's name before D built against either. The
+carve-out is now closed and records the emit/render split and the values.
+
+**Found and not fixed, because it is the data layer's file:**
+`HasTranslations::translationLocale()` resolves requested locale → default
+(`id`), so en→id fallback works and id→en cannot. An English-first record
+returns `null` from `trans()` on `/id` and renders a **blank** section with no
+note, which breaks §7's "never renders blank". Nothing produces such a record
+today, but D1's Post resource makes one enterable by hand. Written up in
+`docs/data-contract.md` for B.
+
+**A3.** Profiled before changing anything. The top ten tests were only 28% of
+the run, so the cost was per-test overhead, not one slow test. `tests/Pest.php`
+seeded both seeders before every test in five directories including files that
+never touch the database; narrowed to Pages/Cards/Sections. Two real
+dependencies surfaced and were fixed in their own files —
+`AccentGroundTest` (walks rendered HTML of every route) and
+`Admin/SchoolPanelTest` (edits an existing school).
+
+| Run | Time |
+|---|---|
+| Baseline, `php artisan test --compact`, 341 tests | **4m41s** |
+| Sequential after narrowing, 347 tests | **2m33s** |
+| `php artisan test --parallel`, 347 tests, three runs | **52.6s / 58.2s / 55.0s** |
+
+**Sequential is still over the two-minute target; parallel is well under it.**
+paratest is already installed via Pest 4 and this machine has 12 cores, so
+`--parallel` needs no new dependency. Three consecutive runs were green with
+an identical 1,386 assertions, so nothing is being skipped or double-counted.
+
+**Two handoffs A could not make itself:**
+
+- **B owns `composer.json`.** The `composer test` script still runs
+  `php artisan test` sequentially. Adding `--parallel` there is B's one-line
+  call, and it is where the 5× actually reaches the team.
+- **D owns `.github/`.** D5's CI workflow should use `--parallel`, and the
+  runtime comment D5 step 3 asks for should read 55s, not 4m41s.
+
+Final state: **347 tests, 1,386 assertions, green.** `git diff --check` clean.
+Pint reports `unary_operator_spaces`, `braces_position` and
+`not_operator_with_successor_space` on `AccentGroundTest`; the identical three
+fixers report against that file at `HEAD~1`, so they pre-date this pass and
+unrelated code was not reformatted.
 
 ---
 
