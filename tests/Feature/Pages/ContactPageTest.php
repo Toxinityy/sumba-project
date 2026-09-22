@@ -115,9 +115,11 @@ it('returns Indonesian validation feedback at the first invalid field', function
         'organisation' => 'Yayasan Pendidikan',
         'email' => 'bukan-surel',
         'message' => '',
+        'unrelated' => 'do not retain',
     ])->assertRedirect(url('/id').'#kontak')
         ->assertSessionHasErrors(['name', 'email', 'message'])
-        ->assertSessionHasInput('organisation', 'Yayasan Pendidikan');
+        ->assertSessionHasInput('organisation', 'Yayasan Pendidikan')
+        ->assertSessionMissing('_old_input.unrelated');
 
     $html = $this->withCookie(config('session.cookie'), session()->getId())
         ->get('/id')->assertOk()->getContent();

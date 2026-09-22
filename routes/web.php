@@ -157,7 +157,8 @@ foreach (config('locales.supported') as $locale) {
                 ]);
 
                 if ($validator->fails()) {
-                    return redirect(LocalizedUrl::contact())->withErrors($validator)->withInput();
+                    return redirect(LocalizedUrl::contact())->withErrors($validator)
+                        ->withInput($request->only(['name', 'organisation', 'email', 'message']));
                 }
 
                 $fields = $validator->validated();

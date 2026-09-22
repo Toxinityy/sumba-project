@@ -33,6 +33,7 @@
            else that has to live inside the <form> element. Empty by default. --}}
       {{ $slot }}
 
+      @php($firstError = isset($errors) ? array_key_first($errors->toArray()) : null)
       @foreach ($fields as $field)
         @php($name = $field['name'])
         @php($type = $field['type'] ?? 'text')
@@ -57,6 +58,7 @@
               @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
               @if ($required) required aria-required="true" @endif
               @if ($error) aria-invalid="true" aria-describedby="{{ $name }}-error" @endif
+              @if ($name === $firstError) autofocus @endif
               class="min-h-11 w-full rounded border border-line-strong bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >{{ old($name) }}</textarea>
           @else
@@ -65,6 +67,7 @@
               @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
               @if ($required) required aria-required="true" @endif
               @if ($error) aria-invalid="true" aria-describedby="{{ $name }}-error" @endif
+              @if ($name === $firstError) autofocus @endif
               class="min-h-11 w-full rounded border border-line-strong bg-surface px-4 py-3 text-body text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
           @endif
 

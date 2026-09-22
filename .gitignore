@@ -41,3 +41,6 @@ Thumbs.db
 _ide_helper.php
 Homestead.json
 Homestead.yaml
+
+# graphify knowledge graph output + cache
+/graphify-out

@@ -3,10 +3,12 @@
 
 <div class="inline-flex overflow-hidden rounded-pill border border-line"
      role="group"
-     aria-label="{{ __('Bahasa / Language') }}">
+     aria-label="{{ __('Bahasa / Language') }}"
+     @if (request()->routeIs(app()->getLocale().'.home')) data-contact-anchor="{{ config('locales.segments.contact')[app()->getLocale()] }}" @endif>
   @foreach ($alternates as $locale => $url)
     <a href="{{ $url }}"
        hreflang="{{ $locale }}"
+       data-contact-url="{{ \App\Support\LocalizedUrl::contact($locale) }}"
        @class([
          'flex min-h-11 min-w-11 items-center justify-center px-3 text-caption font-bold uppercase tracking-[0.08em]',
          'bg-accent text-accent-ink' => $locale === app()->getLocale(),
