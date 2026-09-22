@@ -42,7 +42,7 @@ class PostData
         return self::withHref(
             $post->kind === PostKind::PhotoEssay ? $post->toCardArray() : $post->toDetailArray(),
             $post,
-        ) + ['translated_from' => self::fallbackLocale($post)];
+        ) + ['_fallback_locale' => self::fallbackLocale($post)];
     }
 
     /**

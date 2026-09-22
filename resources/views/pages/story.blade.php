@@ -14,7 +14,7 @@
     :image="$post['image']" />
 
   <x-sections.lede :label="__('stories.hero.label')" surface="raised">
-    <x-translation-note :from="$post['translated_from'] ?? null" />
+    <x-translation-note :from="$post['_fallback_locale'] ?? null" />
     {!! $post['body'] !!}
   </x-sections.lede>
 

@@ -38,7 +38,7 @@ class SchoolData
     public static function detail(School $school): array
     {
         return self::withHref($school->toDetailArray())
-            + ['translated_from' => self::fallbackLocale($school)];
+            + ['_fallback_locale' => self::fallbackLocale($school)];
     }
 
     /**

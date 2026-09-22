@@ -283,21 +283,49 @@ flag the page can use to render the inline fallback note:
 
 Missing translations **fall back, they do not 404**.
 
-**I6 carve-out (2026-09-17): `_fallback_locale` is contract-only until real
-translations exist.** Nothing in the codebase emits it and nothing reads
-it — no fixture produces it (every fixture's content exists in both
-locales), no component renders spec §7's quiet inline fallback note, and no
-test covers either direction. This is a known, deliberate gap, not an
-oversight: implementing it means editing stabilised section components to
-render the note (itself translated, per spec §7), which is out of scope for
-a docs/fixture pass and belongs with the data-layer workstream once a real
-model actually has an untranslated field to fall back from. Until then,
-**the "no Blade template should change at integration time" promise above
-does not cover `_fallback_locale`** — the component that renders spec §7's
-note will need to change (or be added to) when the data layer first
-produces this key for real, and that change is expected, not a broken
-promise. Flag it in that workstream's report rather than assuming the
-promise silently extends to cover it.
+**Implemented 2026-09-22 (closes the I6 carve-out of 2026-09-17).**
+`_fallback_locale` is now emitted and rendered. As the carve-out predicted,
+this added a Blade component rather than changing a stabilised section — the
+"no Blade template should change at integration time" promise held.
+
+**Who emits it.** `PostData::detail()` and `SchoolData::detail()` — detail
+shapes only. Cards and directory items do not carry the key; a rail of
+stories is no place for the note. It derives from
+`HasTranslations::translationLocale()` on the record's main prose field:
+`body` for Post, `lede` for School. A translated title over an untranslated
+body is still a fallback, so the prose decides.
+
+**Its three values:**
+
+```php
+['_fallback_locale' => null]   // the reader is getting their own locale
+['_fallback_locale' => 'id']   // English is missing; Indonesian is showing
+                               // null ALSO when the field is empty in every
+                               // locale — that is a blank section, not a
+                               // fallback, and must not claim otherwise
+```
+
+**Who renders it.** `<x-translation-note :from="$x['_fallback_locale'] ?? null" />`,
+which reads the note text from `lang/*.json` under `translation.fallback.<locale>`
+so the note is itself translated, per §7.
+
+**The panel must read the same method.** Spec §7 also wants per-locale
+completeness badges on Filament list views. Those badges must call
+`translationLocale()` rather than checking `filled()` on the raw JSON — two
+definitions of "translated" between the panel and the public site is a bug
+report waiting to be filed.
+
+**Known limitation, and it belongs to the data layer.** `translationLocale()`
+resolves *requested locale → default locale*, and the default is `id`. So
+en→id fallback works and id→en cannot: a record written in English only
+returns `null` from `trans()` on `/id` and renders a **blank** section with no
+note. That breaks §7's "never renders blank" promise for English-first
+records. Nothing produces such a record today — every seeder and both
+fixtures are Indonesian-first — but the Filament Post resource makes one
+enterable by hand. Fixing it means teaching `translationLocale()` to try the
+other supported locale before giving up, which is
+`app/Models/Concerns/HasTranslations.php` and therefore the data layer's call,
+not the pages'.
 
 ---
 
