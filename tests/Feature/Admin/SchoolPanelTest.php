@@ -6,7 +6,12 @@ use App\Filament\Resources\Schools\Pages\EditSchool;
 use App\Filament\Resources\Schools\Pages\ListSchools;
 use App\Models\School;
 use App\Models\User;
+use Database\Seeders\SchoolSeeder;
 use Livewire\Livewire;
+
+// The panel tests edit a school that already exists. tests/Pest.php no longer
+// seeds Feature/Admin, so this file asks for the one seeder it needs.
+beforeEach(fn () => $this->seed(SchoolSeeder::class));
 
 /*
  | The panel Vera uses (spec §6). What matters here is not that Filament

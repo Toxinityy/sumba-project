@@ -1,6 +1,16 @@
 <?php
 
+use Database\Seeders\PostSeeder;
+use Database\Seeders\SchoolSeeder;
 use Illuminate\Support\Facades\Route;
+
+// This walks the rendered HTML of every route, so it needs the content those
+// routes render. tests/Pest.php seeds Pages/Cards/Sections only; a root-level
+// Feature test that needs seeded content asks for it here.
+beforeEach(function () {
+    $this->seed(SchoolSeeder::class);
+    $this->seed(PostSeeder::class);
+});
 
 /*
  | Spec §4: light --accent is 4.26:1 on --surface-sunk and 3.92:1 on
