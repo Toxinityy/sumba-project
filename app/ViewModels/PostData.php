@@ -42,7 +42,27 @@ class PostData
         return self::withHref(
             $post->kind === PostKind::PhotoEssay ? $post->toCardArray() : $post->toDetailArray(),
             $post,
-        );
+        ) + ['translated_from' => self::fallbackLocale($post)];
+    }
+
+    /**
+     * The locale the story's prose actually resolved to, or null when that is
+     * already the reader's own — which is what <x-translation-note> reads to
+     * decide whether §7's quiet note belongs on the page. `body` is the
+     * field that decides it: it is the bulk of what a reader came for, and a
+     * translated title over an untranslated body is still a fallback.
+     *
+     * Null when the field is empty in every locale too. That is a blank
+     * section, not a fallback, and claiming a translation exists would be
+     * worse than saying nothing.
+     *
+     * Cards do not get this: a rail of stories is no place for the note.
+     */
+    private static function fallbackLocale(Post $post): ?string
+    {
+        $resolved = $post->translationLocale('body');
+
+        return $resolved === app()->getLocale() ? null : $resolved;
     }
 
     /** @return array<int, array> Photo-essay posts, for the Gallery page. */

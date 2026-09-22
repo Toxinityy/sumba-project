@@ -81,3 +81,47 @@ it('keeps a draft story off the index and its own page', function () {
     $this->get('/id/cerita/umbu-elektronika')->assertNotFound();
     $this->get('/id/cerita')->assertOk()->assertDontSee('membongkar radio rusak');
 });
+
+/*
+ | Spec §7: "missing locale renders the source language with a quiet inline
+ | note — and that note is itself translated." Until now the English page fell
+ | back to Indonesian silently, which is the one behaviour §7 rules out.
+ |
+ | Fallback runs requested-locale → default-locale (id), so these cover the
+ | direction that exists. An English-first record has no Indonesian to fall
+ | back to; see the note in docs/data-contract.md.
+ */
+it('shows a translated fallback note when the English story is missing', function () {
+    \App\Models\Post::whereSlug('ibu-maria-bulu', 'id')->firstOrFail()->update([
+        'title' => ['id' => 'Sebelas tahun merantau.', 'en' => null],
+        'body' => ['id' => '<p>Ia pulang untuk mengajar.</p>', 'en' => null],
+    ]);
+
+    $this->get('/en/stories/ibu-maria-bulu')
+        ->assertOk()
+        ->assertSee('Not yet available in English. Showing the Indonesian original.')
+        ->assertSee('Ia pulang untuk mengajar.', escape: false);
+});
+
+it('shows no note when the story is translated', function () {
+    $this->get('/en/stories/ibu-maria-bulu')
+        ->assertOk()
+        ->assertDontSee('Not yet available in English');
+});
+
+it('shows no note on the Indonesian page, which is the source language', function () {
+    $this->get('/id/cerita/ibu-maria-bulu')
+        ->assertOk()
+        ->assertDontSee('Not yet available in English')
+        ->assertDontSee('Belum tersedia');
+});
+
+it('shows no note when the body is empty in every locale rather than untranslated', function () {
+    \App\Models\Post::whereSlug('ibu-maria-bulu', 'id')->firstOrFail()->update([
+        'body' => ['id' => null, 'en' => null],
+    ]);
+
+    $this->get('/en/stories/ibu-maria-bulu')
+        ->assertOk()
+        ->assertDontSee('Not yet available in English');
+});

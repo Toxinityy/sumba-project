@@ -305,5 +305,6 @@
   "contact.validation.required": ":attribute wajib diisi.",
   "contact.validation.email": "Masukkan alamat surel yang valid.",
   "contact.validation.max": ":attribute tidak boleh lebih dari :max karakter.",
-  "contact.validation.string": ":attribute harus berupa teks."
+  "contact.validation.string": ":attribute harus berupa teks.",
+  "translation.fallback.id": "Belum tersedia dalam bahasa Inggris. Menampilkan versi asli bahasa Indonesia."
 }

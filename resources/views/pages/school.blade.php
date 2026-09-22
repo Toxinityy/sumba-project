@@ -10,6 +10,7 @@
     :image="$school['image']" />
 
   <x-sections.lede :label="__('school.profile_label')" surface="raised">
+    <x-translation-note :from="$school['translated_from'] ?? null" />
     <p>{{ $school['lede'] }}</p>
   </x-sections.lede>
 

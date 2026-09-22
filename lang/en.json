@@ -305,5 +305,6 @@
   "contact.validation.required": ":attribute is required.",
   "contact.validation.email": "Enter a valid email address.",
   "contact.validation.max": ":attribute must be :max characters or fewer.",
-  "contact.validation.string": ":attribute must be text."
+  "contact.validation.string": ":attribute must be text.",
+  "translation.fallback.id": "Not yet available in English. Showing the Indonesian original."
 }

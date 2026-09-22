@@ -92,3 +92,25 @@ it('links the language switch to the other locale slug of the same school', func
         ->assertSee('hreflang="id" href="'.url('/id/sekolah/karuni').'"', escape: false);
     $this->get('/en/schools/karuni')->assertNotFound();
 });
+
+/*
+ | Spec §7's fallback note on the school spine. The school's prose field is
+ | `lede`, so that is what decides whether the note shows — the same method
+ | the panel's per-locale completeness badge reads (docs/data-contract.md).
+ */
+it('shows a translated fallback note when the English lede is missing', function () {
+    \App\Models\School::whereSlug('karuni', 'id')->firstOrFail()->update([
+        'lede' => ['id' => 'Sekolah ini dibuka pada tahun 2016.', 'en' => null],
+    ]);
+
+    $this->get('/en/schools/karuni')
+        ->assertOk()
+        ->assertSee('Not yet available in English. Showing the Indonesian original.')
+        ->assertSee('Sekolah ini dibuka pada tahun 2016.');
+});
+
+it('shows no note on a fully translated school page', function () {
+    $this->get('/en/schools/karuni')
+        ->assertOk()
+        ->assertDontSee('Not yet available in English');
+});
