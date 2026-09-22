@@ -2,6 +2,7 @@
 
 namespace App\Models\Concerns;
 
+use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 
 /*
@@ -12,14 +13,26 @@ use Illuminate\Database\Eloquent\Builder;
  */
 trait Publishable
 {
+    protected static function bootPublishable(): void
+    {
+        static::saving(function ($owner) {
+            if ($owner->published_at !== null && $owner->published_at->lessThanOrEqualTo(now())
+                && $owner->media()->unpublishable()->exists()) {
+                throw new DomainException('Published content cannot use media without current web consent (spec §9).');
+            }
+        });
+    }
+
     public function scopePublished(Builder $query): void
     {
-        $query->whereNotNull('published_at')->where('published_at', '<=', now());
+        $query->whereNotNull('published_at')->where('published_at', '<=', now())
+            ->whereDoesntHave('media', fn (Builder $media) => $media->unpublishable());
     }
 
     public function isPublished(): bool
     {
-        return $this->published_at !== null && $this->published_at->lessThanOrEqualTo(now());
+        return $this->published_at !== null && $this->published_at->lessThanOrEqualTo(now())
+            && ! $this->media()->unpublishable()->exists();
     }
 
     /** Withdrawal of consent calls this; it must not be a queued job (§9). */

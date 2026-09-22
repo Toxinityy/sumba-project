@@ -30,7 +30,7 @@
     {{--
       Qualitative status only. No goal, no amount raised, no progress bar,
       no percentage. `status` is a short qualitative string an editor sets
-      by hand ("Butuh 4 mitra lagi", "Didanai penuh tahun ini"). A bar
+      by hand ("Sedang mencari mitra", "Didanai penuh tahun ini"). A bar
       frozen at 40% for six months costs more credibility with an
       institutional donor than the precision earns, and this team cannot
       keep such numbers current. Do not add a <progress> element, a

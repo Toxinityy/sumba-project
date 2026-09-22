@@ -14,6 +14,7 @@
     :image="$post['image']" />
 
   <x-sections.lede :label="__('stories.hero.label')" surface="raised">
+    <x-translation-note :from="$post['_fallback_locale'] ?? null" />
     {!! $post['body'] !!}
   </x-sections.lede>
 
@@ -24,6 +25,6 @@
   <x-sections.next-step
     :heading="__('nextstep.heading')"
     :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
+    :partnerHref="\App\Support\LocalizedUrl::contact()"
     :giveHref="route(app()->getLocale().'.give')" />
 </x-layouts.site>

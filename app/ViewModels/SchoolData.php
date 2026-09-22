@@ -31,7 +31,30 @@ class SchoolData
     {
         $school = School::whereSlug($slug)->published()->first();
 
-        return $school === null ? null : self::withHref($school->toDetailArray());
+        return $school === null ? null : self::detail($school);
+    }
+
+    /** Full shape for a school the route has already bound. */
+    public static function detail(School $school): array
+    {
+        return self::withHref($school->toDetailArray())
+            + ['_fallback_locale' => self::fallbackLocale($school)];
+    }
+
+    /**
+     * The locale the school's prose actually resolved to, or null when that
+     * is already the reader's own. <x-translation-note> reads it to decide
+     * whether §7's quiet note belongs on the page. `lede` is the school's
+     * equivalent of a story's `body` — the paragraph that introduces it.
+     *
+     * Null when the field is empty in every locale, which is a blank section
+     * rather than a fallback. Directory cards do not get this key at all.
+     */
+    private static function fallbackLocale(School $school): ?string
+    {
+        $resolved = $school->translationLocale('lede');
+
+        return $resolved === app()->getLocale() ? null : $resolved;
     }
 
     private static function withHref(array $school): array

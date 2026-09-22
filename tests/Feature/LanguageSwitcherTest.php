@@ -35,6 +35,16 @@ it('renders a switcher linking to the equivalent page', function () {
         ->assertSee('/en/schools', escape: false);
 });
 
+it('provides the other locale contact anchor on the homepage switcher', function () {
+    $id = $this->get('/id')->assertOk()->getContent();
+    $en = $this->get('/en')->assertOk()->getContent();
+
+    expect($id)->toContain('data-contact-anchor="kontak"')
+        ->toContain('data-contact-url="'.\App\Support\LocalizedUrl::contact('en').'"')
+        ->and($en)->toContain('data-contact-anchor="contact"')
+        ->toContain('data-contact-url="'.\App\Support\LocalizedUrl::contact('id').'"');
+});
+
 /*
  | Task 4 attaches a `locale` route default to every locale route (so the
  | setlocale middleware can read $request->route('locale')). That default

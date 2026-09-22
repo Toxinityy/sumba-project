@@ -6,9 +6,11 @@ use App\Models\Enums\ConsentScope;
 use Database\Factories\ConsentFactory;
 use DomainException;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 #[Fillable([
     'subject_given_name', 'subject_is_minor', 'guardian_name', 'guardian_relationship',
@@ -55,7 +57,26 @@ class Consent extends Model
     {
         return $this->scope === ConsentScope::Web
             && $this->withdrawn_at === null
+            && $this->granted_on->startOfDay()->lessThanOrEqualTo(now())
+            && (! $this->subject_is_minor || ($this->subject_assented && filled($this->guardian_name)))
             && $this->review_on->endOfDay()->isFuture();
+    }
+
+    /** The database form of coversWebUse(), used by public query scopes. */
+    public function scopeCoveringWebUse(Builder $query): void
+    {
+        $query->where('scope', ConsentScope::Web->value)
+            ->whereNull('withdrawn_at')
+            ->whereDate('granted_on', '<=', today())
+            ->whereDate('review_on', '>=', today())
+            ->where(function (Builder $query) {
+                $query->where('subject_is_minor', false)
+                    ->orWhere(function (Builder $query) {
+                        $query->where('subject_assented', true)
+                            ->whereNotNull('guardian_name')
+                            ->where('guardian_name', '!=', '');
+                    });
+            });
     }
 
     /**
@@ -65,14 +86,16 @@ class Consent extends Model
      */
     public function withdraw(): void
     {
-        $this->forceFill(['withdrawn_at' => now()])->save();
+        DB::transaction(function () {
+            $this->forceFill(['withdrawn_at' => now()])->save();
 
-        $this->mediaAssets()->with('attachable')->each(function (MediaAsset $asset) {
-            $owner = $asset->attachable;
+            $this->mediaAssets()->with('attachable')->each(function (MediaAsset $asset) {
+                $owner = $asset->attachable;
 
-            if ($owner !== null && method_exists($owner, 'unpublish')) {
-                $owner->unpublish();
-            }
+                if ($owner !== null && method_exists($owner, 'unpublish')) {
+                    $owner->unpublish();
+                }
+            });
         });
     }
 }

@@ -99,8 +99,8 @@ class SchoolSeeder extends Seeder
                     'en' => 'A new reading room for 60 children.',
                 ],
                 'status' => [
-                    'id' => 'Butuh 4 mitra lagi',
-                    'en' => 'Needs 4 more partners',
+                    'id' => 'Sedang mencari mitra untuk ruang baca',
+                    'en' => 'Seeking partners for a reading room',
                 ],
                 'lede' => [
                     'id' => 'Enam puluh anak belajar di dua ruang kelas. Ruang ketiga akan menjadi perpustakaan pertama di desa ini — tempat anak-anak bisa membaca setelah jam sekolah, dan tempat orang tua belajar membaca bersama mereka.',
@@ -344,8 +344,8 @@ class SchoolSeeder extends Seeder
                     'en' => 'Computer laboratory refurbishment.',
                 ],
                 'status' => [
-                    'id' => 'Perlu 2 mitra korporasi',
-                    'en' => 'Needs 2 corporate partners',
+                    'id' => 'Sedang mencari mitra korporasi',
+                    'en' => 'Seeking corporate partners',
                 ],
                 'lede' => [
                     'id' => 'Dua puluh dua komputer melayani seratus delapan puluh murid kelas akhir yang membutuhkannya untuk ujian berbasis komputer. Delapan di antaranya sudah tidak menyala, dan yang tersisa berbagi satu jaringan listrik yang sering padam.',
@@ -698,8 +698,8 @@ class SchoolSeeder extends Seeder
                     'en' => 'Final-year scholarships for 12 pupils.',
                 ],
                 'status' => [
-                    'id' => 'Butuh 5 mitra lagi',
-                    'en' => 'Needs 5 more partners',
+                    'id' => 'Sedang mencari mitra beasiswa',
+                    'en' => 'Seeking scholarship partners',
                 ],
                 'lede' => [
                     'id' => 'Dua belas murid kelas akhir memenuhi syarat masuk universitas tahun ini, tetapi enam di antaranya berisiko putus sebelum ujian akhir karena orang tua mereka tidak lagi mampu membayar biaya transportasi dan buku ujian.',

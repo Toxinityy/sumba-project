@@ -204,6 +204,10 @@ the real host.
 run today. It must all be done, in order, once a host exists — before the
 site is considered launch-ready.
 
+- [ ] Replace homepage plates and deep-page placeholder images with consent-cleared, optimized photographs. Verify both locales at mobile and desktop widths.
+- [ ] Verify school facts and status copy against current records. Edit existing school records that still use numeric partner targets; updating seed text does not change an already seeded database.
+- [ ] Obtain the legal registration details and verified giving instructions from the ministry. Keep the giving page enquiry-led until those details can be published accurately.
+- [ ] Verify statistics, dated evidence and partner permissions before publishing the deferred pages or enabling their production routes.
 - [ ] Deploy to a staging subdomain on the real host, following the
       procedure in "Deploying to cPanel" above (same host as production —
       staging on a different host tells you nothing useful).

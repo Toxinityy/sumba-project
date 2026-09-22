@@ -1,5 +1,7 @@
 # Hope for Sumba — Website Design Spec
 
+> **Approved UX correction (2026-09-20):** AGENTS.md and the user-approved review prohibit public numeric funding displays, including sponsorship costs and currency conversions. This supersedes the IDR/USD display instructions and tier-card examples below; internal cost fields may remain. Giving is enquiry-led until verified payment details are supplied. Fixture statistics, placeholder evidence/partners and the four deferred pages are preview-only outside production. Contact failures must preserve input and provide localized recovery. See `docs/superpowers/plans/2026-09-20-high-priority-ux.md`.
+
 **Date:** 2026-09-16
 **Status:** Approved, pending expert review of the safeguarding policy
 **Launch target:** October–November 2026
@@ -34,7 +36,7 @@ This rules out the standard nonprofit vocabulary — desaturated photography, a 
 | 6 | **Visual system: Open Field (light) + Dusk Savanna (dark)** | One system at two luminances, sharing a warm neutral family and a gold accent hue — not two directions. |
 | 7 | Safeguarding standard proposed and **enforced in schema** | No policy existed. The site's rules are structural: minors have no surname field, consent gates publishing, EXIF is stripped unconditionally. |
 | 8 | Compressed publication masters uploaded; originals on a separate drive | Keeps shared-hosting disk and memory pressure down; bad crops stay recoverable from the archive. |
-| 9 | IDR always; **approximate USD on `/en`** from a manual rate | CSR departments think in rupiah; an overseas individual donor reading a bare IDR figure has no sense of scale. A manual rate avoids an API, a scheduled job and a silent staleness bug. |
+| 9 | Sponsorship costs remain internal | The public giving journey describes concrete school needs and invites an enquiry in both locales. No amount, conversion or target is displayed. |
 | 10 | **Deliberate launch scope**, four pages deferred | Six-to-ten week runway with two developers new to Filament. See §10. |
 
 ---
@@ -184,7 +186,7 @@ Every name below is a section from the table above. Where a section serves a spe
 
 | Page | Sequence |
 |---|---|
-| Home | Hero → Lede → Stat band → Work (featured school) → Stories → Next step |
+| Home | Hero → Lede → Stat band → Work (featured school) → Stories → Next step → Form (partnership enquiry) → Detail panel (where to find us) |
 | School detail | Hero → Lede → People → Context → Work → Evidence → Detail panel (current need) → Next step |
 | Children's home | Same shape, stricter media rules |
 | Project | Hero → Work → Evidence → Detail panel (status) → Next step |
@@ -196,7 +198,7 @@ Every name below is a section from the table above. Where a section serves a spe
 | Story detail | Hero → Lede → Quote → Next step |
 | Gallery | Hero → Stories (photo essays) → Next step |
 | Partners | Hero → Lede → Partners → Next step |
-| Contact | Hero → Form (partnership enquiry) → Detail panel (where to find us) → Next step |
+| Contact | **No page of its own (changed 2026-09-20).** The form and the detail panel close Home, under the anchor `/id#kontak` / `/en#contact`, and "Partner with us" everywhere points there. The old `/id/kontak` and `/en/contact` redirect (301) to that anchor. The nav shows Home ("Beranda") in Contact's place. |
 | Safeguarding | Hero → Lede → Lede → Lede (policy page — exempt from rule 1, see below) |
 
 The Project and Impact spines are recorded here for completeness; both pages are deferred past launch (§10).
@@ -261,7 +263,7 @@ Filament is an admin panel builder, not a CMS, so these are build items rather t
 
 **Fallback:** missing locale renders the source language with a quiet inline note — and that note is itself translated.
 
-**Currency:** costs stored in IDR. `/id` renders IDR. `/en` renders IDR plus an approximate USD equivalent from a single manually-set rate in settings, explicitly labelled approximate.
+**Currency:** costs may be stored internally in IDR for proposals and accounting. Neither locale displays numeric sponsorship costs or currency conversions on the website.
 
 **In Filament:** locale switcher in the panel, per-locale completeness badges on list views, translation status visible before publish.
 

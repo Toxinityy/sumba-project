@@ -3,7 +3,8 @@
     'heading',
     'body',
     'partnerHref',
-    'giveHref',
+    'giveHref' => null,
+    'partnerLabel' => null,
     'en' => null,
     // Geometry (spec §5). null keeps the inverse two-column band the deep
     // pages use. 'field' is the landing page's version: a large tinted field,
@@ -36,9 +37,8 @@
           Spec §5: "Partner with us" MUST come first in the DOM. A CSR
           department — the primary audience for this site — cannot click
           Donate; it needs a proposal, a budget line and a named contact.
-          Giving ("Support a school") is the secondary action below it, and
-          routes to an information page (bank transfer, QRIS, Wise, PayPal),
-          never a payment gateway. Do not reorder these two elements.
+          Giving ("Support a school") is the secondary action where present;
+          the giving page itself ends with one enquiry action.
         --}}
         <div @class(['mt-8 flex flex-wrap gap-4' => $variant === 'field', 'flex flex-wrap gap-4' => $variant !== 'field'])>
           @if ($variant === 'field')
@@ -46,14 +46,18 @@
                  BACKGROUND with --accent-ink on it, and --ink text on
                  --badge-bg at 11.70:1 light / 11.53:1 dark. Accent is never
                  used as text on this ground — it would be 3.92:1. --}}
-            <x-button :href="$partnerHref" variant="primary">{{ __('cta.partner') }}</x-button>
-            <x-button :href="$giveHref" variant="secondary">{{ __('cta.give') }}</x-button>
+            <x-button :href="$partnerHref" variant="primary">{{ $partnerLabel ?? __('cta.partner') }}</x-button>
+            @if ($giveHref)
+              <x-button :href="$giveHref" variant="secondary">{{ __('cta.give') }}</x-button>
+            @endif
           @else
-            <x-button :href="$partnerHref" variant="primary">{{ __('cta.partner') }}</x-button>
-            <a href="{{ $giveHref }}"
-               class="inline-flex min-h-11 items-center justify-center rounded-pill border-[1.5px] border-inverse-ink px-7 py-4 text-[15px] font-bold leading-none text-inverse-ink transition-colors hover:bg-inverse-ink hover:text-inverse">
-              {{ __('cta.give') }}
-            </a>
+            <x-button :href="$partnerHref" variant="primary">{{ $partnerLabel ?? __('cta.partner') }}</x-button>
+            @if ($giveHref)
+              <a href="{{ $giveHref }}"
+                 class="inline-flex min-h-11 items-center justify-center rounded-pill border-[1.5px] border-inverse-ink px-7 py-4 text-[15px] font-bold leading-none text-inverse-ink transition-colors hover:bg-inverse-ink hover:text-inverse">
+                {{ __('cta.give') }}
+              </a>
+            @endif
           @endif
         </div>
       </div>

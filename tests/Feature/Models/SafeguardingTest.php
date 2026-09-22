@@ -69,6 +69,49 @@ it('blocks an asset whose consent has been withdrawn', function () {
     expect(MediaAsset::factory()->depictingMinor($consent)->create()->isPublishable())->toBeFalse();
 });
 
+it('requires a minor’s assent and an effective grant date for web use', function () {
+    $noAssent = Consent::factory()->create(['subject_assented' => false]);
+    $futureGrant = Consent::factory()->create(['granted_on' => now()->addDay()->toDateString()]);
+
+    expect($noAssent->coversWebUse())->toBeFalse()
+        ->and($futureGrant->coversWebUse())->toBeFalse();
+});
+
+it('does not use an adult consent record to publish an image of a minor', function () {
+    $adult = Consent::factory()->forAdult()->create();
+
+    expect(MediaAsset::factory()->depictingMinor($adult)->create()->isPublishable())->toBeFalse();
+});
+
+it('blocks publishing an owner with media that lacks valid web consent', function () {
+    $school = School::factory()->draft()->create();
+    $consent = Consent::factory()->printOnly()->create();
+    MediaAsset::factory()->depictingMinor($consent)->for($school, 'attachable')->create();
+
+    expect(fn () => $school->update(['published_at' => now()]))->toThrow(DomainException::class);
+    expect($school->fresh()->isPublished())->toBeFalse();
+});
+
+it('blocks attaching invalid child media to a published owner', function () {
+    $school = School::factory()->create();
+    $consent = Consent::factory()->printOnly()->create();
+
+    expect(fn () => MediaAsset::factory()->depictingMinor($consent)
+        ->for($school, 'attachable')->create())->toThrow(DomainException::class);
+    expect($school->media()->count())->toBe(0);
+});
+
+it('removes already published content when its consent lapses', function () {
+    $school = School::factory()->create();
+    $consent = Consent::factory()->create();
+    MediaAsset::factory()->depictingMinor($consent)->for($school, 'attachable')->create();
+
+    $consent->update(['review_on' => now()->subDay()->toDateString()]);
+
+    expect(School::published()->whereKey($school)->exists())->toBeFalse()
+        ->and($school->fresh()->isPublished())->toBeFalse();
+});
+
 it('unpublishes everything using an asset the moment consent is withdrawn', function () {
     $consent = Consent::factory()->create();
     $school = School::factory()->create();
@@ -85,6 +128,22 @@ it('unpublishes everything using an asset the moment consent is withdrawn', func
     expect($school->fresh()->isPublished())->toBeFalse()
         ->and($post->fresh()->isPublished())->toBeFalse()
         ->and($consent->fresh()->coversWebUse())->toBeFalse();
+});
+
+it('rolls consent withdrawal back if unpublishing its content fails', function () {
+    $consent = Consent::factory()->create();
+    $school = School::factory()->create();
+    MediaAsset::factory()->depictingMinor($consent)->for($school, 'attachable')->create();
+
+    School::saving(function (School $record) {
+        if ($record->published_at === null) {
+            throw new RuntimeException('Simulated write failure');
+        }
+    });
+
+    expect(fn () => $consent->withdraw())->toThrow(RuntimeException::class);
+    expect($consent->fresh()->withdrawn_at)->toBeNull()
+        ->and($school->fresh()->isPublished())->toBeTrue();
 });
 
 it('finds consent records due for review', function () {

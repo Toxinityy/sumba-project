@@ -1,6 +1,16 @@
 <?php
 
+use Database\Seeders\PostSeeder;
+use Database\Seeders\SchoolSeeder;
 use Illuminate\Support\Facades\Route;
+
+// This walks the rendered HTML of every route, so it needs the content those
+// routes render. tests/Pest.php seeds Pages/Cards/Sections only; a root-level
+// Feature test that needs seeded content asks for it here.
+beforeEach(function () {
+    $this->seed(SchoolSeeder::class);
+    $this->seed(PostSeeder::class);
+});
 
 /*
  | Spec §4: light --accent is 4.26:1 on --surface-sunk and 3.92:1 on
@@ -64,7 +74,14 @@ it('never renders accent text on a sunk or tinted ground', function () {
 
     $violations = [];
     foreach ($urls as $url) {
-        foreach (accentOnForbiddenGround($this->get($url)->assertOk()->getContent()) as $v) {
+        $response = $this->get($url);
+        // The old contact URL is now a redirect to the landing page's form,
+        // which this loop already renders at /id and /en.
+        if ($response->isRedirect()) {
+            continue;
+        }
+
+        foreach (accentOnForbiddenGround($response->assertOk()->getContent()) as $v) {
             $violations[] = "{$url}: {$v}";
         }
     }

@@ -10,10 +10,11 @@
    details are fictional. Nothing here should be published or quoted.
    ========================================================================== */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const OUT = __dirname;
+const OUT = path.dirname(fileURLToPath(import.meta.url));
 
 /* -- helpers ------------------------------------------------------------- */
 
@@ -220,8 +221,8 @@ const SCHOOLS = [
     loc: "Karuni, Sumba Barat Daya",
     needId: "Ruang baca baru untuk 60 anak.",
     needEn: "A new reading room for 60 children.",
-    statusId: "Butuh 4 mitra lagi",
-    statusEn: "Needs 4 more partners",
+    statusId: "Sedang mencari mitra untuk ruang baca",
+    statusEn: "Seeking partners for a reading room",
     variant: "2",
   },
   {
@@ -242,8 +243,8 @@ const SCHOOLS = [
     loc: "Kambera, Sumba Timur",
     needId: "Pembaruan laboratorium komputer.",
     needEn: "Computer laboratory refurbishment.",
-    statusId: "Perlu 2 mitra korporasi",
-    statusEn: "Needs 2 corporate partners",
+    statusId: "Sedang mencari mitra korporasi",
+    statusEn: "Seeking corporate partners",
     variant: "4",
   },
   {
@@ -275,8 +276,8 @@ const SCHOOLS = [
     loc: "Waikabubak, Sumba Barat",
     needId: "Beasiswa kelas akhir untuk 12 murid.",
     needEn: "Final-year scholarships for 12 pupils.",
-    statusId: "Butuh 5 mitra lagi",
-    statusEn: "Needs 5 more partners",
+    statusId: "Sedang mencari mitra beasiswa",
+    statusEn: "Seeking scholarship partners",
     variant: "4",
   },
 ];
@@ -454,7 +455,7 @@ pages.push({
               "Enam puluh anak belajar di dua ruang kelas. Ruang ketiga akan menjadi perpustakaan pertama di desa ini — tempat anak-anak bisa membaca setelah jam sekolah, dan tempat orang tua belajar membaca bersama mereka.",
               "Sixty children learn in two classrooms. A third room will become the village's first library — somewhere children can read after school, and where parents learn to read alongside them."
             )}>Enam puluh anak belajar di dua ruang kelas. Ruang ketiga akan menjadi perpustakaan pertama di desa ini — tempat anak-anak bisa membaca setelah jam sekolah, dan tempat orang tua belajar membaca bersama mereka.</p>
-            <p class="card__status" ${bi("Butuh 4 mitra lagi", "Needs 4 more partners")}>Butuh 4 mitra lagi</p>
+            <p class="card__status" ${bi("Sedang mencari mitra untuk ruang baca", "Seeking partners for a reading room")}>Sedang mencari mitra untuk ruang baca</p>
           </div>
           <div class="btn-row">
             <a class="btn btn--primary" href="sekolah-karuni.html" ${bi(
@@ -700,7 +701,7 @@ pages.push({
             "Pekerjaan bangunan hampir selesai. Yang belum tersedia adalah rak untuk sisi kedua ruangan, koleksi buku berbahasa Indonesia untuk usia dini, dan satu panel surya kecil agar ruangan bisa dipakai sampai malam.",
             "The building work is nearly done. What is still missing is shelving for the second side of the room, a collection of early-years books in Indonesian, and one small solar panel so the room can be used into the evening."
           )}>Pekerjaan bangunan hampir selesai. Yang belum tersedia adalah rak untuk sisi kedua ruangan, koleksi buku berbahasa Indonesia untuk usia dini, dan satu panel surya kecil agar ruangan bisa dipakai sampai malam.</p>
-          <p class="card__status" ${bi("Butuh 4 mitra lagi", "Needs 4 more partners")}>Butuh 4 mitra lagi</p>
+          <p class="card__status" ${bi("Sedang mencari mitra untuk ruang baca", "Seeking partners for a reading room")}>Sedang mencari mitra untuk ruang baca</p>
         </div>
         <dl class="facts">
           <div class="facts__row">
@@ -903,8 +904,6 @@ const TIERS = [
   {
     id: "Ruang kelas",
     en: "A classroom",
-    costId: "Rp 180.000.000",
-    costEn: "Rp 180,000,000 (approx. USD 11,000)",
     descId: "Satu ruang kelas lengkap dengan meja, kursi dan papan tulis.",
     descEn: "One complete classroom with desks, chairs and a board.",
     variant: "2",
@@ -912,8 +911,6 @@ const TIERS = [
   {
     id: "Laboratorium",
     en: "A laboratory",
-    costId: "Rp 240.000.000",
-    costEn: "Rp 240,000,000 (approx. USD 14,500)",
     descId: "Laboratorium IPA atau komputer untuk satu sekolah menengah.",
     descEn: "A science or computer laboratory for one secondary school.",
     variant: "3",
@@ -921,8 +918,6 @@ const TIERS = [
   {
     id: "Gaji guru satu tahun",
     en: "A teacher for a year",
-    costId: "Rp 54.000.000",
-    costEn: "Rp 54,000,000 (approx. USD 3,300)",
     descId: "Satu guru tetap, tinggal di desa tempat ia mengajar.",
     descEn: "One permanent teacher, living in the village where they teach.",
     variant: "4",
@@ -930,8 +925,6 @@ const TIERS = [
   {
     id: "Perpustakaan",
     en: "A library",
-    costId: "Rp 95.000.000",
-    costEn: "Rp 95,000,000 (approx. USD 5,800)",
     descId: "Rak, koleksi buku dan penerangan tenaga surya.",
     descEn: "Shelving, a book collection and solar lighting.",
     variant: "2",
@@ -939,8 +932,6 @@ const TIERS = [
   {
     id: "Dua puluh laptop",
     en: "Twenty laptops",
-    costId: "Rp 120.000.000",
-    costEn: "Rp 120,000,000 (approx. USD 7,300)",
     descId: "Perangkat untuk satu kelas komputer, termasuk perawatan.",
     descEn: "Devices for one computer class, maintenance included.",
     variant: "3",
@@ -948,8 +939,6 @@ const TIERS = [
   {
     id: "Beasiswa satu murid",
     en: "One pupil's scholarship",
-    costId: "Rp 7.200.000",
-    costEn: "Rp 7,200,000 (approx. USD 440)",
     descId: "Satu tahun penuh: seragam, buku, makan siang dan transportasi.",
     descEn: "A full year: uniform, books, lunch and transport.",
     variant: "4",
@@ -964,11 +953,11 @@ pages.push({
     <div class="wrap">
       <div class="prose">
         <p class="label muted" ${bi("Dukung kami", "Get involved")}>Dukung kami</p>
-        <h1 ${bi("Pilih sesuatu yang nyata.", "Fund something specific.")}>Pilih sesuatu yang nyata.</h1>
+        <h1 ${bi("Dukung sesuatu yang nyata.", "Support something specific.")}>Dukung sesuatu yang nyata.</h1>
         <p class="lead" ${bi(
-          "Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.",
-          "Every option below is tied to one school and one need whose progress you can follow. We send photographic and financial reporting on each."
-        )}>Setiap bentuk dukungan di bawah ini terhubung dengan satu sekolah dan satu kebutuhan yang bisa Anda lihat perkembangannya. Kami mengirimkan laporan foto dan keuangan untuk setiap program.</p>
+          "Jelajahi berbagai cara mendukung pendidikan di Sumba. Ceritakan minat Anda, dan tim kami akan membantu menemukan kebutuhan sekolah atau kemitraan yang sesuai.",
+          "Explore ways to support education in Sumba. Tell us what interests you, and our team will help you find a school need or partnership that fits."
+        )}>Jelajahi berbagai cara mendukung pendidikan di Sumba. Ceritakan minat Anda, dan tim kami akan membantu menemukan kebutuhan sekolah atau kemitraan yang sesuai.</p>
       </div>
     </div>
   </section>
@@ -987,7 +976,6 @@ ${TIERS.map(
           ).trim()}
           <div class="card__body">
             <p class="card__title" ${bi(tier.id, tier.en)}>${esc(tier.id)}</p>
-            <p class="card__status" ${bi(tier.costId, tier.costEn)}>${esc(tier.costId)}</p>
             <p class="card__need" ${bi(tier.descId, tier.descEn)}>${esc(tier.descId)}</p>
           </div>
         </div>`
@@ -1001,39 +989,29 @@ ${TIERS.map(
       <div class="grid-2">
         <div class="prose">
           <p class="label muted" ${bi("Cara memberi", "How giving works")}>Cara memberi</p>
-          <h2 ${bi(
-            "Transfer langsung ke rekening yayasan.",
-            "A direct transfer to the foundation."
-          )}>Transfer langsung ke rekening yayasan.</h2>
+          <h2 ${bi("Mulai dengan percakapan.", "Start with a conversation.")}>Mulai dengan percakapan.</h2>
           <p ${bi(
-            "Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.",
-            "We do not yet use an online payment gateway. Giving is by bank transfer, QRIS, Wise or PayPal, straight into an account held in the name of Yayasan Harapan Sumba."
-          )}>Kami belum menggunakan gerbang pembayaran daring. Pemberian dilakukan melalui transfer bank, QRIS, Wise atau PayPal, langsung ke rekening atas nama Yayasan Harapan Sumba.</p>
+            "Ceritakan sekolah atau bentuk dukungan yang Anda minati. Tim kami akan membahas kebutuhan saat ini dan cara yang sesuai untuk membantu.",
+            "Tell us which school or type of support interests you. Our team will discuss the current need and suitable ways to help."
+          )}>Ceritakan sekolah atau bentuk dukungan yang Anda minati. Tim kami akan membahas kebutuhan saat ini dan cara yang sesuai untuk membantu.</p>
           <p ${bi(
-            "Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda.",
-            "After transferring, send us the receipt and you will have a formal acknowledgement within three working days, along with the name of the school your gift went to."
-          )}>Setelah transfer, kirimkan bukti kepada kami dan Anda akan menerima tanda terima resmi dalam tiga hari kerja, beserta nama sekolah yang menerima dukungan Anda.</p>
+            "Rincian pembayaran belum ditampilkan di sini. Hubungi tim kami untuk memastikan langkah berikutnya sebelum melakukan transfer.",
+            "Payment details are not published here yet. Contact the team to confirm the next steps before making a transfer."
+          )}>Rincian pembayaran belum ditampilkan di sini. Hubungi tim kami untuk memastikan langkah berikutnya sebelum melakukan transfer.</p>
+          <p><a href="kontak.html" ${bi("Tanyakan cara mendukung sekolah", "Ask about supporting a school")}>Tanyakan cara mendukung sekolah</a></p>
         </div>
         <dl class="facts">
           <div class="facts__row">
-            <dt class="facts__key" ${bi("Nama rekening", "Account name")}>Nama rekening</dt>
-            <dd class="facts__value">Yayasan Harapan Sumba</dd>
+            <dt class="facts__key" ${bi("Minat Anda", "Your interest")}>Minat Anda</dt>
+            <dd class="facts__value" ${bi("Sekolah atau bentuk dukungan", "A school or type of support")}>Sekolah atau bentuk dukungan</dd>
           </div>
           <div class="facts__row">
-            <dt class="facts__key" ${bi("Bank", "Bank")}>Bank</dt>
-            <dd class="facts__value" ${bi("CONTOH — belum diisi", "PLACEHOLDER — not yet supplied")}>CONTOH — belum diisi</dd>
+            <dt class="facts__key" ${bi("Percakapan", "The conversation")}>Percakapan</dt>
+            <dd class="facts__value" ${bi("Kebutuhan saat ini dan cara membantu", "Current needs and ways to help")}>Kebutuhan saat ini dan cara membantu</dd>
           </div>
           <div class="facts__row">
-            <dt class="facts__key" ${bi("Nomor rekening", "Account number")}>Nomor rekening</dt>
-            <dd class="facts__value" ${bi("CONTOH — belum diisi", "PLACEHOLDER — not yet supplied")}>CONTOH — belum diisi</dd>
-          </div>
-          <div class="facts__row">
-            <dt class="facts__key" ${bi("Internasional", "International")}>Internasional</dt>
-            <dd class="facts__value">Wise / PayPal</dd>
-          </div>
-          <div class="facts__row">
-            <dt class="facts__key" ${bi("Tanda terima", "Acknowledgement")}>Tanda terima</dt>
-            <dd class="facts__value" ${bi("3 hari kerja", "3 working days")}>3 hari kerja</dd>
+            <dt class="facts__key" ${bi("Langkah berikutnya", "Next steps")}>Langkah berikutnya</dt>
+            <dd class="facts__value" ${bi("Dikonfirmasi langsung bersama tim kami", "Confirmed directly with our team")}>Dikonfirmasi langsung bersama tim kami</dd>
           </div>
         </dl>
       </div>
@@ -1067,7 +1045,7 @@ ${TIERS.map(
       </div>
     </div>
   </section>
-${NEXT_STEP}`,
+${NEXT_STEP.replace(/\s*<a class="btn btn--secondary"[\s\S]*?<\/a>/, "")}`,
 });
 
 /* Contact ---------------------------------------------------------------- */

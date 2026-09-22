@@ -1,27 +1,17 @@
 {{-- resources/views/pages/give.blade.php --}}
-{{-- Spine per design spec §5 (rewritten 2026-09-17, commit dc06ca3):
-     Hero → Directory (sponsorship tiers) → Ways (corporate, church,
-     volunteer) → Detail panel (how giving works) → Next step.
-
-     All five sections come from the shared component set; this page adds
-     no markup of its own. Directory now takes an optional `cards="tier"`
-     prop (see components/sections/directory.blade.php) to render
-     <x-cards.tier> instead of <x-cards.school>. Ways is a new section
-     (components/sections/ways.blade.php). "How giving works" is the
-     current-need component's broadened job — see spec §5, "Detail panel".
-
-     Placeholder discipline: bank and account-number values read
-     "CONTOH — belum diisi" / "PLACEHOLDER — not yet supplied"
-     (give.how.placeholder), never a plausible-looking fake — spec §12
-     lists the real legal entity name, registration number and bank
-     details as still outstanding (owner: Reynold). --}}
+{{-- The support journey is enquiry-led until the ministry supplies verified
+     payment details. The shared sections still follow the spec §5 spine. --}}
 @php($heroImage = \App\ViewModels\PlaceholderImage::make(1600, 900, __('give.hero.heading')))
 
 <x-layouts.site :title="__('give.hero.heading').' — Hope for Sumba'">
   <x-sections.hero
     :heading="__('give.hero.heading')"
     :subhead="__('give.hero.body')"
-    :image="$heroImage" />
+    :image="$heroImage">
+    <x-slot:actions>
+      <x-button :href="\App\Support\LocalizedUrl::contact()">{{ __('give.enquiry.cta') }}</x-button>
+    </x-slot:actions>
+  </x-sections.hero>
 
   <x-sections.directory
     cards="tier"
@@ -42,19 +32,17 @@
     :heading="__('give.how.heading')"
     :status="__('give.how.status')"
     :facts="[
-        ['key' => __('give.how.account_name_key'), 'value' => 'Yayasan Harapan Sumba'],
-        ['key' => __('give.how.bank_key'), 'value' => __('give.how.placeholder')],
-        ['key' => __('give.how.account_number_key'), 'value' => __('give.how.placeholder')],
-        ['key' => __('give.how.international_key'), 'value' => 'Wise / PayPal'],
-        ['key' => __('give.how.acknowledgement_key'), 'value' => __('give.how.acknowledgement_value')],
+        ['key' => __('give.how.interest_key'), 'value' => __('give.how.interest_value')],
+        ['key' => __('give.how.discuss_key'), 'value' => __('give.how.discuss_value')],
+        ['key' => __('give.how.next_key'), 'value' => __('give.how.next_value')],
     ]">
     <p>{{ __('give.how.body1') }}</p>
     <p class="mt-4">{{ __('give.how.body2') }}</p>
   </x-sections.current-need>
 
   <x-sections.next-step
-    :heading="__('nextstep.heading')"
-    :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
-    :giveHref="route(app()->getLocale().'.give')" />
+    :heading="__('give.enquiry.heading')"
+    :body="__('give.enquiry.body')"
+    :partnerLabel="__('give.enquiry.cta')"
+    :partnerHref="\App\Support\LocalizedUrl::contact()" />
 </x-layouts.site>

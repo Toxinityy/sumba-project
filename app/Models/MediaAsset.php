@@ -80,6 +80,13 @@ class MediaAsset extends Model
             if ($asset->consent_id === null) {
                 throw new DomainException('An asset depicting a minor requires a consent record (spec §9).');
             }
+
+            // Existing published content cannot acquire an unconsented image.
+            $owner = $asset->attachable;
+            if ($owner?->published_at !== null && $owner->published_at->lessThanOrEqualTo(now())
+                && ! $asset->isPublishable()) {
+                throw new DomainException('A published record cannot use media without current web consent (spec §9).');
+            }
         });
     }
 
@@ -135,6 +142,13 @@ class MediaAsset extends Model
         $query->where('role', $role);
     }
 
+    public function scopeUnpublishable(Builder $query): void
+    {
+        $query->where('depicts_minor', true)
+            ->whereDoesntHave('consent', fn (Builder $consent) => $consent
+                ->where('subject_is_minor', true)->coveringWebUse());
+    }
+
     /**
      * The publishing gate (§9): an asset depicting a minor goes live only
      * behind valid, web-scoped, unwithdrawn consent. Filament blocks on this
@@ -142,6 +156,12 @@ class MediaAsset extends Model
      */
     public function isPublishable(): bool
     {
-        return ! $this->depicts_minor || ($this->consent?->coversWebUse() ?? false);
+        if (! $this->depicts_minor) {
+            return true;
+        }
+
+        $consent = $this->consent()->first();
+
+        return $consent?->subject_is_minor && $consent->coversWebUse();
     }
 }

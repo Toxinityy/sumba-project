@@ -10,8 +10,10 @@
   and from the footer. Their routes stay alive and nothing 404s; they are
   simply not the four things a first-time visitor has to choose between.
 
-  What is left is the four destinations that are genuinely destinations:
-  the schools directory, the stories index, how to get involved, and contact.
+  What is left is Home plus the three destinations that are genuinely
+  destinations: the schools directory, the stories index, and how to get
+  involved. Contact is no longer a page: its form closes the landing page
+  (/id#kontak), reached from the Partner button beside the switcher.
 
   Opaque, not frosted: a translucent bar sitting over the landing page's dark
   chapter darkened its own ground enough to pull the accent wordmark to 3.86:1.
@@ -33,7 +35,7 @@
     {{-- No fixed widths: Indonesian labels run 15-20% longer than English and
          must not be clipped or forced to wrap mid-word. --}}
     <nav class="flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="{{ __('nav.label') }}">
-      @foreach (['schools.index', 'stories.index', 'give', 'contact'] as $name)
+      @foreach (['home', 'schools.index', 'stories.index', 'give'] as $name)
         <a href="{{ route("{$locale}.{$name}") }}"
            class="flex min-h-11 items-center px-1 text-[15px] font-semibold text-ink-muted hover:text-ink"
            @if (request()->routeIs("{$locale}.{$name}")) aria-current="page" @endif>
@@ -48,7 +50,7 @@
       {{-- The primary CTA, present from the first screen on wide viewports
            only: below that the four nav items plus the language switcher
            already fill the bar, and the hero carries the same action. --}}
-      <a href="{{ route("{$locale}.contact") }}"
+      <a href="{{ \App\Support\LocalizedUrl::contact() }}"
          class="hidden min-h-11 items-center justify-center rounded-pill bg-accent px-4 text-[14px] font-bold text-accent-ink hover:bg-accent-strong xl:inline-flex">
         {{ __('cta.partner') }}
       </a>

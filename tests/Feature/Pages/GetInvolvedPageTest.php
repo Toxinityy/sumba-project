@@ -6,9 +6,27 @@ it('renders the Get Involved page in both locales', function () {
     $this->get('/en/get-involved')->assertOk()->assertSee('A classroom');
 });
 
-it('shows an approximate USD figure only on the English locale', function () {
-    $this->get('/id/dukung')->assertDontSee('approx. USD', escape: false);
-    $this->get('/en/get-involved')->assertSee('approx. USD 11,000', escape: false);
+it('describes support without displaying monetary figures in either locale', function () {
+    foreach (['/id/dukung', '/en/get-involved'] as $url) {
+        $html = $this->get($url)->assertOk()->getContent();
+        expect($html)->not->toMatch('/(?:Rp\s*[\d.]|USD\s*[\d,])/');
+    }
+});
+
+it('offers an enquiry instead of unavailable payment instructions or a closing self-link', function () {
+    foreach (['id' => '/id/dukung', 'en' => '/en/get-involved'] as $locale => $url) {
+        $html = $this->get($url)->assertOk()->getContent();
+        foreach (['PLACEHOLDER', 'CONTOH', 'Wise', 'PayPal'] as $missingDetail) {
+            expect($html)->not->toContain($missingDetail);
+        }
+        $dom = new DOMDocument;
+        @$dom->loadHTML($html);
+        $xpath = new DOMXPath($dom);
+        $actions = $xpath->query('//main/section[last()]//a');
+        expect($actions)->toHaveCount(1);
+        expect($actions->item(0)->getAttribute('href'))
+            ->toBe(url("/{$locale}").($locale === 'id' ? '#kontak' : '#contact'));
+    }
 });
 
 // MINOR fix: this was named "shows all six tiers" but only asserted one

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Support\LocalizedUrl;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +24,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->guardAgainstUnconfiguredMailInProduction();
+
+        RateLimiter::for('contact', fn (Request $request) => Limit::perMinute(5)
+            ->by($request->ip())
+            ->response(function (Request $request, array $headers) {
+                // Throttle runs before SetLocale; read the route's locale explicitly.
+                $locale = $request->route('locale');
+                $message = __('contact.form.throttled', ['seconds' => $headers['Retry-After']], $locale);
+
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => $message], 429, $headers);
+                }
+
+                return redirect(LocalizedUrl::contact($locale))
+                    ->withHeaders($headers)
+                    ->withErrors(['contact' => $message])
+                    ->withInput(array_filter($request->only(['name', 'organisation', 'email', 'message']), 'is_string'));
+            }));
     }
 
     /**

@@ -1,13 +1,11 @@
 # Add in cPanel under "Cron Jobs", running every minute.
 #
 # Shared hosting gives no shell access, so there is no supervisor and no
-# long-running `queue:work` daemon. --stop-when-empty makes the worker drain
-# the queue and exit, which is exactly what a per-minute cron wants: no
-# overlapping workers, no process that dies silently and is never restarted.
-# --max-time=50 stops a worker that is still processing before the next
-# minute's cron fires, so two workers never run at once.
+# long-running `queue:work` daemon. --stop-when-empty drains and exits.
+# flock prevents the next minute's cron from starting a second worker while
+# the first is still processing a slow job; --max-time is checked between jobs.
 #
-# Replace PHP_PATH and USERNAME with the host's real values (check the
-# PHP version cPanel's "MultiPHP Manager" uses, and the account's home path).
+# Replace USERNAME, example.org and the PHP path with the host's real values. Confirm that
+# /usr/bin/flock exists on the host before enabling this cron entry.
 
-* * * * * /usr/local/bin/php /home/USERNAME/app/artisan queue:work --stop-when-empty --max-time=50 >> /dev/null 2>&1
+* * * * * /usr/bin/flock -n /home/USERNAME/example.org/storage/framework/queue-worker.lock /usr/local/bin/php /home/USERNAME/example.org/artisan queue:work --stop-when-empty --max-time=50 >> /dev/null 2>&1

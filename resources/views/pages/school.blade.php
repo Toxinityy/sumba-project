@@ -10,6 +10,7 @@
     :image="$school['image']" />
 
   <x-sections.lede :label="__('school.profile_label')" surface="raised">
+    <x-translation-note :from="$school['_fallback_locale'] ?? null" />
     <p>{{ $school['lede'] }}</p>
   </x-sections.lede>
 
@@ -32,6 +33,6 @@
   <x-sections.next-step
     :heading="__('nextstep.heading')"
     :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
+    :partnerHref="\App\Support\LocalizedUrl::contact()"
     :giveHref="route(app()->getLocale().'.give')" />
 </x-layouts.site>

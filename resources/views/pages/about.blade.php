@@ -54,6 +54,6 @@
   <x-sections.next-step
     :heading="__('nextstep.heading')"
     :body="__('nextstep.body')"
-    :partnerHref="route(app()->getLocale().'.contact')"
+    :partnerHref="\App\Support\LocalizedUrl::contact()"
     :giveHref="route(app()->getLocale().'.give')" />
 </x-layouts.site>
