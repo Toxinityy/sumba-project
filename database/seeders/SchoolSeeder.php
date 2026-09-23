@@ -55,10 +55,14 @@ class SchoolSeeder extends Seeder
                     'title' => ['id' => $person['name'], 'en' => $person['name']],
                     'kind' => PostKind::Profile,
                     'subject_given_name' => $given,
-                    'subject_family_name' => $family,
                     'subject_is_minor' => false,
                     'published_at' => now(),
                 ]);
+
+                // Adult surnames live in their own table (spec §9).
+                if (filled($family)) {
+                    $post->subjectSurname()->create(['family_name' => $family]);
+                }
 
                 self::attach($post, 'portrait', $person);
             }

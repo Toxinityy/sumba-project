@@ -27,7 +27,9 @@ it('seeds the three stories and two photo essays', function () {
  | and the quote would drift apart the first time someone edited one.
  */
 it('fills out the head teacher instead of duplicating her', function () {
-    $matches = Post::where('subject_given_name', 'Maria')->where('subject_family_name', 'Bulu')->get();
+    $matches = Post::where('subject_given_name', 'Maria')
+        ->whereHas('subjectSurname', fn ($surname) => $surname->where('family_name', 'Bulu'))
+        ->get();
 
     expect($matches)->toHaveCount(1);
 

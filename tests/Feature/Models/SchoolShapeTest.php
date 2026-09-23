@@ -44,8 +44,10 @@ function fullSchool(): School
     attach($project, 'after', ['caption' => ['id' => 'Agustus 2026 — sesudah', 'en' => 'August 2026 — after']]);
 
     $teacher = Post::factory()->aboutAnAdult()->for($school, 'about')->create([
-        'subject_given_name' => 'Maria', 'subject_family_name' => 'Bulu',
+        'subject_given_name' => 'Maria',
     ]);
+    // aboutAnAdult() creates a random surname row; this one is asserted on.
+    $teacher->subjectSurname()->update(['family_name' => 'Bulu']);
     attach($teacher, 'portrait');
 
     return $school;

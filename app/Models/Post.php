@@ -7,17 +7,16 @@ use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\Publishable;
 use App\Models\Enums\PostKind;
 use Database\Factories\PostFactory;
-use DomainException;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
     'slug', 'title', 'kind', 'hook', 'body', 'quote', 'subject_given_name',
-    'subject_family_name', 'subject_honorific', 'subject_is_minor',
-    'subject_role', 'published_at',
+    'subject_honorific', 'subject_is_minor', 'subject_role', 'published_at',
 ])]
 class Post extends Model
 {
@@ -33,17 +32,6 @@ class Post extends Model
             'subject_is_minor' => 'boolean',
             'published_at' => 'datetime',
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (self $post) {
-            // First names only for minors (§9). Enforced on the write path
-            // because "the editor will remember" is not a control.
-            if ($post->subject_is_minor && filled($post->subject_family_name)) {
-                throw new DomainException('A post about a minor cannot carry a surname (spec §9).');
-            }
-        });
     }
 
     /**
@@ -97,6 +85,17 @@ class Post extends Model
         return $this->morphTo();
     }
 
+    /**
+     * The adult subject's family name, if there is one. Always null for a
+     * minor — not by convention but because the composite foreign key on
+     * subject_surnames cannot reference a post whose subject_is_minor is
+     * true (spec §9, migration 2026_09_22_000002).
+     */
+    public function subjectSurname(): HasOne
+    {
+        return $this->hasOne(SubjectSurname::class);
+    }
+
     public function scopeOfKind(Builder $query, PostKind $kind): void
     {
         $query->where('kind', $kind);
@@ -119,7 +118,7 @@ class Post extends Model
             // alone (§9), even if one was somehow stored.
             $this->subject_is_minor ? null : $this->subject_honorific,
             $this->subject_given_name,
-            $this->subject_is_minor ? null : $this->subject_family_name,
+            $this->subject_is_minor ? null : $this->subjectSurname?->family_name,
         ]))) ?: null;
     }
 }

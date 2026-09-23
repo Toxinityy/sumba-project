@@ -33,7 +33,6 @@ class PostFactory extends Factory
         return $this->state([
             'kind' => PostKind::Profile,
             'subject_given_name' => fake()->firstName(),
-            'subject_family_name' => null,
             'subject_is_minor' => true,
         ]);
     }
@@ -44,10 +43,13 @@ class PostFactory extends Factory
         return $this->state([
             'kind' => PostKind::Profile,
             'subject_given_name' => fake()->firstName(),
-            'subject_family_name' => fake()->lastName(),
             'subject_is_minor' => false,
             'subject_role' => ['id' => 'Kepala sekolah', 'en' => 'Head teacher'],
-        ]);
+            // The surname is a row in its own table now (spec §9), so it is
+            // created after the post exists rather than set as an attribute.
+        ])->afterCreating(fn (Post $post) => $post->subjectSurname()->create([
+            'family_name' => fake()->lastName(),
+        ]));
     }
 
     public function draft(): static

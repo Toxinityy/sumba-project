@@ -18,7 +18,6 @@ function profilePost(array $overrides = []): Post
         'body' => ['id' => '<p>Rambu berangkat pukul lima pagi.</p>', 'en' => '<p>Rambu leaves at five in the morning.</p>'],
         'quote' => ['id' => '“Saya ingin jadi guru.”', 'en' => '“I want to be a teacher.”'],
         'subject_given_name' => 'Rambu',
-        'subject_family_name' => null,
         // Set on purpose: a minor is a given name alone, so neither an
         // honorific nor a surname may reach a page, whatever is stored.
         'subject_honorific' => 'Ibu',
@@ -71,10 +70,11 @@ it('never lets a quote carry a minor past their given name', function () {
 it('carries an honorific for an adult, and none for a child', function () {
     $adult = profilePost([
         'subject_given_name' => 'Maria',
-        'subject_family_name' => 'Bulu',
         'subject_honorific' => 'Ibu',
         'subject_is_minor' => false,
     ]);
+    // Adult surnames are their own table now (spec §9).
+    $adult->subjectSurname()->create(['family_name' => 'Bulu']);
 
     expect($adult->subjectName())->toBe('Ibu Maria Bulu')
         ->and(profilePost()->subjectName())->toBe('Rambu');
@@ -85,7 +85,6 @@ it('knows photo essays as a kind, shaped 3:2', function () {
         'kind' => PostKind::PhotoEssay,
         'title' => ['id' => 'Panen bersama di Karuni', 'en' => 'A shared harvest in Karuni'],
         'subject_given_name' => null,
-        'subject_family_name' => null,
         'subject_is_minor' => false,
     ]);
 

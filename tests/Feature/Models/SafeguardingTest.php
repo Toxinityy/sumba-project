@@ -10,20 +10,21 @@ use App\Models\Consent;
 use App\Models\MediaAsset;
 use App\Models\Post;
 use App\Models\School;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 uses(RefreshDatabase::class);
 
-it('refuses to store a surname on a post about a minor', function () {
-    Post::factory()->aboutAMinor()->create(['subject_family_name' => 'Wulang']);
-})->throws(DomainException::class);
+// The Eloquent guard that used to sit here is gone with the column it
+// guarded (2026_09_22_000002). Its replacement is the schema-level pair at
+// the bottom of this file, which a raw INSERT or UPDATE cannot walk past.
 
 it('allows an adult subject to be named in full with a role', function () {
     $post = Post::factory()->aboutAnAdult()->create();
 
-    expect($post->subjectName())->toContain($post->subject_family_name);
+    expect($post->subjectName())->toContain($post->subjectSurname->family_name);
 });
 
 it('never appends a surname when the subject is a minor', function () {
@@ -193,5 +194,66 @@ it('cannot store a surname on a media asset even by raw insert', function () {
 
     expect(fn () => DB::table('media_assets')
         ->insert($row + ['subject_family_name' => 'Wulang']))
-        ->toThrow(Illuminate\Database\QueryException::class);
+        ->toThrow(QueryException::class);
+});
+
+/*
+ | The `posts` half. Unlike media_assets this column IS populated — adults on
+ | this site legitimately have surnames (PostSeeder writes "Bulu", SchoolSeeder
+ | writes one per portrait) — so the rows move to `subject_surnames` rather
+ | than being dropped.
+ |
+ | The composite foreign key (post_id, subject_is_minor) -> posts(id,
+ | subject_is_minor) is what makes it structural: the child table's
+ | subject_is_minor is always false, so a surname row can only ever reference
+ | an adult post. Both directions of the violation are covered below, and each
+ | carries a control insert/update that must succeed — without one, a case can
+ | pass because of an unrelated NOT NULL column rather than the constraint
+ | under test. That is not hypothetical; it happened to the media_assets case.
+ */
+it('has no surname column on posts at all', function () {
+    expect(Schema::hasColumn('posts', 'subject_family_name'))->toBeFalse();
+});
+
+it('cannot attach a surname to a minor subject by raw insert', function () {
+    $adult = Post::factory()->create(['subject_is_minor' => false]);
+    $minor = Post::factory()->create(['subject_is_minor' => true]);
+
+    $row = fn (Post $post) => [
+        'post_id' => $post->id, 'subject_is_minor' => false,
+        'family_name' => 'Wulang', 'created_at' => now(), 'updated_at' => now(),
+    ];
+
+    // Control: the identical row against an adult inserts cleanly.
+    DB::table('subject_surnames')->insert($row($adult));
+
+    expect(fn () => DB::table('subject_surnames')->insert($row($minor)))
+        ->toThrow(QueryException::class);
+});
+
+it('cannot turn an adult who has a surname into a minor by raw update', function () {
+    $surnamed = Post::factory()->create(['subject_is_minor' => false]);
+    $surnamed->subjectSurname()->create(['family_name' => 'Bulu']);
+
+    $plain = Post::factory()->create(['subject_is_minor' => false]);
+
+    // Control: the same raw update on an adult with no surname row succeeds,
+    // so the case below is failing on the constraint and not on the UPDATE.
+    DB::table('posts')->where('id', $plain->id)->update(['subject_is_minor' => true]);
+    expect($plain->fresh()->subject_is_minor)->toBeTrue();
+
+    expect(fn () => DB::table('posts')->where('id', $surnamed->id)
+        ->update(['subject_is_minor' => true]))
+        ->toThrow(QueryException::class);
+});
+
+it('still renders an adult subject name in full, unchanged', function () {
+    $post = Post::factory()->create([
+        'subject_is_minor' => false,
+        'subject_given_name' => 'Maria',
+        'subject_honorific' => 'Ibu',
+    ]);
+    $post->subjectSurname()->create(['family_name' => 'Bulu']);
+
+    expect($post->fresh()->subjectName())->toBe('Ibu Maria Bulu');
 });

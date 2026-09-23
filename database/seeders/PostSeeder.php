@@ -30,20 +30,32 @@ class PostSeeder extends Seeder
         foreach (self::stories() as $story) {
             $media = $story['media'];
             $match = $story['match'] ?? null;
-            unset($story['media'], $story['match']);
+
+            // An adult subject's surname is a row in subject_surnames now, not
+            // a column on posts (spec §9), so it comes out of the attribute
+            // array the same way media and match do.
+            $surname = $story['subject_family_name'] ?? null;
+            unset($story['media'], $story['match'], $story['subject_family_name']);
 
             // Match on the subject's stored name rather than the slug: the
             // school seeder slugged her "maria-bulu", the story is
             // "ibu-maria-bulu", and the slug is exactly what this changes.
             $post = $match === null ? null : Post::query()
                 ->where('subject_given_name', $match[0])
-                ->where('subject_family_name', $match[1])
+                ->whereHas('subjectSurname', fn ($query) => $query
+                    ->where('family_name', $match[1]))
                 ->first();
 
             if ($post === null) {
                 $post = Post::create($story);
             } else {
                 $post->update($story);
+            }
+
+            // updateOrCreate so a reseed does not duplicate the row; the
+            // database would refuse it anyway, since post_id is unique.
+            if (filled($surname)) {
+                $post->subjectSurname()->updateOrCreate([], ['family_name' => $surname]);
             }
 
             if ($post->media()->count() === 0) {
@@ -113,7 +125,7 @@ class PostSeeder extends Seeder
                 ],
                 'body' => [
                     'id' => '<p>Ibu Maria mengajar di Kupang selama sebelas tahun sebelum sebuah surat dari desanya sendiri mengubah rencananya: TK satu-satunya di Karuni kehilangan kepala sekolahnya, dan tidak ada pengganti.</p><p>Ia pulang tahun 2019. Sejak itu jumlah murid TK Harapan Karuni naik dari dua puluh menjadi enam puluh, dan ruang ketiga yang sedang dibangun adalah idenya sendiri.</p>',
-                    'en' => "<p>Ibu Maria taught in Kupang for eleven years before a letter from her own village changed her plans: the only kindergarten in Karuni had lost its head teacher, with no replacement in sight.</p><p>She came home in 2019. Since then, enrolment at TK Harapan Karuni has grown from twenty pupils to sixty, and the third room now under construction was her own idea.</p>",
+                    'en' => '<p>Ibu Maria taught in Kupang for eleven years before a letter from her own village changed her plans: the only kindergarten in Karuni had lost its head teacher, with no replacement in sight.</p><p>She came home in 2019. Since then, enrolment at TK Harapan Karuni has grown from twenty pupils to sixty, and the third room now under construction was her own idea.</p>',
                 ],
                 'quote' => [
                     'id' => '“Anak-anak di sini sama pintarnya. Mereka hanya butuh ruang.”',
