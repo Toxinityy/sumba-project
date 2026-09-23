@@ -535,7 +535,7 @@ Decision 2 above chooses separate storage over a CHECK constraint because no
 host exists to prove a CHECK would be enforced. Record the reasoning where the
 next person looks, and record what would change it.
 
-- [ ] **Step 1: Confirm the local driver, so the record is not guesswork.**
+- [x] **Step 1: Confirm the local driver, so the record is not guesswork.**
 
 ```bash
 php artisan tinker --execute="dump(DB::connection()->getDriverName(), DB::connection()->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION));"
@@ -545,7 +545,7 @@ Expected: `sqlite` and its version. That is the point — **the test suite runs
 on SQLite and proves nothing about MySQL's CHECK behaviour**, which is half of
 why the constraint route is not chosen today.
 
-- [ ] **Step 2: Write the decision into `docs/data-contract.md`,** under a new
+- [x] **Step 2: Write the decision into `docs/data-contract.md`,** under a new
       "Subject identity" heading:
       - minor-capable tables carry no family-name column at all (§9);
       - adult family names live in one separate table;
@@ -553,10 +553,10 @@ why the constraint route is not chosen today.
         which point a CHECK constraint becomes a defensible belt alongside the
         braces, not instead of them.
 
-- [ ] **Step 3: Add one line to `docs/deployment.md`'s open questions:** the
+- [x] **Step 3: Add one line to `docs/deployment.md`'s open questions:** the
       production MySQL version is needed, and name what it decides.
 
-- [ ] **Step 4: Show D the new shape before writing the migration.** D's Post
+- [x] **Step 4: Show D the new shape before writing the migration.** D's Post
       resource form has a surname field on it by this afternoon; if it is
       pointed at a column B is about to drop, D writes it twice.
 
@@ -577,7 +577,7 @@ to be guarded against at `MediaAsset.php:73`.
 Dropping it satisfies §9 exactly — *"no surname field at all"* — with no
 constraint, no separate table and no host dependency.
 
-- [ ] **Step 1: Confirm the column really is unwritten before dropping it.**
+- [x] **Step 1: Confirm the column really is unwritten before dropping it.**
 
 ```bash
 grep -rn "subject_family_name" --include=*.php app database tests | grep -i media
@@ -588,7 +588,7 @@ Expected: only the `#[Fillable]` list, the guard at line 73, the factory's
 column has a user this plan did not find, and the task becomes the `posts`
 treatment in B3 instead.
 
-- [ ] **Step 2: Write the failing test.**
+- [x] **Step 2: Write the failing test.**
 
 ```php
 // tests/Feature/Models/SafeguardingTest.php
@@ -613,7 +613,7 @@ it('cannot store a surname on a media asset even by raw insert', function () {
 The second test is the one that matters. It is the review's *"test a raw
 update"* — it bypasses Eloquent entirely, which is precisely the hole.
 
-- [ ] **Step 3: Run it and watch both fail.**
+- [x] **Step 3: Run it and watch both fail.**
 
 ```bash
 php artisan test tests/Feature/Models/SafeguardingTest.php
@@ -622,7 +622,7 @@ php artisan test tests/Feature/Models/SafeguardingTest.php
 Expected: the first fails because the column exists; the second fails because
 the raw insert **succeeds**. That successful insert is the P0, reproduced.
 
-- [ ] **Step 4: Write the migration.**
+- [x] **Step 4: Write the migration.**
 
 ```php
 // database/migrations/2026_09_22_000001_drop_media_asset_surnames.php
@@ -644,7 +644,7 @@ public function down(): void
 }
 ```
 
-- [ ] **Step 5: Remove the column's traces from the model and factory.**
+- [x] **Step 5: Remove the column's traces from the model and factory.**
 
 Delete `'subject_family_name'` from the `#[Fillable]` attribute at
 `MediaAsset.php:32`, delete the guard block at lines 72–75, and delete the
@@ -654,7 +654,7 @@ Delete `'subject_family_name'` from the `#[Fillable]` attribute at
 surname branch goes. Update the surviving comment so it no longer describes a
 column that is gone.
 
-- [ ] **Step 6: Run the migration and the tests.**
+- [x] **Step 6: Run the migration and the tests.**
 
 ```bash
 php artisan migrate
@@ -664,7 +664,7 @@ php artisan test tests/Feature/Models/
 Expected: both new cases pass; the existing safeguarding, factory and
 relationship cases still pass.
 
-- [ ] **Step 7: Commit, and tell C that `MediaAsset.php` is now theirs.**
+- [x] **Step 7: Commit, and tell C that `MediaAsset.php` is now theirs.**
 
 ```bash
 git add database/migrations/2026_09_22_000001_drop_media_asset_surnames.php \
@@ -706,7 +706,7 @@ deliberate: `Post.php:60`, `Post.php:75` and `School.php:90` all call it, and
 none of them should need editing. If a caller breaks, the extraction went
 wrong.
 
-- [ ] **Step 1: Write the failing tests.**
+- [x] **Step 1: Write the failing tests.**
 
 ```php
 // tests/Feature/Models/SafeguardingTest.php
@@ -748,7 +748,7 @@ subject_is_minor = 1` on a row that already has a surname is exactly the
 "bulk/raw update" the review named, and it must fail at the database, not in a
 model event.
 
-- [ ] **Step 2: Run them and watch them fail.**
+- [x] **Step 2: Run them and watch them fail.**
 
 ```bash
 php artisan test tests/Feature/Models/SafeguardingTest.php --filter=surname
@@ -758,7 +758,7 @@ Expected: every case fails, and the raw-insert and raw-update cases fail by
 **succeeding** rather than throwing. Note the exact output — it is the P0's
 reproduction and belongs in the end-of-day record.
 
-- [ ] **Step 3: Write the migration.** Three phases in one `up()`, in order:
+- [x] **Step 3: Write the migration.** Three phases in one `up()`, in order:
 
 ```php
 public function up(): void
@@ -824,7 +824,7 @@ public function down(): void
 }
 ```
 
-- [ ] **Step 4: Count what the migration would discard, before running it.**
+- [x] **Step 4: Count what the migration would discard, before running it.**
 
 ```bash
 php artisan tinker --execute="dump(DB::table('posts')->whereNotNull('subject_family_name')->where('subject_family_name','!=','')->where('subject_is_minor',true)->count());"
@@ -834,13 +834,13 @@ Expected: `0`. Anything above zero is a live §9 violation already in the data �
 **stop, name the rows in the end-of-day record, and raise it** before a
 migration silently deletes evidence of it.
 
-- [ ] **Step 5: Enable foreign keys in the test connection.** SQLite ignores
+- [x] **Step 5: Enable foreign keys in the test connection.** SQLite ignores
       foreign keys unless asked. Check `config/database.php`'s `sqlite` block
       for `'foreign_key_constraints' => true`. **If it is off, the three raw-write
       tests will pass locally and the constraint will do nothing** — a false
       green on a P0 is worse than a red.
 
-- [ ] **Step 6: Implement the model side.**
+- [x] **Step 6: Implement the model side.**
 
 ```php
 // app/Models/SubjectSurname.php
@@ -857,7 +857,7 @@ line 122 from `$this->subject_is_minor ? null : $this->subject_family_name` to
 `$this->subjectSurname?->family_name`. The minor branch is no longer needed —
 a minor cannot have a surname row at all.
 
-- [ ] **Step 7: Update the factory and both seeders.**
+- [x] **Step 7: Update the factory and both seeders.**
 
 `PostFactory.php:36` and `:47` set `subject_family_name`. Replace the `adult()`
 state's surname with an `afterCreating` that creates the `SubjectSurname` row.
@@ -865,7 +865,7 @@ state's surname with an `afterCreating` that creates the `SubjectSurname` row.
 that lookup against the new relation. `PostSeeder.php:123` and
 `SchoolSeeder.php:58` write surnames; both move to the relation.
 
-- [ ] **Step 8: Migrate fresh, seed, and run the model suite.**
+- [x] **Step 8: Migrate fresh, seed, and run the model suite.**
 
 ```bash
 php artisan migrate:fresh --seed
@@ -877,11 +877,11 @@ assertion still passes, and `School::toDetailArray()['people']` still carries
 names. **If a Blade template has to change, the extraction leaked** — stop and
 fix `subjectName()` instead.
 
-- [ ] **Step 9: Break it on purpose.** Drop the composite foreign key by hand,
+- [x] **Step 9: Break it on purpose.** Drop the composite foreign key by hand,
       rerun the raw-insert test, confirm it goes red. Restore. A foreign key
       that SQLite is quietly ignoring looks exactly like one that works.
 
-- [ ] **Step 10: Run the full suite, then commit.**
+- [x] **Step 10: Run the full suite, then commit.**
 
 ```bash
 php artisan test --compact
@@ -906,6 +906,86 @@ editorial changes**, which means updating only the structural fields, never the
 translated copy. If that distinction is not cleanly drawable, write "one-time
 import only" into `docs/deployment.md` instead and move on. Ten minutes either
 way; do not build a merge strategy today.
+
+---
+
+### Agent B verification record (completed 2026-09-22)
+
+**Ran on `design/spec-and-prototype` in the main checkout, not a worktree.**
+The lanes are being executed sequentially rather than by four concurrent
+agents, so the isolation the worktree buys was not needed and B's merge step
+disappears. The commits can still be cherry-picked onto
+`feature/data-layer-safeguarding` if the branch structure is wanted back.
+
+**B1.** Probed: **SQLite 3.40.0**, `foreign_key_constraints` on, `PRAGMA
+foreign_keys` = 1 — so the raw-write tests below are meaningful locally and
+still prove nothing about production MySQL. The decision and its revisit
+trigger are in **Subject identity** in `docs/data-contract.md`; the version
+question is on the staging checklist in `docs/deployment.md`, along with a
+warning to confirm the composite key survived the import, since a `mysqldump`
+restored with `FOREIGN_KEY_CHECKS=0` and never re-enabled enforces nothing and
+looks identical until someone writes a bad row.
+
+**B2.** `media_assets.subject_family_name` dropped. **The plan's own test code
+was counterfeit and this caught it:** the raw-insert case passed *before* the
+migration, because it threw on `media_assets.alt` being NOT NULL rather than
+on the surname column — it would have passed against either schema. The case
+now supplies `alt` and carries a **control insert** of the identical row
+without a surname, which must succeed. Every schema-level case B added since
+carries the same control, for the same reason.
+
+**B3.** 13 adult surname rows moved to `subject_surnames`; **0 minor rows
+carried a surname**, so nothing was discarded — counted before writing the
+migration, not after. The invariant is the composite foreign key
+`(post_id, subject_is_minor)` → `posts(id, subject_is_minor)` with the child
+column always false, so both directions fail at the database:
+
+| Attempt | Result |
+|---|---|
+| raw `INSERT` of a surname for a minor post | rejected |
+| raw `UPDATE posts SET subject_is_minor = 1` on a surnamed adult | rejected |
+| the same insert/update against an adult (control) | succeeds |
+
+Verified by **deleting the foreign key and watching both cases go red**, which
+is the only thing that distinguishes an enforced constraint from one the
+engine is parsing and ignoring.
+
+`Post::subjectName()` keeps its signature and returns `"Ibu Maria Bulu"`
+exactly as before, and **no Blade template changed** — the acceptance
+condition the plan set for the extraction not leaking.
+
+**B4 (the stretch task, done).** The premise was worth checking rather than
+trusting, and it was worse than the plan said: a second `SchoolSeeder` run
+turned 6 schools into 12 and 17 posts into 30, with duplicate projects,
+portraits, media and surname rows. **`PostSeeder` had the same bug** for its
+own stories — the plan only named `SchoolSeeder`. Both now skip a record whose
+Indonesian slug exists.
+
+Not `updateOrCreate` with "structural fields only", which the plan offered:
+nearly every School field is editorial copy, so that split is not cleanly
+drawable, a half-refresh is harder to reason about than an import, and
+overwriting the copy would destroy the editor's work. One test proves a
+reseed changes no counts (with a non-empty-database control), another edits a
+lede, reseeds, and proves the edit survives.
+
+**Final state: 353 tests, 1,395 assertions, green** (`php artisan test
+--parallel`, 36s). `migrate:fresh --seed` rebuilds clean and reseeding both
+seeders afterwards is a genuine no-op. `git diff --check` clean. Pint passes
+on every file B touched; it still reports `ordered_imports` on
+`app/Models/User.php`, which B did not touch.
+
+**Handoffs:**
+
+- **`app/Models/MediaAsset.php` is C's from B2's commit onward.** B has not
+  touched it since.
+- **D: there is no `subject_family_name` field to put on the Post form.** An
+  adult's surname is `$post->subjectSurname->family_name`, and the field must
+  be hidden or disabled when `subject_is_minor` is true — the database will
+  reject it either way, but a form that lets an editor type a child's surname
+  and then throws is a worse experience than one that never offers the box.
+- **B still owns `composer.json`** and has not yet added `--parallel` to the
+  `composer test` script, per A3's handoff. Not done here because it is
+  unrelated to the safeguarding work and belongs in its own commit.
 
 ---
 
