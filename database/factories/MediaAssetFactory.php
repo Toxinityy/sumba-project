@@ -39,7 +39,6 @@ class MediaAssetFactory extends Factory
     {
         return $this->state([
             'depicts_minor' => true,
-            'subject_family_name' => null,
             'consent_id' => $consent?->id ?? Consent::factory(),
         ]);
     }

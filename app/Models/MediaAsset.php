@@ -29,7 +29,7 @@ use Intervention\Image\ImageManager;
  */
 #[Fillable([
     'path', 'width', 'height', 'alt', 'caption', 'credit', 'taken_on',
-    'depicts_minor', 'consent_id', 'subject_given_name', 'subject_family_name',
+    'depicts_minor', 'consent_id', 'subject_given_name',
     'focal_x', 'focal_y', 'crops', 'role', 'position',
 ])]
 class MediaAsset extends Model
@@ -65,14 +65,12 @@ class MediaAsset extends Model
                 return;
             }
 
-            // Spec §9 wants minor subjects to have no surname field at all.
-            // A single table cannot drop a column conditionally and the schema
-            // builder cannot express a CHECK constraint, so the invariant is
-            // enforced here — where every write path, Filament included, goes
-            // through it — rather than left to editorial discipline.
-            if (filled($asset->subject_family_name)) {
-                throw new DomainException('An asset depicting a minor cannot carry a surname (spec §9).');
-            }
+            // The surname guard that used to sit here is gone, and so is the
+            // column (2026_09_22_000001). §9 wants "no surname field at all",
+            // and a model event was never that — a raw or bulk UPDATE walked
+            // straight past it. Nothing ever wrote the column, so it was
+            // dropped rather than constrained. See "Subject identity" in
+            // docs/data-contract.md.
 
             // An asset flagged as depicting a minor is unusable without a
             // consent record to point at, so the link is required at write

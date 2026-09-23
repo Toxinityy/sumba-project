@@ -11,6 +11,8 @@ use App\Models\MediaAsset;
 use App\Models\Post;
 use App\Models\School;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 uses(RefreshDatabase::class);
 
@@ -30,9 +32,9 @@ it('never appends a surname when the subject is a minor', function () {
     expect($post->subjectName())->toBe($post->subject_given_name);
 });
 
-it('refuses to store a surname on an asset depicting a minor', function () {
-    MediaAsset::factory()->depictingMinor()->create(['subject_family_name' => 'Wulang']);
-})->throws(DomainException::class);
+// The Eloquent guard this used to assert is gone with the column it guarded
+// (2026_09_22_000001). Its replacements are the two schema-level cases at the
+// bottom of this file, which a raw insert cannot walk past.
 
 it('refuses to store an asset depicting a minor with no consent record', function () {
     MediaAsset::factory()->create(['depicts_minor' => true]);
@@ -153,4 +155,43 @@ it('finds consent records due for review', function () {
     $due = Consent::where('review_on', '<=', now()->addMonth())->pluck('id');
 
     expect($due->all())->toBe([$expiring->id]);
+});
+
+/*
+ | Spec §9 wants the no-surname rule to be structural: "the schema makes the
+ | rule unbreakable rather than merely documented." Until 2026-09-22 it lived
+ | in Post::saving and MediaAsset::saving, which Eloquent enforces and a raw
+ | or bulk UPDATE walks straight past — the P0 the 2026-09-21 backend review
+ | called a launch blocker.
+ |
+ | These cases bypass Eloquent deliberately. A model event cannot satisfy them.
+ | See "Subject identity" in docs/data-contract.md for why this is a separate
+ | table rather than a CHECK constraint.
+ */
+it('has no surname column on media assets at all', function () {
+    expect(Schema::hasColumn('media_assets', 'subject_family_name'))->toBeFalse();
+});
+
+it('cannot store a surname on a media asset even by raw insert', function () {
+    // ConsentFactory's default is already minor + web-scoped + current.
+    $consent = Consent::factory()->create();
+
+    // `alt` is NOT NULL and every other column is nullable or defaulted, so
+    // once it is supplied the ONLY thing left that can reject this row is the
+    // absent surname column. Omitting it made an earlier version of this test
+    // pass against a schema that still HAD the column — it threw on alt.
+    $row = [
+        'path' => 'media/a.jpg', 'width' => 100, 'height' => 100,
+        'alt' => json_encode(['id' => 'Foto', 'en' => 'Photo']),
+        'depicts_minor' => true, 'consent_id' => $consent->id,
+        'created_at' => now(), 'updated_at' => now(),
+    ];
+
+    // The control: the same row without a surname must insert cleanly. If this
+    // ever fails, the case below is passing for the wrong reason again.
+    DB::table('media_assets')->insert($row);
+
+    expect(fn () => DB::table('media_assets')
+        ->insert($row + ['subject_family_name' => 'Wulang']))
+        ->toThrow(Illuminate\Database\QueryException::class);
 });
