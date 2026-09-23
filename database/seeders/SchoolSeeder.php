@@ -25,6 +25,15 @@ class SchoolSeeder extends Seeder
     public function run(): void
     {
         foreach (self::schools() as $data) {
+            // Seeding is an import, not a sync. Once a school exists its copy
+            // belongs to whoever last edited it in the panel, so a rerun skips
+            // it rather than duplicating it or overwriting them. Before this
+            // guard, a second run made a second set of six schools, their
+            // projects, their portraits and their media.
+            if (School::whereSlug($data['slug']['id'], 'id')->exists()) {
+                continue;
+            }
+
             $school = School::create([
                 ...collect($data)->except(['media', 'evidence', 'people'])->all(),
                 'published_at' => now(),

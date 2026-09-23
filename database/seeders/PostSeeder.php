@@ -37,6 +37,15 @@ class PostSeeder extends Seeder
             $surname = $story['subject_family_name'] ?? null;
             unset($story['media'], $story['match'], $story['subject_family_name']);
 
+            // Same import-not-sync rule as SchoolSeeder. On the first run the
+            // head teacher exists under the school seeder's slug ("maria-bulu"),
+            // not the story's, so this does not match her and the block below
+            // correctly updates her. On the second run it does match, and she
+            // is left alone.
+            if (Post::whereSlug($story['slug']['id'], 'id')->exists()) {
+                continue;
+            }
+
             // Match on the subject's stored name rather than the slug: the
             // school seeder slugged her "maria-bulu", the story is
             // "ibu-maria-bulu", and the slug is exactly what this changes.
