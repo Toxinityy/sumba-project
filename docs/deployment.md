@@ -208,6 +208,22 @@ site is considered launch-ready.
 - [ ] Verify school facts and status copy against current records. Edit existing school records that still use numeric partner targets; updating seed text does not change an already seeded database.
 - [ ] Obtain the legal registration details and verified giving instructions from the ministry. Keep the giving page enquiry-led until those details can be published accurately.
 - [ ] Verify statistics, dated evidence and partner permissions before publishing the deferred pages or enabling their production routes.
+- [ ] **Record the production MySQL version**, and say which engine it is
+      (MySQL or MariaDB):
+  ```bash
+  mysql -e "SELECT VERSION();"   # or via cPanel's phpMyAdmin
+  ```
+  This decides one open schema question. Minor surnames are kept out
+  structurally by a separate `subject_surnames` table with a composite
+  foreign key (see **Subject identity** in `docs/data-contract.md`), chosen
+  because no host existed to prove a CHECK constraint would be enforced —
+  **MySQL below 8.0.16 parses CHECK and silently ignores it.** At ≥ 8.0.16 a
+  CHECK becomes a defensible second layer. It never replaces the table: that
+  would put a safeguarding invariant back on one engine's version number.
+  Also confirm the composite foreign key survived the import — a
+  `mysqldump` restored with `FOREIGN_KEY_CHECKS=0` and never re-enabled
+  enforces nothing, and looks identical until someone writes a bad row.
+
 - [ ] Deploy to a staging subdomain on the real host, following the
       procedure in "Deploying to cPanel" above (same host as production —
       staging on a different host tells you nothing useful).

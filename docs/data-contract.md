@@ -329,6 +329,54 @@ not the pages'.
 
 ---
 
+## Subject identity
+
+*Decided 2026-09-22. Spec §9: "Minor subject records have no surname field at
+all. The schema makes the rule unbreakable rather than merely documented. If
+it can't be entered, it can't leak."*
+
+Until today that rule lived in `Post::saving` and `MediaAsset::saving`, which
+Eloquent enforces and a raw or bulk `UPDATE` walks straight past. The backend
+review of 2026-09-21 called it a P0 launch blocker.
+
+**The shape:**
+
+- **Minor-capable tables carry no family-name column at all.** `media_assets`
+  never wrote one, so its column is simply gone.
+- **Adult family names live in one separate table,** `subject_surnames`, whose
+  rows can only reference a post whose `subject_is_minor` is false. The link is
+  a composite foreign key, not a trigger and not a model event, so a raw insert
+  and a raw update both fail at the database.
+- **`Post::subjectName()` is unchanged** — same signature, same output string.
+  Every caller (`Post::toCardArray()`, `Post::toDetailArray()`, `School::people()`)
+  reads it and none of them needed editing. If a caller ever has to change, the
+  extraction leaked and the leak is the bug.
+
+**Why a separate table rather than a CHECK constraint.** The review offered
+both. A CHECK is the smaller diff and it was rejected for one reason: **there
+is no host.** `docs/deployment.md` still records no hosting decision, so nobody
+can run the probe that says whether production MySQL enforces CHECK or parses
+and silently ignores it — MySQL below 8.0.16 does the latter. A constraint that
+might be decorative is worse than no constraint, because it reads like
+enforcement to the next person who audits this.
+
+Separate storage depends on no host fact, and it is closer to what §9 literally
+says.
+
+**What the local suite does and does not prove.** Tests run on **SQLite 3.40.0**
+(`DB::connection()->getDriverName()`, checked 2026-09-22). SQLite enforces both
+CHECK and composite foreign keys, and `config/database.php` sets
+`foreign_key_constraints` to true, so the raw-write tests are meaningful here.
+They still prove nothing about the production engine. **A green suite is not
+host evidence.**
+
+**What would revisit this:** a host is chosen and reports MySQL ≥ 8.0.16. A
+CHECK constraint then becomes a defensible belt alongside these braces — not
+instead of them. Dropping the separate table because a CHECK exists would put
+the invariant back on one engine's version.
+
+---
+
 ## Rules the contract enforces
 
 These are not style preferences. Each has a specific failure it prevents.
@@ -336,7 +384,8 @@ These are not style preferences. Each has a specific failure it prevents.
 1. **No numeric funding field, anywhere, in any entity.** Not on the model, not
    in the array, not in the database.
 2. **Minors have no surname field.** Enforced in the schema, not by editorial
-   discipline.
+   discipline — see **Subject identity** above for how, and for what the local
+   SQLite suite does not prove about the production engine.
 3. **`jpeg` is always present in `sources`.** `<x-picture>` throws otherwise,
    loudly, by design.
 4. **Indonesian strings are the primary case.** They run 15–20% longer than
